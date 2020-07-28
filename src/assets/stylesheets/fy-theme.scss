@@ -1,0 +1,12 @@
+// define 3 theme color
+// mat-palette accepts $palette-name, main, lighter and darker variants
+$fy-theme-primary: mat-palette($mat-pink);
+$fy-theme-accent: mat-palette($mat-gray);
+$fy-theme-warn: mat-palette($mat-deep-orange, A200);
+
+// create theme (use mat-dark-theme for themes with dark backgrounds)
+$fy-theme: mat-light-theme(
+    $fy-theme-primary,
+    $fy-theme-accent,
+    $fy-theme-warn
+);

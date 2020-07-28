@@ -1,0 +1,39 @@
+<div class="internal-loader" fxLayout="column" fxLayoutAlign="center center" *ngIf="isLoading" fxFlexFill>
+  <app-loader></app-loader>
+</div>
+
+<div *ngIf="!isLoading" fxLayout="column" fxLayoutAlign="start stretch">
+  <div class="sync-header">
+    Import Expenses from Fyle App
+  </div>
+  <div fxLayout="column" fxLayoutAlign="start center">
+    <mat-card class="sync-card">
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <div>
+          <div class="sync-card--header">
+            Import Expenses
+          </div>
+          <div class="sync-card--info" *ngIf="lastTask">
+            Last imported on {{lastTask.updated_at | date}}
+          </div>
+        </div>
+        <div>
+          <button type="button" [disabled]="isExpensesSyncing" mat-flat-button color="primary" (click)="syncExpenses()">
+            <div *ngIf="!isExpensesSyncing">
+              Import
+            </div>
+            <div *ngIf="isExpensesSyncing">
+              Importing
+            </div>
+          </button>
+        </div>
+      </div>
+      <div *ngIf="errorOccurred" class="sync-card--error" fxLayout="row" fxLayoutAlign="start center">
+        <mat-icon class="sync-card--error-icon">error</mat-icon>
+        <div>
+          An error occurred while importing the Expenses. Please try again.
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
