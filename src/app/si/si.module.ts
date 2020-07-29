@@ -38,11 +38,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { EmployeeMappingsComponent } from './settings/employee-mappings/employee-mappings.component';
 import { CategoryMappingsComponent } from './settings/category-mappings/category-mappings.component';
 import { ProjectMappingsComponent } from './settings/project-mappings/project-mappings.component';
+import { CostCenterMappingsComponent } from './settings/cost-center-mappings/cost-center-mappings.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { EmployeeMappingsDialogComponent } from './settings/employee-mappings/employee-mappings-dialog/employee-mappings-dialog.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CategoryMappingsDialogComponent } from './settings/category-mappings/category-mappings-dialog/category-mappings-dialog.component';
 import { ProjectMappingsDialogComponent } from './settings/project-mappings/project-mappings-dialog/project-mappings-dialog.component';
+import { CostCenterMappingsDialogComponent } from './settings/cost-center-mappings/cost-center-mappings-dialog/cost-center-mappings-dialog.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -50,6 +52,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { from } from 'rxjs';
 @NgModule({
   declarations: [
     SiComponent,
@@ -69,14 +72,17 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     EmployeeMappingsComponent,
     CategoryMappingsComponent,
     ProjectMappingsComponent,
+    CostCenterMappingsComponent,
     EmployeeMappingsDialogComponent,
     CategoryMappingsDialogComponent,
-    ProjectMappingsDialogComponent
+    ProjectMappingsDialogComponent,
+    CostCenterMappingsDialogComponent
   ],
   entryComponents: [
     EmployeeMappingsDialogComponent,
     CategoryMappingsDialogComponent,
-    ProjectMappingsDialogComponent
+    ProjectMappingsDialogComponent,
+    CostCenterMappingsDialogComponent
   ],
   imports: [
     CommonModule,

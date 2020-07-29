@@ -4,7 +4,7 @@
       <header matSubheader class="si-sidenav--header">
         <img alt="Fyle" src="../../assets/images/pngs/fyle-logo.png" class="si-sidenav--logo" />
         <mat-icon>add</mat-icon>
-        <img alt="Sage Intacct" src="../../../assets/images/pngs/sage-intacct-logo3.png" class="si-sidenav--logo">
+        <img alt="Sage Intacct" src="../../../assets/images/pngs/sage-intacct-logo.png" class="si-sidenav--si-logo">
       </header>
 
       <a class="mat-h2 si-sidenav--nav-item" mat-list-item routerLink="{{workspace.id}}/dashboard"
@@ -44,6 +44,10 @@
       <a class="mat-h3 si-sidenav--nav-sub-item" [ngClass]="{'si-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item routerLink="{{workspace.id}}/settings/project_mappings/"
         routerLinkActive="active">
         Project Mappings
+      </a>
+      <a class="mat-h3 si-sidenav--nav-sub-item" [ngClass]="{'si-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item routerLink="{{workspace.id}}/settings/cost_center_mappings/"
+        routerLinkActive="active">
+        Cost Center Mappings
       </a>
     </mat-nav-list>
   </mat-sidenav>

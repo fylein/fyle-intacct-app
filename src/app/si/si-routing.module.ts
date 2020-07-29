@@ -19,6 +19,7 @@ import { ConnectSageIntacctComponent } from './settings/connect-sage-intacct/con
 import { EmployeeMappingsComponent } from './settings/employee-mappings/employee-mappings.component';
 import { CategoryMappingsComponent } from './settings/category-mappings/category-mappings.component';
 import { ProjectMappingsComponent } from './settings/project-mappings/project-mappings.component';
+import { CostCenterMappingsComponent } from './settings/cost-center-mappings/cost-center-mappings.component';
 
 const routes: Routes = [{
   path: '',
@@ -97,6 +98,11 @@ const routes: Routes = [{
         {
           path: 'project_mappings',
           component: ProjectMappingsComponent,
+          canActivate: [WorkspacesGuard]
+        },
+        {
+          path: 'cost_center_mappings',
+          component: CostCenterMappingsComponent,
           canActivate: [WorkspacesGuard]
         }
       ]

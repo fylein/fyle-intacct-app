@@ -62,6 +62,16 @@ export class ConfigurationComponent implements OnInit {
     }[employeeMappedTo];
   }
 
+  configurationProjectCostCenterValidator: ValidatorFn = (fg: FormGroup) => {
+    const project = fg.get('projects').value;
+    const costCenter = fg.get('costCenters').value;
+    if (!project || !costCenter) {
+      return null;
+    }
+
+    return project === costCenter ? { projectCostCenterSame: true } : null;
+  }
+
   getAllSettings() {
     const that = this;
     that.isLoading = true;
@@ -93,10 +103,15 @@ export class ConfigurationComponent implements OnInit {
         settings => settings.source_field === 'PROJECT'
       )[0];
 
+      const costCenterFieldMapping = that.mappingSettings.filter(
+        settings => settings.source_field === 'COST_CENTER'
+      )[0];
+
       that.employeeFieldMapping = employeeFieldMapping;
       that.reimburExpenseFieldMapping = reimburExpenseFieldMapping;
       that.categoryFieldMapping = categoryFieldMapping;
       that.projectFieldMapping = projectFieldMapping ? projectFieldMapping : {};
+      that.costCenterFieldMapping = costCenterFieldMapping ? costCenterFieldMapping : {};
 
       that.expenseOptions = that.getExpenseOptions(that.employeeFieldMapping.destination_field);
       that.categoryOptions = that.getCategoryOptions(that.employeeFieldMapping.destination_field);
@@ -106,16 +121,19 @@ export class ConfigurationComponent implements OnInit {
         reimburExpense: [that.reimburExpenseFieldMapping ? that.reimburExpenseFieldMapping.destination_field : ''],
         category: [that.categoryFieldMapping ? that.categoryFieldMapping.destination_field : ''],
         projects: [that.projectFieldMapping ? that.projectFieldMapping.destination_field : ''],
+        costCenters: [that.costCenterFieldMapping ? that.costCenterFieldMapping.destination_field : '']
+      }, {
+        validators: [that.configurationProjectCostCenterValidator]
       });
 
       if (that.generalSettings.employee_field_mapping) {
-        that.expenseOptions = [{
-          label: 'Bill',
-          value: 'BILL'
-        },
-        {
+        that.expenseOptions = [        {
           label: 'Expense Report',
           value: 'EXPENSE_REPORT'
+        },
+        {
+          label: 'Bill',
+          value: 'BILL'
         }
         ];
       }
@@ -124,12 +142,12 @@ export class ConfigurationComponent implements OnInit {
       that.generalSettingsForm.controls.reimburExpense.disable();
       that.generalSettingsForm.controls.category.disable()
 
-      if (that.generalSettings.corporate_credit_card_expenses_object) {
-        that.generalSettingsForm.controls.cccExpense.disable();
-      }
-
       if (projectFieldMapping) {
         that.generalSettingsForm.controls.projects.disable();
+      }
+
+      if (costCenterFieldMapping) {
+        that.generalSettingsForm.controls.costCenters.disable();
       }
 
       that.isLoading = false;
@@ -141,9 +159,10 @@ export class ConfigurationComponent implements OnInit {
         employees: ['', Validators.required],
         reimburExpense: ['', Validators.required],
         category: ['', Validators.required],
-        cccExpense: [null],
         projects: [null],
         costCenters: [null],
+      }, {
+        validators: [that.configurationProjectCostCenterValidator]
       });
 
       that.generalSettingsForm.controls.employees.valueChanges.subscribe((employeeMappedTo) => {
@@ -158,10 +177,11 @@ export class ConfigurationComponent implements OnInit {
   save() {
     const that = this;
     if (that.generalSettingsForm.valid) {
-      const reimbursableExpensesObject = that.generalSettingsForm.value.reimburExpense;
-      const categoryMappingObject = that.generalSettingsForm.value.category;
+      const reimbursableExpensesObject = that.generalSettingsForm.value.reimburExpense || (that.reimburExpenseFieldMapping && that.reimburExpenseFieldMapping.destination_field);
+      const categoryMappingObject = that.generalSettingsForm.value.category || (that.categoryFieldMapping && that.categoryFieldMapping.destination_field);
       const employeeMappingsObject = that.generalSettingsForm.value.employees || (that.employeeFieldMapping && that.employeeFieldMapping.destination_field);
       const projectMappingObject = that.generalSettingsForm.value.projects || (that.projectFieldMapping && that.projectFieldMapping.destination_field);
+      const costCenterMappingObject = that.generalSettingsForm.value.costCenters || (that.costCenterFieldMapping && that.costCenterFieldMapping.destination_field);
 
       const mappingsSettingsPayload = [{
         source_field: 'EMPLOYEE',
@@ -184,6 +204,14 @@ export class ConfigurationComponent implements OnInit {
           destination_field: projectMappingObject
         });
       }
+
+      if (costCenterMappingObject) {
+        mappingsSettingsPayload.push({
+          source_field: 'COST_CENTER',
+          destination_field: costCenterMappingObject
+        });
+      }
+
       that.isLoading = true;
 
       forkJoin(

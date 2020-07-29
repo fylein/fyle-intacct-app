@@ -21,6 +21,11 @@ $fy-page-info-desc: #414562;
       padding: 0 16px;
     }
 
+    &--si-logo {
+      max-height: 35px;
+      padding: 0 16px 5px;
+    }
+
     &--menu {
       &-icon {
         color: $fy-nav-text;

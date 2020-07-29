@@ -160,7 +160,8 @@ export class DashboardComponent implements OnInit {
       this.mappingsService.postSageIntacctProjects(),
       this.mappingsService.postFyleEmployees(),
       this.mappingsService.postFyleCategories(),
-      this.mappingsService.postFyleProjects()
+      this.mappingsService.postFyleProjects(),
+      this.mappingsService.postFyleCostCenters()
     ).subscribe(() => {
       // that.snackBar.open('All employee data synced from your fyle account');
     });

@@ -22,11 +22,11 @@
       </div>
       <mat-form-field floatLabel="always" appearance="outline" required>
         <mat-select placeholder="Choose Sage Intacct equivalent of Employees" formControlName="employees">
-          <mat-option value="VENDOR">
-            Vendor
-          </mat-option>
           <mat-option value="EMPLOYEE">
             Employee
+          </mat-option>
+          <mat-option value="VENDOR">
+            Vendor
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -74,6 +74,34 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+
+      <div class="configurations--label">
+        Map Cost Centers from Fyle to
+      </div>
+      <mat-form-field floatLabel="always" appearance="outline">
+        <mat-select placeholder="Choose Sage Intacct equivalent of Cost Centers" formControlName="costCenters">
+          <mat-option>
+            None
+          </mat-option>
+          <mat-option value="PROJECT">
+            Project
+          </mat-option>
+          <mat-option value="DEPARTMENT">
+            Department
+          </mat-option>
+          <mat-option value="LOCATION">
+            Location
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="configurations--errors" md-colors="{color:'warning'}" *ngIf="generalSettingsForm.errors">
+        <div *ngFor="let error of generalSettingsForm.errors | keyvalue">
+          <div *ngIf="error.key === 'projectCostCenterSame'">
+            Projects and Cost Centers cannot have the same value
+          </div>
+        </div>
+      </div>
 
       <button [disabled]="isSaveDisabled || !generalSettingsForm.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="save()" type="submit">
         Save

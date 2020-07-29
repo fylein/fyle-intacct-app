@@ -141,11 +141,19 @@ export class SettingsService {
         setting => setting.source_field === 'PROJECT'
       )[0];
 
+      const costCenterFieldMapping = mappingSettings.filter(
+        setting => setting.source_field === 'COST_CENTER'
+      )[0];
+
       generalSettings.employee_field_mapping = employeeFieldMapping.destination_field;
       generalSettings.category_field_mapping = categoryFieldMapping.destination_field;
 
       if (projectFieldMapping) {
         generalSettings.project_field_mapping = projectFieldMapping.destination_field;
+      }
+
+      if (costCenterFieldMapping) {
+        generalSettings.cost_center_field_mapping = costCenterFieldMapping.destination_field;
       }
 
       return generalSettings;

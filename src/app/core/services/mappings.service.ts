@@ -68,6 +68,19 @@ export class MappingsService {
     return this.fyleProjects;
   }
 
+  postFyleCostCenters() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    if (!this.fyleCostCenters) {
+      this.fyleCostCenters = this.apiService.post(`/workspaces/${workspaceId}/fyle/cost_centers/`, {}).pipe(
+        map(data => data),
+        publishReplay(1),
+        refCount()
+      );
+    }
+    return this.fyleCostCenters;
+  }
+
   postSageIntacctVendors() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
@@ -196,6 +209,12 @@ export class MappingsService {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/projects/`, {});
+  }
+
+  getFyleCostCenters() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(`/workspaces/${workspaceId}/fyle/cost_centers/`, {});
   }
 
   getSageIntacctDepartments() {
