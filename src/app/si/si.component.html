@@ -1,0 +1,119 @@
+<mat-sidenav-container class="si" autosize fxFlexFill *ngIf="!isLoading">
+  <mat-sidenav class="si-sidenav" mode="side" opened>
+    <mat-nav-list>
+      <header matSubheader class="si-sidenav--header">
+        <img alt="Fyle" src="../../assets/images/pngs/fyle-logo.png" class="si-sidenav--logo" />
+        <mat-icon>add</mat-icon>
+        <img alt="Sage Intacct" src="../../../assets/images/pngs/sage-intacct-logo.png" class="si-sidenav--si-logo">
+      </header>
+
+      <a class="mat-h2 si-sidenav--nav-item" mat-list-item routerLink="{{workspace.id}}/dashboard"
+        routerLinkActive="active">
+        Dashboard
+      </a>
+
+      <a class="mat-h2 si-sidenav--nav-item" [ngClass]="{'si-sidenav--nav-item__disabled': navDisabled}" mat-list-item routerLink="{{workspace.id}}/sync_export/sync"
+        routerLinkActive="active">
+        Import & Export
+      </a>
+
+      <a class="mat-h2 si-sidenav--nav-item" [ngClass]="{'si-sidenav--nav-item__disabled': navDisabled}" mat-list-item routerLink="{{workspace.id}}/expense_groups/"
+        routerLinkActive="active">
+        Expense Groups
+      </a>
+
+      <a class="mat-h3 si-sidenav--nav-item" mat-list-item>
+        Settings
+      </a>
+      <a class="mat-h3 si-sidenav--nav-sub-item" mat-list-item routerLink="{{workspace.id}}/settings/connect_sage_intacct/"
+      routerLinkActive="active">
+      Connect Sage Intacct
+      </a>
+      <a class="mat-h3 si-sidenav--nav-sub-item" mat-list-item routerLink="{{workspace.id}}/settings/configurations/"
+        routerLinkActive="active">
+        Configurations
+      </a>
+      <a class="mat-h3 si-sidenav--nav-sub-item" [ngClass]="{'si-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item
+        routerLink="{{workspace.id}}/settings/employee_mappings/" routerLinkActive="active">
+        Employee Mappings
+      </a>
+      <a class="mat-h3 si-sidenav--nav-sub-item" [ngClass]="{'si-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item
+        routerLink="{{workspace.id}}/settings/category_mappings/" routerLinkActive="active">
+        Category Mappings
+      </a>
+      <a class="mat-h3 si-sidenav--nav-sub-item" [ngClass]="{'si-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item routerLink="{{workspace.id}}/settings/project_mappings/"
+        routerLinkActive="active">
+        Project Mappings
+      </a>
+      <a class="mat-h3 si-sidenav--nav-sub-item" [ngClass]="{'si-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item routerLink="{{workspace.id}}/settings/cost_center_mappings/"
+        routerLinkActive="active">
+        Cost Center Mappings
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar fxLayoutAlign="space-between center">
+      <div class="si--title" fxLayout="row" fxLayoutAlign="space-around center">
+        <div class="mat-small">
+          Fyle Org Name:
+          <span class="si--title-fyle-org">
+            {{user.org_name}}
+          </span>
+        </div>
+        <div class="mat-small si--title-separator" *ngIf="companyName">
+          |
+        </div>
+        <div class="mat-small" *ngIf="companyName">
+          Sage Intacct Company Name:
+          <span class="si--title-si-org">
+            {{companyName}}
+          </span>
+        </div>
+      </div>
+
+      <mat-menu class="si--menu" #appMenu="matMenu" xPosition="before">
+        <button type="button" mat-menu-item *ngIf="orgsCount > 0" (click)="switchWorkspace()">
+          <div fxLayoutAlign="space-around center">
+            <mat-icon class="si--menu-icon">
+              swap_horiz
+            </mat-icon>
+            <strong class="si--menu-text">
+              Switch Org
+            </strong>
+          </div>
+        </button>
+        <button type="button" mat-menu-item [routerLink]="['../auth/logout']">
+          <div fxLayoutAlign="space-around center">
+            <mat-icon class="si--menu-icon">
+              power_settings_new
+            </mat-icon>
+            <strong class="si--menu-text">
+              Sign Out
+            </strong>
+          </div>
+        </button>
+      </mat-menu>
+
+      <div class="si--menu cursor-pointer" [matMenuTriggerFor]="appMenu">
+        <div fxLayoutAlign="space-around center">
+          <mat-icon class="si--menu-icon">
+            account_circle
+          </mat-icon>
+          <strong class="si--menu-text">{{user.full_name}}</strong>
+          <mat-icon class="si--menu-icon si--menu-icon__offset">
+            keyboard_arrow_down
+          </mat-icon>
+        </div>
+      </div>
+
+    </mat-toolbar>
+    <div class="si-body">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<div fxLayoutAlign="center center" fxFlexFill *ngIf="isLoading">
+  <app-loader></app-loader>
+</div>

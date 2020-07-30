@@ -1,0 +1,78 @@
+<h2 mat-dialog-title>
+  <div class="mappings-dialog--header" fxLayout="row" fxLayoutAlign="space-between center">
+    <div class="mat-title">
+      Create New Mapping
+    </div>
+    <div>
+      <mat-icon class="mappings-dialog--close cursor-pointer" aria-hidden="false" aria-label="close this dialog" mat-dialog-close>close</mat-icon>
+    </div>
+  </div>
+</h2>
+<mat-dialog-content>
+  <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
+    <app-loader></app-loader>
+  </div>
+  <form *ngIf="!isLoading" class="mappings-dialog--form" [formGroup]="form">
+    <div fxLayout="column" fxLayoutAlign="start stretch">
+      <div class="mat-body-strong">
+        <strong class="mappings-dialog--label">
+          Choose Fyle Category
+        </strong>
+      </div>
+      <mat-form-field class="mappings-dialog--field" appearance="outline">
+        <input required type="text" formControlName="fyleCategory" placeholder="Choose Fyle category" matInput
+          [matAutocomplete]="fyCat" [errorStateMatcher]="matcher">
+        <mat-autocomplete #fyCat="matAutocomplete" [displayWith]="mappingDisplay">
+          <mat-option *ngFor="let option of fyleCategoryOptions" [value]="option">
+            {{option.value}}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error class="mappings-dialog--error" *ngIf="form.controls.fyleCategory.hasError('forbiddenOption')">
+          Please enter a valid value
+        </mat-error>
+      </mat-form-field>
+
+      <div class="mat-body-strong" *ngIf="generalSettings.category_field_mapping === 'ACCOUNT'">
+        <strong class="mappings-dialog--label">
+          Gl Account
+        </strong>
+      </div>
+      <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="generalSettings.category_field_mapping === 'ACCOUNT'">
+        <input type="text" formControlName="sageIntacctAccount" placeholder="Choose Sage Intacct account" matInput
+          [matAutocomplete]="siAc" [errorStateMatcher]="matcher">
+        <mat-autocomplete #siAc="matAutocomplete" [displayWith]="mappingDisplay">
+          <mat-option *ngFor="let option of sageIntacctAccountOptions" [value]="option">
+            {{option.value}}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error class="mappings-dialog--error" *ngIf="form.controls.sageIntacctAccount.hasError('forbiddenOption')">
+          Please enter a valid value
+        </mat-error>
+      </mat-form-field>
+
+      <div class="mat-body-strong" *ngIf="generalSettings.category_field_mapping === 'EXPENSE_TYPE'">
+        <strong class="mappings-dialog--label">
+          Expense Type
+        </strong>
+      </div>
+      <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="generalSettings.category_field_mapping === 'EXPENSE_TYPE'">
+        <input type="text" formControlName="sageIntacctExpenseTypes" placeholder="Choose Sage Intacct expense type" matInput
+          [matAutocomplete]="sageIntacctEt" [errorStateMatcher]="matcher">
+        <mat-autocomplete #sageIntacctEt="matAutocomplete" [displayWith]="mappingDisplay">
+          <mat-option *ngFor="let option of sageIntacctExpenseTypeOptions" [value]="option">
+            {{option.value}}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error class="mappings-dialog--error" *ngIf="form.controls.sageIntacctExpenseTypes.hasError('forbiddenOption')">
+          Please enter a valid value
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button type="button" mat-flat-button mat-dialog-close>Cancel</button>
+  <button class="mappings-dialog--save-btn" mat-flat-button color="primary" type="submit" (click)="submit()">
+    Save
+  </button>
+</mat-dialog-actions>

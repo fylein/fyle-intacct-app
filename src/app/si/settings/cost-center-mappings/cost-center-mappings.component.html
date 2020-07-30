@@ -1,0 +1,61 @@
+<div *ngIf="!isLoading">
+  <div *ngIf="isConfigValueSet">
+    <div class="page-header mappings--header">
+      <div class="page-header--name mat-h2">
+        Cost Center Mappings
+      </div>
+    </div>
+    <div class="page-info">
+      <div fxLayout="row" fxLayoutAlign="start center" class="page-info--description">
+        <!-- TODO: Add KB article link -->
+        Map Cost Centers items from Fyle to their counterparts on Sage Intacct. <a href="#" target="_blank" rel="noopener noreferrer" class="read-more-link" fxLayout="row" fxLayoutAlign="start center">Read more<mat-icon class="read-more-link--icon">open_in_new</mat-icon></a>
+      </div>
+      <button class="page-info--primary-action" mat-flat-button color="primary" type="button" (click)="open()">
+        New Cost Center Mapping
+      </button>
+    </div>
+
+    <div *ngIf="!costCenterMappings.length && !isLoading">
+      <zero-state message="You have no cost center mappings yet"></zero-state>
+    </div>
+
+    <div *ngIf="costCenterMappings.length" [hidden]="isLoading">
+      <table mat-table [dataSource]="costCenterMappings" class="page-table" matSort matSortActive="created_at"
+        matSortDisableClear matSortDirection="desc">
+        <ng-container matColumnDef="costCenter">
+          <th mat-header-cell *matHeaderCellDef> Cost Center </th>
+          <td mat-cell *matCellDef="let element">
+            {{element.source.value}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="si">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ generalSettings.cost_center_field_mapping | titlecase }}
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{element.destination.value}}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+        <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
+      </table>
+    </div>
+  </div>
+  <div *ngIf="!isConfigValueSet">
+    <div class="page-header cost-center-mappings--header">
+      <div class="page-header--name mat-h2">
+        Cost Center Mappings
+      </div>
+    </div>
+    <div class="page-info" fxLayoutAlign="center center">
+      <zero-state message="Your cost centers arent enabled yet" link="Go to Configurations"
+        (click)="goToConfigurations()"></zero-state>
+    </div>
+  </div>
+</div>
+
+<div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
+  <app-loader></app-loader>
+</div>

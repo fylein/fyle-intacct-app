@@ -1,0 +1,178 @@
+<div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
+  <app-loader></app-loader>
+</div>
+
+<div *ngIf="currentState !== allOnboardingStates.isOnboarded && !isLoading"
+  class="onboarding-stepper onboarding-stepper--container" fxLayout="column" fxLayoutAlign="start center">
+  <h1 class="text-center onboarding-stepper--title">Welcome to Fyle App for Sage Intacct Integrations</h1>
+  <div fxLayout="row" fxLayoutAlign="center center" class="onboarding-stepper--logos">
+    <img src="../../../assets/images/pngs/fyle-logo.png" alt="Fyle">
+    <mat-icon class="add-icon">add</mat-icon>
+    <img src="../../../assets/images/pngs/sage-intacct-logo.png" class="sage-intacct-logo" alt="Sage Intacct">
+  </div>
+  <div class="onboarding-stepper--subheader">
+    Let's get you on board with a few quick steps!
+  </div>
+  <div>
+    <mat-vertical-stepper class="onboarding-stepper--stepper" [disableRipple]="rippleDisabled" [linear]="linearMode"
+      #stepper>
+      <mat-step [completed]="false">
+        <ng-template matStepLabel>
+          <div class="onboarding-stepper--step-header">
+            Connect to your Fyle & Sage Intacct accounts
+          </div>
+        </ng-template>
+        <div class="onboarding-stepper--step" fxLayout="row" fxLayoutAlign="space-between center">
+          <div fxLayout="row" fxLayoutAlign="start center">
+            <mat-icon class="onboarding-stepper--check"
+              [ngClass]="{'onboarding-stepper--check__complete': currentState === allOnboardingStates.fyleConnected || currentState === allOnboardingStates.sageIntacctConnected || currentState === allOnboardingStates.configurationsDone || currentState === allOnboardingStates.employeeMappingsDone}">
+              check_circle</mat-icon>
+            <div class="onboarding-stepper--desc">Connect to Fyle Account</div>
+          </div>
+          <div class="onboarding-stepper--navigation cursor-pointer" (click)="connectFyle()"
+            *ngIf="currentState === allOnboardingStates.initialized"
+            [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.initialized}">
+            Connect Fyle
+          </div>
+        </div>
+        <div class="onboarding-stepper--step" fxLayout="row" fxLayoutAlign="space-between center">
+          <div fxLayout="row" fxLayoutAlign="start center">
+            <mat-icon class="onboarding-stepper--check"
+              [ngClass]="{'onboarding-stepper--check__complete': currentState === allOnboardingStates.sageIntacctConnected || currentState === allOnboardingStates.configurationsDone || currentState === allOnboardingStates.employeeMappingsDone}">
+              check_circle</mat-icon>
+            <div class="onboarding-stepper--desc">Connect to Sage Intacct Account</div>
+          </div>
+          <div routerLink="../settings/connect_sage_intacct/" class="onboarding-stepper--navigation cursor-pointer"
+            *ngIf="currentState === allOnboardingStates.fyleConnected"
+            [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.fyleConnected}">
+            Connect Sage Intacct
+          </div>
+        </div>
+      </mat-step>
+      <mat-step [completed]="false">
+        <ng-template matStepLabel>
+          <div class="onboarding-stepper--step-header">
+            Configure Fyle Sage Intacct app
+          </div>
+        </ng-template>
+        <div class="onboarding-stepper--step" fxLayout="row" fxLayoutAlign="space-between center">
+          <div fxLayout="row" fxLayoutAlign="start center">
+            <mat-icon class="onboarding-stepper--check"
+              [ngClass]="{'onboarding-stepper--check__complete': currentState === allOnboardingStates.configurationsDone || currentState === allOnboardingStates.employeeMappingsDone}">
+              check_circle</mat-icon>
+            <div class="onboarding-stepper--desc">Map Fyle fields to Sage Intacct fields</div>
+          </div>
+          <div routerLink="../settings/configurations/" class="onboarding-stepper--navigation cursor-pointer"
+            *ngIf="currentState === allOnboardingStates.sageIntacctConnected"
+            [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.sageIntacctConnected}">
+            Go to Configurations
+          </div>
+        </div>
+      </mat-step>
+      <mat-step [completed]="false">
+        <ng-template matStepLabel>
+          <div class="onboarding-stepper--step-header">
+            Map Fyle fields to Sage Intacct
+          </div>
+        </ng-template>
+        <div class="onboarding-stepper--step" fxLayout="row" fxLayoutAlign="space-between center">
+          <div fxLayout="row" fxLayoutAlign="start center">
+            <mat-icon class="onboarding-stepper--check"
+              [ngClass]="{'onboarding-stepper--check__complete': currentState === allOnboardingStates.employeeMappingsDone}">
+              check_circle</mat-icon>
+            <div class="onboarding-stepper--desc">Map Employees</div>
+          </div>
+          <div routerLink="../settings/employee_mappings/" class="onboarding-stepper--navigation cursor-pointer"
+            *ngIf="currentState === allOnboardingStates.configurationsDone"
+            [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.configurationsDone}">
+            Go to Employee Mappings
+          </div>
+        </div>
+        <div class="onboarding-stepper--step" fxLayout="row" fxLayoutAlign="space-between center">
+          <div fxLayout="row" fxLayoutAlign="start center">
+            <mat-icon class="onboarding-stepper--check">check_circle</mat-icon>
+            <div class="onboarding-stepper--desc">Map Categories</div>
+          </div>
+          <div routerLink="../settings/category_mappings/" class="onboarding-stepper--navigation cursor-pointer"
+            *ngIf="currentState === allOnboardingStates.employeeMappingsDone"
+            [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.employeeMappingsDone}">
+            Go to Category Mappings
+          </div>
+        </div>
+      </mat-step>
+    </mat-vertical-stepper>
+  </div>
+</div>
+
+<div class="dashboard" *ngIf="currentState === allOnboardingStates.isOnboarded && !isLoading">
+  <h1 class="dashboard--header">
+    Dashboard
+  </h1>
+  <div fxLayout="row">
+    <div class="dashboard--actions" fxLayout="column" fxLayoutAlign="start center">
+      <mat-card class="dashboard--actions-card mat-elevation-z2">
+        <div class="dashboard--actions-content" fxLayout="row" fxLayoutAlign="space-between center">
+          <div class="dashboard--actions-header">
+            <span *ngIf="successfulExpenseGroupsCount > 0">
+              Import Expenses from Fyle
+            </span>
+            <span *ngIf="successfulExpenseGroupsCount === 0">
+              Start by importing expense from Fyle
+            </span>
+          </div>
+          <div class="dashboard--actions-action cursor-pointer" fxLayout="row" fxLayoutAlign="start center"
+            routerLink="../sync_export/sync/">
+            <div>
+              Import Now
+            </div>
+            <mat-icon>
+              arrow_forward
+            </mat-icon>
+          </div>
+        </div>
+      </mat-card>
+
+      <mat-card class="dashboard--actions-card mat-elevation-z2">
+        <div class="dashboard--actions-content" fxLayout="row" fxLayoutAlign="space-between center">
+          <div class="dashboard--actions-header">
+            Export Expenses to Sage Intacct
+          </div>
+          <div class="dashboard--actions-action cursor-pointer" fxLayout="row" fxLayoutAlign="start center"
+            routerLink="../sync_export/export/">
+            <div>
+              Export Now
+            </div>
+            <mat-icon>
+              arrow_forward
+            </mat-icon>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+    <div class="dashboard--stats" fxLayout="row" fxLayoutAlign="center">
+      <mat-card class="dashboard--stats-card">
+        <mat-list role="list">
+          <mat-list-item role="listitem">
+            <mat-icon class="dashboard--stats-card-icon" mat-list-icon>publish</mat-icon>
+            <div mat-line>{{successfulExpenseGroupsCount}}</div>
+            <div mat-line>
+              <div class="dashboard--stats-card-desc">
+                Successful exports
+              </div>
+
+            </div>
+          </mat-list-item>
+          <mat-list-item role="listitem">
+            <mat-icon class="dashboard--stats-card-icon" mat-list-icon>info</mat-icon>
+            <div mat-line>{{failedExpenseGroupsCount}}</div>
+            <div mat-line>
+              <div class="dashboard--stats-card-desc">
+                  Failed exports
+              </div>
+            </div>
+          </mat-list-item>
+        </mat-list>
+      </mat-card>
+    </div>
+  </div>
+</div>
