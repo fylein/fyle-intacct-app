@@ -12,14 +12,14 @@
       matSortDisableClear matSortDirection="desc">
 
       <ng-container matColumnDef="shortDescription">
-        <th mat-header-cell *matHeaderCellDef> Short Description </th>
+        <th mat-header-cell *matHeaderCellDef> Error Type </th>
         <td mat-cell *matCellDef="let element">
           {{element.short_description}}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="longDescription">
-        <th mat-header-cell *matHeaderCellDef> Long Description </th>
+        <th mat-header-cell *matHeaderCellDef> Description </th>
         <td mat-cell *matCellDef="let element">
           {{element.long_description}}
         </td>

@@ -29,7 +29,6 @@ export class CostCenterMappingsDialogComponent implements OnInit {
   sageIntacctProjectOptions: any[];
   sageIntacctLocationOptions: any[];
   fyleCostCenterOptions: any[];
-  qboOptions: any[];
   generalSettings: any;
   matcher = new MappingErrorStateMatcher();
 
