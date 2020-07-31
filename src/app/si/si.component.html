@@ -25,8 +25,8 @@
       <a class="mat-h3 si-sidenav--nav-item" mat-list-item>
         Settings
       </a>
-      <a class="mat-h3 si-sidenav--nav-sub-item" mat-list-item routerLink="{{workspace.id}}/settings/connect_sage_intacct/"
-      routerLinkActive="active">
+      <a class="mat-h3 si-sidenav--nav-sub-item" mat-list-item *ngIf="connectSageIntacct"
+      routerLink="{{workspace.id}}/settings/connect_sage_intacct/" routerLinkActive="active">
       Connect Sage Intacct
       </a>
       <a class="mat-h3 si-sidenav--nav-sub-item" mat-list-item routerLink="{{workspace.id}}/settings/configurations/"

@@ -24,6 +24,7 @@ export class SiComponent implements OnInit {
   showSwitchOrg = false;
   navDisabled = true;
   windowReference: Window;
+  connectSageIntacct = true;
 
   constructor(
     private workspaceService: WorkspaceService,
@@ -115,6 +116,7 @@ export class SiComponent implements OnInit {
   getSageIntacctCompanyName() {
     const that = this;
     that.settingsService.getSageIntacctCredentials(that.workspace.id).subscribe(res => {
+      that.connectSageIntacct = false;
       that.companyName = res && res.si_company_name;
     })
   }
