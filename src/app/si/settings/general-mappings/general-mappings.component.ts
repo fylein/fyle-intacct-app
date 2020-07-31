@@ -27,10 +27,6 @@ export class GeneralMappingsComponent implements OnInit {
     private snackBar: MatSnackBar) {
   }
 
-  mappingDisplay(mappingObject) {
-    return mappingObject ? mappingObject.value : '';
-  }
-
   submit() {
     const that = this;
 
