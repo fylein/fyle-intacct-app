@@ -24,6 +24,9 @@
       </div>
       <mat-form-field class="mappings-dialog--form-element" appearance="outline">
         <mat-select placeholder="Default Location" formControlName="location">
+          <mat-option>
+            None
+          </mat-option>
           <mat-option *ngFor="let option of sageIntacctLocations" [value]="option.destination_id">
             {{option.value}}
           </mat-option>
@@ -37,6 +40,9 @@
       </div>
       <mat-form-field class="mappings-dialog--form-element" appearance="outline">
         <mat-select placeholder="Default Department" formControlName="department">
+          <mat-option>
+            None
+          </mat-option>
           <mat-option *ngFor="let option of sageIntacctDepartments" [value]="option.destination_id">
             {{option.value}}
           </mat-option>
@@ -50,6 +56,9 @@
       </div>
       <mat-form-field class="mappings-dialog--form-element" appearance="outline">
         <mat-select placeholder="Default Project" formControlName="project">
+          <mat-option>
+            None
+          </mat-option>
           <mat-option *ngFor="let option of sageIntacctProjects" [value]="option.destination_id">
             {{option.value}}
           </mat-option>
