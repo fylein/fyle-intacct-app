@@ -25,7 +25,7 @@ export class ExportComponent implements OnInit {
   generalSettings: any;
   failedExpenseGroupCount = 0;
   successfulExpenseGroupCount = 0;
-  sageIntacctCompanyName = '';
+  companyName: string;
   windowReference: Window;
 
   constructor(
@@ -118,6 +118,13 @@ export class ExportComponent implements OnInit {
     });
   }
 
+  getSageIntacctCompanyName() {
+    const that = this;
+    that.settingsService.getSageIntacctCredentials(that.workspaceId).subscribe(res => {
+      that.companyName = res && res.si_company_name;
+    })
+  }
+
   ngOnInit() {
     const that = this;
 
@@ -125,6 +132,7 @@ export class ExportComponent implements OnInit {
     that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
 
     that.isLoading = true;
+    that.getSageIntacctCompanyName();
     that.loadExportableExpenseGroups();
   }
 

@@ -271,4 +271,20 @@ export class MappingsService {
       `/workspaces/${workspaceId}/mappings/employees/`, {}
     );
   }
+
+  getGeneralMappings() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(
+      `/workspaces/${workspaceId}/mappings/general/`, {}
+    );
+  }
+
+  postGeneralMappings(mapping: any) {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.post(
+      `/workspaces/${workspaceId}/mappings/general/`, mapping
+    );
+  }
 }

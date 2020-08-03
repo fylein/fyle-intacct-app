@@ -15,6 +15,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { SyncComponent } from './sync-export/sync/sync.component';
 import { ExportComponent } from './sync-export/export/export.component';
 import { ConfigurationComponent } from './settings/configuration/configuration.component';
+import { GeneralMappingsComponent } from './settings/general-mappings/general-mappings.component';
 import { ConnectSageIntacctComponent } from './settings/connect-sage-intacct/connect-sage-intacct';
 import { EmployeeMappingsComponent } from './settings/employee-mappings/employee-mappings.component';
 import { CategoryMappingsComponent } from './settings/category-mappings/category-mappings.component';
@@ -80,6 +81,11 @@ const routes: Routes = [{
         {
           path: 'configurations',
           component: ConfigurationComponent
+        },
+        {
+          path: 'general_mappings',
+          component: GeneralMappingsComponent,
+          canActivate: [WorkspacesGuard]
         },
         {
           path: 'connect_sage_intacct',

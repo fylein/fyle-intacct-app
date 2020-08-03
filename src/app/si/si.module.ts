@@ -35,6 +35,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ConfigurationComponent } from './settings/configuration/configuration.component';
 import { ConnectSageIntacctComponent } from './settings/connect-sage-intacct/connect-sage-intacct';
 import { MatSelectModule } from '@angular/material/select';
+import { GeneralMappingsComponent } from './settings/general-mappings/general-mappings.component';
 import { EmployeeMappingsComponent } from './settings/employee-mappings/employee-mappings.component';
 import { CategoryMappingsComponent } from './settings/category-mappings/category-mappings.component';
 import { ProjectMappingsComponent } from './settings/project-mappings/project-mappings.component';
@@ -68,6 +69,7 @@ import { from } from 'rxjs';
     SyncComponent,
     ExportComponent,
     ConfigurationComponent,
+    GeneralMappingsComponent,
     ConnectSageIntacctComponent,
     EmployeeMappingsComponent,
     CategoryMappingsComponent,
