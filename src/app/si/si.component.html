@@ -33,6 +33,10 @@
         routerLinkActive="active">
         Configurations
       </a>
+      <a class="mat-h3 si-sidenav--nav-sub-item" [ngClass]="{'si-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item 
+        routerLink="{{workspace.id}}/settings/general_mappings/" routerLinkActive="active">
+        General Mappings
+      </a>
       <a class="mat-h3 si-sidenav--nav-sub-item" [ngClass]="{'si-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item
         routerLink="{{workspace.id}}/settings/employee_mappings/" routerLinkActive="active">
         Employee Mappings
