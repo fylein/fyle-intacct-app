@@ -24,6 +24,8 @@ export class ViewExpenseGroupComponent implements OnInit {
   pageSize: number;
   pageNumber: number;
   status: string;
+  showMappingErrors = false;
+  showSageIntacctErrors = false;
   windowReference: Window;
 
   constructor(
@@ -64,6 +66,8 @@ export class ViewExpenseGroupComponent implements OnInit {
     return that.tasksService.getTasksByExpenseGroupId(that.expenseGroupId).toPromise().then((tasks) => {
       if (tasks.length > 0) {
         that.task = tasks[0];
+        that.showMappingErrors = that.task.detail ? true : false;
+        that.showSageIntacctErrors = that.task.sage_intacct_errors ? true : false;
         that.status = that.task.status;
       }
     });

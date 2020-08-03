@@ -18,38 +18,12 @@
   <form class="configurations--form" [formGroup]="generalSettingsForm">
     <div fxLayout="column" fxLayoutAlign="start stretch">
       <div class="configurations--label">
-        Map Employees from Fyle to
-      </div>
-      <mat-form-field floatLabel="always" appearance="outline" required>
-        <mat-select placeholder="Choose Sage Intacct equivalent of Employees" formControlName="employees">
-          <mat-option value="EMPLOYEE">
-            Employee
-          </mat-option>
-          <mat-option value="VENDOR">
-            Vendor
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <div class="configurations--label">
         Map reimbursable Expenses from Fyle to
       </div>
       <mat-form-field floatLabel="always" appearance="outline" required>
         <mat-select placeholder="Choose Sage Intacct equivalent of Reimbursable Expenses"
           formControlName="reimburExpense">
           <mat-option *ngFor="let option of expenseOptions" [value]="option.value">
-            {{option.label}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <div class="configurations--label">
-        Map Categories from Fyle to
-      </div>
-      <mat-form-field floatLabel="always" appearance="outline" required>
-        <mat-select placeholder="Choose Sage Intacct equivalent of Categories"
-          formControlName="category">
-          <mat-option *ngFor="let option of categoryOptions" [value]="option.value">
             {{option.label}}
           </mat-option>
         </mat-select>

@@ -4,6 +4,7 @@ import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SiComponent } from '../../si.component';
 
 @Component({
   selector: 'app-connect-sage-intacct',
@@ -21,7 +22,8 @@ export class ConnectSageIntacctComponent implements OnInit {
               private settingsService: SettingsService, 
               private route: ActivatedRoute, 
               private router: Router, 
-              private snackBar: MatSnackBar) { }
+              private snackBar: MatSnackBar,
+              private si: SiComponent) { }
 
   save() {
     const that = this;
@@ -43,6 +45,7 @@ export class ConnectSageIntacctComponent implements OnInit {
         that.snackBar.open('Sage Intacct account connected successfully');
         that.isLoading = false;
         that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
+        that.si.getSageIntacctCompanyName();
       }, err => {
         that.snackBar.open('Wrong credentials, please try again');
         that.isLoading = false;

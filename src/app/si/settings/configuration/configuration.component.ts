@@ -16,50 +16,43 @@ export class ConfigurationComponent implements OnInit {
   isSaveDisabled: boolean;
   generalSettingsForm: FormGroup;
   expenseOptions: { label: string, value: string }[];
-  categoryOptions: { label: string, value: string }[];
   workspaceId: number;
   generalSettings: any;
   mappingSettings: any;
-  employeeFieldMapping: any;
   reimburExpenseFieldMapping: any;
-  categoryFieldMapping: any;
   projectFieldMapping: any;
   costCenterFieldMapping: any;
 
   constructor(private formBuilder: FormBuilder, private settingsService: SettingsService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) { }
 
-  getExpenseOptions(employeeMappedTo) {
+  getEmployee(reimburExpenseMappedTo) {
     return {
-      EMPLOYEE: [
+      EXPENSE_REPORT: [
         {
-          label: 'Expense Report',
-          value: 'EXPENSE_REPORT'
+          value: 'EMPLOYEE'
         }
       ],
-      VENDOR: [
+      BILL: [
         {
-          label: 'Bill',
-          value: 'BILL'
+          value: 'VENDOR'
         },
       ]
-    }[employeeMappedTo];
+    }[reimburExpenseMappedTo];
   }
 
-  getCategoryOptions(employeeMappedTo) {
+  getCategory(reimburExpenseMappedTo) {
     return {
-      EMPLOYEE: [
+      EXPENSE_REPORT: [
         {
-          label: 'Expense Types',
           value: 'EXPENSE_TYPE'
         }
       ],
-      VENDOR: [
+      BILL: [
         {
-          label: 'Gl Account Number',
           value: 'ACCOUNT'
         }
       ]
-    }[employeeMappedTo];
+    }[reimburExpenseMappedTo];
   }
 
   configurationProjectCostCenterValidator: ValidatorFn = (fg: FormGroup) => {
@@ -84,19 +77,9 @@ export class ConfigurationComponent implements OnInit {
       that.generalSettings = responses[0];
       that.mappingSettings = responses[1].results;
 
-      const employeeFieldMapping = that.mappingSettings.filter(
-        setting => (setting.source_field === 'EMPLOYEE') &&
-          (setting.destination_field === 'EMPLOYEE' || setting.destination_field === 'VENDOR')
-      )[0];
-
       const reimburExpenseFieldMapping = that.mappingSettings.filter(
         setting => (setting.source_field === 'EXPENSE_REPORT') &&
           (setting.destination_field === 'EXPENSE_REPORT' || setting.destination_field === 'BILL')
-      )[0];
-
-      const categoryFieldMapping = that.mappingSettings.filter(
-        setting => (setting.source_field === 'CATEGORY') && 
-        (setting.destination_field === 'EXPENSE_TYPE' || setting.destination_field === 'ACCOUNT')
       )[0];
 
       const projectFieldMapping = that.mappingSettings.filter(
@@ -107,40 +90,28 @@ export class ConfigurationComponent implements OnInit {
         settings => settings.source_field === 'COST_CENTER'
       )[0];
 
-      that.employeeFieldMapping = employeeFieldMapping;
-      that.reimburExpenseFieldMapping = reimburExpenseFieldMapping;
-      that.categoryFieldMapping = categoryFieldMapping;
+      that.reimburExpenseFieldMapping = reimburExpenseFieldMapping ? reimburExpenseFieldMapping: {};
       that.projectFieldMapping = projectFieldMapping ? projectFieldMapping : {};
       that.costCenterFieldMapping = costCenterFieldMapping ? costCenterFieldMapping : {};
 
-      that.expenseOptions = that.getExpenseOptions(that.employeeFieldMapping.destination_field);
-      that.categoryOptions = that.getCategoryOptions(that.employeeFieldMapping.destination_field);
+      that.expenseOptions = [{
+        label: 'Expense Report',
+        value: 'EXPENSE_REPORT'
+      },
+      {
+        label: 'Bill',
+        value: 'BILL'
+      }];
 
       that.generalSettingsForm = that.formBuilder.group({
-        employees: [that.employeeFieldMapping ? that.employeeFieldMapping.destination_field : ''],
         reimburExpense: [that.reimburExpenseFieldMapping ? that.reimburExpenseFieldMapping.destination_field : ''],
-        category: [that.categoryFieldMapping ? that.categoryFieldMapping.destination_field : ''],
         projects: [that.projectFieldMapping ? that.projectFieldMapping.destination_field : ''],
         costCenters: [that.costCenterFieldMapping ? that.costCenterFieldMapping.destination_field : '']
       }, {
         validators: [that.configurationProjectCostCenterValidator]
       });
 
-      if (that.generalSettings.employee_field_mapping) {
-        that.expenseOptions = [        {
-          label: 'Expense Report',
-          value: 'EXPENSE_REPORT'
-        },
-        {
-          label: 'Bill',
-          value: 'BILL'
-        }
-        ];
-      }
-
-      that.generalSettingsForm.controls.employees.disable();
       that.generalSettingsForm.controls.reimburExpense.disable();
-      that.generalSettingsForm.controls.category.disable()
 
       if (projectFieldMapping) {
         that.generalSettingsForm.controls.projects.disable();
@@ -156,21 +127,21 @@ export class ConfigurationComponent implements OnInit {
       that.mappingSettings = {};
       that.isLoading = false;
       that.generalSettingsForm = that.formBuilder.group({
-        employees: ['', Validators.required],
         reimburExpense: ['', Validators.required],
-        category: ['', Validators.required],
         projects: [null],
         costCenters: [null],
       }, {
         validators: [that.configurationProjectCostCenterValidator]
       });
 
-      that.generalSettingsForm.controls.employees.valueChanges.subscribe((employeeMappedTo) => {
-        that.expenseOptions = that.getExpenseOptions(employeeMappedTo);
-        that.categoryOptions = that.getCategoryOptions(employeeMappedTo);
-        that.generalSettingsForm.controls.reimburExpense.reset();
-        that.generalSettingsForm.controls.category.reset()
-      });
+      that.expenseOptions = [{
+        label: 'Expense Report',
+        value: 'EXPENSE_REPORT'
+      },
+      {
+        label: 'Bill',
+        value: 'BILL'
+      }];
     });
   }
 
@@ -178,8 +149,8 @@ export class ConfigurationComponent implements OnInit {
     const that = this;
     if (that.generalSettingsForm.valid) {
       const reimbursableExpensesObject = that.generalSettingsForm.value.reimburExpense || (that.reimburExpenseFieldMapping && that.reimburExpenseFieldMapping.destination_field);
-      const categoryMappingObject = that.generalSettingsForm.value.category || (that.categoryFieldMapping && that.categoryFieldMapping.destination_field);
-      const employeeMappingsObject = that.generalSettingsForm.value.employees || (that.employeeFieldMapping && that.employeeFieldMapping.destination_field);
+      const categoryMappingObject = that.getCategory(reimbursableExpensesObject)[0].value;
+      const employeeMappingsObject = that.getEmployee(reimbursableExpensesObject)[0].value;
       const projectMappingObject = that.generalSettingsForm.value.projects || (that.projectFieldMapping && that.projectFieldMapping.destination_field);
       const costCenterMappingObject = that.generalSettingsForm.value.costCenters || (that.costCenterFieldMapping && that.costCenterFieldMapping.destination_field);
 
