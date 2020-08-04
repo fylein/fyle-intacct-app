@@ -4,13 +4,13 @@
 <div class="configurations" *ngIf="!isLoading">
   <div class="page-header configurations--header">
     <div class="page-header--name mat-h2">
-      Connect Sage Intacct
+      Connect to Sage Intacct
     </div>
   </div>
   <div class="page-info">
     <div fxLayout="row" fxLayoutAlign="start center" class="page-info--description">
       <div>
-        Please connect your Sage Intacct account to export your Fyle data.
+        Connect to your Sage Intacct account to start exporting expense data from Fyle.
       </div>
       <a href="" class="read-more-link" fxLayout="row" fxLayoutAlign="start center">Read more<mat-icon class="read-more-link--icon">open_in_new</mat-icon></a>
     </div>
@@ -24,7 +24,7 @@
         </strong>
       </div>
       <mat-form-field class="mappings-dialog--form-element" appearance="outline">
-        <input required type="text" formControlName="userID" placeholder="User ID" matInput>
+        <input required type="text" formControlName="userID" placeholder="Enter user ID" matInput>
       </mat-form-field>
 
       <div class="mat-body-strong">
@@ -33,7 +33,7 @@
         </strong>
       </div>
       <mat-form-field class="mappings-dialog--form-element" appearance="outline">
-        <input required type="text" formControlName="companyID" placeholder="Company ID" matInput>
+        <input required type="text" formControlName="companyID" placeholder="Enter company ID" matInput>
       </mat-form-field>
 
       <div class="mat-body-strong">
@@ -42,7 +42,7 @@
         </strong>
       </div>
       <mat-form-field class="mappings-dialog--form-element" appearance="outline">
-        <input required type="text" formControlName="companyName" placeholder="Company Name" matInput>
+        <input required type="text" formControlName="companyName" placeholder="Enter company name" matInput>
       </mat-form-field>
 
       <div class="mat-body-strong">
@@ -51,7 +51,7 @@
         </strong>
       </div>
       <mat-form-field class="mappings-dialog--form-element" appearance="outline">
-        <input required type="password" formControlName="userPassword" placeholder="User Password" matInput>
+        <input required type="password" formControlName="userPassword" placeholder="Enter user password" matInput>
       </mat-form-field>
 
       <button class="configurations--save-btn" mat-flat-button color="primary" (click)="save()" type="submit">
