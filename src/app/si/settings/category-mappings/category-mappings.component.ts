@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { CategoryMappingsDialogComponent } from './category-mappings-dialog/category-mappings-dialog.component';
 import { StorageService } from 'src/app/core/services/storage.service';
+import { SettingsService } from 'src/app/core/services/settings.service';
+import { forkJoin, from } from 'rxjs';
 
 @Component({
   selector: 'app-category-mappings',
@@ -21,7 +23,8 @@ export class CategoryMappingsComponent implements OnInit {
     private route: ActivatedRoute,
     public dialog: MatDialog,
     private router: Router,
-    private storageService: StorageService) { }
+    private storageService: StorageService,
+    private settingsService: SettingsService) { }
 
   open() {
     const that = this;
@@ -35,27 +38,65 @@ export class CategoryMappingsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       const onboarded = that.storageService.get('onboarded');
       if (onboarded === true) {
-        that.getCategoryMappings();
+        that.reset();
       } else {
         that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
       }
     });
   }
 
-
-  getCategoryMappings() {
+  createCategoryMappingsRows() {
     const that = this;
-    that.isLoading = true;
-    that.mappingsService.getMappings('CATEGORY').subscribe(categoryMappings => {
-      that.categoryMappings = categoryMappings.results;
-      that.isLoading = false;
+    const categoryMappings = that.categoryMappings.filter(mapping => mapping.destination_type !== 'CCC_ACCOUNT');
+    const mappings = [];
+
+    categoryMappings.forEach(categoryMapping => {
+      mappings.push({
+        fyle_value: categoryMapping.source.value,
+        sage_intacct_value: categoryMapping.destination.value,
+        ccc_account: that.getCCCAccount(that.categoryMappings, categoryMapping)
+      });
     });
+
+    that.categoryMappings = mappings;
   }
+
+  getCCCAccount(categoryMappings, categoryMapping) {
+    const categMapping = categoryMappings.filter(mapping => mapping.destination_type === 'CCC_ACCOUNT' && mapping.source.value === categoryMapping.source.value);
+
+    return categMapping.length ? categMapping[0].destination.value : null;
+  }
+
+  reset() {
+    const that = this;
+
+    const getCategoryMappings = that.mappingsService.getMappings('CATEGORY').toPromise().then(categoryMappings => {
+      that.categoryMappings = categoryMappings.results;
+      that.createCategoryMappingsRows();
+    });
+
+    const showOrHideCCCField = that.settingsService.getCombinedSettings(that.workspaceId).toPromise().then(settings => {
+      if (settings && settings.corporate_credit_card_expenses_object && settings.reimbursable_expenses_object !== settings.corporate_credit_card_expenses_object) {
+        that.columnsToDisplay = ['category', 'sageIntacct', 'ccc'];
+      }
+    });
+
+    that.isLoading = true;
+    forkJoin([
+      from(getCategoryMappings),
+      from(showOrHideCCCField),
+    ]).subscribe(() => {
+      that.isLoading = false;
+    }, (err) => {
+      that.isLoading = false;
+    })
+  }
+
 
   ngOnInit() {
     const that = this;
     that.workspaceId = that.route.parent.snapshot.params.workspace_id;
-    that.getCategoryMappings();
+    that.reset();
   }
 
 }

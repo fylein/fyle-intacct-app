@@ -12,6 +12,7 @@ export class MappingsService {
   // TODO: Map models to each of these and the methods below
   fyleCategories: Observable<any[]>;
   sageIntacctAccounts: Observable<any[]>;
+  sageIntacctChargeCardAccounts: Observable<any[]>;
   fyleEmployees: Observable<any[]>;
   sageIntacctVendors: Observable<any[]>;
   sageIntacctEmployees: Observable<any[]>;
@@ -84,13 +85,11 @@ export class MappingsService {
   postSageIntacctVendors() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    if (!this.sageIntacctVendors) {
-      this.sageIntacctVendors = this.apiService.post(`/workspaces/${workspaceId}/sage_intacct/vendors/`, {}).pipe(
-        map(data => data),
-        publishReplay(1),
-        refCount()
-      );
-    }
+    this.sageIntacctVendors = this.apiService.post(`/workspaces/${workspaceId}/sage_intacct/vendors/`, {}).pipe(
+      map(data => data),
+      publishReplay(1),
+      refCount()
+    );
     return this.sageIntacctVendors;
   }
 
@@ -106,7 +105,7 @@ export class MappingsService {
     }
     return this.sageIntacctEmployees;
   }
-  
+
   postSageIntacctExpensetypes() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
@@ -150,16 +149,30 @@ export class MappingsService {
   postSageIntacctAccounts() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    if (!this.sageIntacctAccounts) {
-      this.sageIntacctAccounts = this.apiService.post(
-        `/workspaces/${workspaceId}/sage_intacct/accounts/`, {}
+    this.sageIntacctAccounts = this.apiService.post(
+      `/workspaces/${workspaceId}/sage_intacct/accounts/`, {}
+    ).pipe(
+      map(data => data),
+      publishReplay(1),
+      refCount()
+    );
+
+    return this.sageIntacctAccounts;
+  }
+
+  postSageIntacctChargeCardAccounts() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    if (!this.sageIntacctChargeCardAccounts) {
+      this.sageIntacctChargeCardAccounts = this.apiService.post(
+        `/workspaces/${workspaceId}/sage_intacct/charge_card_accounts/`, {}
       ).pipe(
         map(data => data),
         publishReplay(1),
         refCount()
       );
     }
-    return this.sageIntacctAccounts;
+    return this.sageIntacctChargeCardAccounts;
   }
 
   postSageIntacctDepartments() {
@@ -191,6 +204,12 @@ export class MappingsService {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/vendors/`, {});
+  }
+
+  getSageIntacctChargeCard() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/charge_card_accounts/`, {});
   }
 
   getSageIntacctEmployees() {

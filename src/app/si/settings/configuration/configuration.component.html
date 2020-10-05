@@ -30,6 +30,20 @@
       </mat-form-field>
 
       <div class="configurations--label">
+        Map Corporate Credit Card Expenses from Fyle to
+      </div>
+      <mat-form-field floatLabel="always" appearance="outline">
+        <mat-select placeholder="Choose Sage Intacct equivalent of Corporate Credit Card Expenses" formControlName="cccExpense">
+          <mat-option>
+            None
+          </mat-option>
+          <mat-option *ngFor="let option of cccExpenseOptions" [value]="option.value">
+            {{option.label}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="configurations--label">
         Map Projects from Fyle to
       </div>
       <mat-form-field floatLabel="always" appearance="outline">

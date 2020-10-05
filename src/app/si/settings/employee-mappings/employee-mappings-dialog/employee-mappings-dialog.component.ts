@@ -31,22 +31,24 @@ export class EmployeeMappingsDialogComponent implements OnInit {
   // TODO: replace any with relevant models
   fyleEmployees: any[];
   sageIntacctEmployees: any[];
-  cccObjects: any[];
+  creditCardValue: any[];
   sageIntacctVendors: any[];
   generalSettings: any;
   employeeOptions: any[];
   sageIntacctEmployeeOptions: any[];
   cccOptions: any[];
   sageIntacctVendorOptions: any[];
+  generalMappings: any;
+  defaultCCCObj: any;
 
   matcher = new MappingErrorStateMatcher();
 
   constructor(private formBuilder: FormBuilder,
-              public dialogRef: MatDialogRef<EmployeeMappingsDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any,
-              private mappingsService: MappingsService,
-              private snackBar: MatSnackBar,
-              private settingsService: SettingsService) { }
+    public dialogRef: MatDialogRef<EmployeeMappingsDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private mappingsService: MappingsService,
+    private snackBar: MatSnackBar,
+    private settingsService: SettingsService) { }
 
 
   mappingDisplay(mappingObject) {
@@ -55,9 +57,11 @@ export class EmployeeMappingsDialogComponent implements OnInit {
 
   submit() {
     const that = this;
+
     const fyleEmployee = that.form.value.fyleEmployee;
     const sageIntacctVendor = that.generalSettings.employee_field_mapping === 'VENDOR' ? that.form.value.sageIntacctVendor : '';
     const sageIntacctEmployee = that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.form.value.sageIntacctEmployee : '';
+    const creditCardAccount = that.form.value.creditCardAccount ? that.form.value.creditCardAccount.value : that.defaultCCCObj;
 
     if (that.form.valid && (sageIntacctVendor || sageIntacctEmployee)) {
       const employeeMapping = [
@@ -68,6 +72,17 @@ export class EmployeeMappingsDialogComponent implements OnInit {
           destination_value: that.generalSettings.employee_field_mapping === 'VENDOR' ? sageIntacctVendor.value : sageIntacctEmployee.value
         })
       ];
+
+      if (creditCardAccount || (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'BILL')) {
+        employeeMapping.push(
+          that.mappingsService.postMappings({
+            source_type: 'EMPLOYEE',
+            destination_type: 'CHARGE_CARD_ACCOUNT',
+            source_value: fyleEmployee.value,
+            destination_value: creditCardAccount
+          })
+        );
+      }
 
       that.isLoading = true;
       forkJoin(employeeMapping).subscribe(responses => {
@@ -86,7 +101,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
   }
 
   forbiddenSelectionValidator(options: any[]): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} | null => {
+    return (control: AbstractControl): { [key: string]: any } | null => {
       const forbidden = !options.some((option) => {
         return control.value.id && option.id === control.value.id;
       });
@@ -130,42 +145,80 @@ export class EmployeeMappingsDialogComponent implements OnInit {
     });
   }
 
+  setupCCCAutocompleteWatcher() {
+    const that = this;
+
+    that.form.controls.creditCardAccount.valueChanges.pipe(debounceTime(300)).subscribe((newValue) => {
+      if (typeof (newValue) === 'string') {
+        that.cccOptions = that.creditCardValue
+          .filter(cccObject => new RegExp(newValue.toLowerCase(), 'g').test(cccObject.value.toLowerCase()));
+      }
+    });
+  }
+
   setupAutocompleteWatchers() {
     const that = this;
     that.setupFyleEmployeeAutocompleteWatcher();
     that.setupSageIntacctVendorAutocompleteWatcher();
     that.setupSageIntacctEmployeesWatcher();
+    that.setupCCCAutocompleteWatcher();
+  }
+
+  getDefaultCCCObj() {
+    const that = this;
+    if (that.generalSettings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
+      that.defaultCCCObj = that.creditCardValue.filter(cccObj => cccObj.value === that.generalMappings.default_charge_card_name)[0];
+    } else if (that.generalSettings.corporate_credit_card_expenses_object === 'BILL') {
+      that.defaultCCCObj = that.creditCardValue.filter(cccObj => cccObj.value === that.generalMappings.default_ccc_vendor_name)[0];
+    }
   }
 
   reset() {
     const that = this;
-    // TODO: remove promises and do with rxjs observables
+
     const getFyleEmployees = that.mappingsService.getFyleEmployees().toPromise().then((fyleEmployees) => {
       that.fyleEmployees = fyleEmployees;
     });
-    let getSageIntacctEquivalent;
-    if (that.generalSettings.employee_field_mapping === 'EMPLOYEE') {
-      // TODO: remove promises and do with rxjs observables
-      getSageIntacctEquivalent = that.mappingsService.getSageIntacctEmployees().toPromise().then((sageIntacctEmployees) => {
-        that.sageIntacctEmployees = sageIntacctEmployees;
-      });
-    } else if (that.generalSettings.employee_field_mapping === 'VENDOR') {
-      // TODO: remove promises and do with rxjs observables
-      getSageIntacctEquivalent = that.mappingsService.getSageIntacctVendors().toPromise().then((sageIntacctVendors) => {
-        that.sageIntacctVendors = sageIntacctVendors;
-      });
-    }
+
+    const settings = that.generalSettings;
+
+    const getSageIntacctEmployee = that.mappingsService.getSageIntacctEmployees().toPromise().then((sageIntacctEmployees) => {
+      that.sageIntacctEmployees = sageIntacctEmployees;
+    });
+
+    const getSageIntacctVendor = that.mappingsService.getSageIntacctVendors().toPromise().then((sageIntacctVendors) => {
+      that.sageIntacctVendors = sageIntacctVendors;
+      if (settings.corporate_credit_card_expenses_object === 'BILL') {
+        that.creditCardValue = sageIntacctVendors;
+      }
+    });
+
+    const getSageIntacctChargeCard = that.mappingsService.getSageIntacctChargeCard().toPromise().then((getSageIntacctChargeCards) => {
+      if (settings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
+        that.creditCardValue = getSageIntacctChargeCards;
+      }
+    });
+
+    const getGeneralMappings = that.mappingsService.getGeneralMappings().toPromise().then((generalMappings) => {
+      that.generalMappings = generalMappings;
+    });
 
     that.isLoading = true;
     forkJoin([
       from(getFyleEmployees),
-      from(getSageIntacctEquivalent)
+      from(getSageIntacctEmployee),
+      from(getSageIntacctVendor),
+      from(getSageIntacctChargeCard),
+      from(getGeneralMappings)
     ]).subscribe((res) => {
       that.isLoading = false;
+
+      that.getDefaultCCCObj();
       that.form = that.formBuilder.group({
         fyleEmployee: ['', Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleEmployees)])],
         sageIntacctVendor: ['', that.generalSettings.employee_field_mapping === 'VENDOR' ? that.forbiddenSelectionValidator(that.sageIntacctVendors) : null],
-        sageIntacctEmployee: ['', that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.forbiddenSelectionValidator(that.sageIntacctEmployees) : null]
+        sageIntacctEmployee: ['', that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.forbiddenSelectionValidator(that.sageIntacctEmployees) : null],
+        creditCardAccount: [that.defaultCCCObj || '', (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'BILL') ? that.forbiddenSelectionValidator(that.creditCardValue) : null]
       });
       that.setupAutocompleteWatchers();
     });

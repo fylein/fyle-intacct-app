@@ -16,6 +16,7 @@ export class ConfigurationComponent implements OnInit {
   isSaveDisabled: boolean;
   generalSettingsForm: FormGroup;
   expenseOptions: { label: string, value: string }[];
+  cccExpenseOptions: { label: string, value: string }[];
   workspaceId: number;
   generalSettings: any;
   mappingSettings: any;
@@ -90,7 +91,7 @@ export class ConfigurationComponent implements OnInit {
         settings => settings.source_field === 'COST_CENTER'
       )[0];
 
-      that.reimburExpenseFieldMapping = reimburExpenseFieldMapping ? reimburExpenseFieldMapping: {};
+      that.reimburExpenseFieldMapping = reimburExpenseFieldMapping ? reimburExpenseFieldMapping : {};
       that.projectFieldMapping = projectFieldMapping ? projectFieldMapping : {};
       that.costCenterFieldMapping = costCenterFieldMapping ? costCenterFieldMapping : {};
 
@@ -103,8 +104,18 @@ export class ConfigurationComponent implements OnInit {
         value: 'BILL'
       }];
 
+      that.cccExpenseOptions = [{
+        label: 'Charge Card Transaction',
+        value: 'CHARGE_CARD_TRANSACTION'
+      },
+      {
+        label: 'Bill',
+        value: 'BILL'
+      }];
+
       that.generalSettingsForm = that.formBuilder.group({
         reimburExpense: [that.reimburExpenseFieldMapping ? that.reimburExpenseFieldMapping.destination_field : ''],
+        cccExpense: [that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : ''],
         projects: [that.projectFieldMapping ? that.projectFieldMapping.destination_field : ''],
         costCenters: [that.costCenterFieldMapping ? that.costCenterFieldMapping.destination_field : '']
       }, {
@@ -112,6 +123,10 @@ export class ConfigurationComponent implements OnInit {
       });
 
       that.generalSettingsForm.controls.reimburExpense.disable();
+
+      if (that.generalSettings.corporate_credit_card_expenses_object) {
+        that.generalSettingsForm.controls.cccExpense.disable();
+      }
 
       if (projectFieldMapping) {
         that.generalSettingsForm.controls.projects.disable();
@@ -128,6 +143,7 @@ export class ConfigurationComponent implements OnInit {
       that.isLoading = false;
       that.generalSettingsForm = that.formBuilder.group({
         reimburExpense: ['', Validators.required],
+        cccExpense: [null],
         projects: [null],
         costCenters: [null],
       }, {
@@ -142,6 +158,15 @@ export class ConfigurationComponent implements OnInit {
         label: 'Bill',
         value: 'BILL'
       }];
+
+      that.cccExpenseOptions = [{
+        label: 'Charge Card Transaction',
+        value: 'CHARGE_CARD_TRANSACTION'
+      },
+      {
+        label: 'Bill',
+        value: 'BILL'
+      }];
     });
   }
 
@@ -149,6 +174,7 @@ export class ConfigurationComponent implements OnInit {
     const that = this;
     if (that.generalSettingsForm.valid) {
       const reimbursableExpensesObject = that.generalSettingsForm.value.reimburExpense || (that.reimburExpenseFieldMapping && that.reimburExpenseFieldMapping.destination_field);
+      const cccExpensesObject = that.generalSettingsForm.value.cccExpense || that.generalSettings.corporate_credit_card_expenses_object || null;
       const categoryMappingObject = that.getCategory(reimbursableExpensesObject)[0].value;
       const employeeMappingsObject = that.getEmployee(reimbursableExpensesObject)[0].value;
       const projectMappingObject = that.generalSettingsForm.value.projects || (that.projectFieldMapping && that.projectFieldMapping.destination_field);
@@ -169,6 +195,18 @@ export class ConfigurationComponent implements OnInit {
         destination_field: categoryMappingObject
       });
 
+      if (cccExpensesObject) {
+        mappingsSettingsPayload.push({
+          source_field: 'EMPLOYEE',
+          destination_field: 'CHARGE_CARD_ACCOUNT'
+        });
+
+        mappingsSettingsPayload.push({
+          source_field: 'CATEGORY',
+          destination_field: 'CCC_ACCOUNT'
+        });
+      }
+
       if (projectMappingObject) {
         mappingsSettingsPayload.push({
           source_field: 'PROJECT',
@@ -188,7 +226,7 @@ export class ConfigurationComponent implements OnInit {
       forkJoin(
         [
           that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject)
+          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject)
         ]
       ).subscribe(responses => {
         that.isLoading = true;
