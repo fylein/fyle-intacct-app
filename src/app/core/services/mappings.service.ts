@@ -85,12 +85,7 @@ export class MappingsService {
   postSageIntacctVendors() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    this.sageIntacctVendors = this.apiService.post(`/workspaces/${workspaceId}/sage_intacct/vendors/`, {}).pipe(
-      map(data => data),
-      publishReplay(1),
-      refCount()
-    );
-    return this.sageIntacctVendors;
+    return this.apiService.post(`/workspaces/${workspaceId}/sage_intacct/vendors/`, {});
   }
 
   postSageIntacctEmployees() {
@@ -149,15 +144,7 @@ export class MappingsService {
   postSageIntacctAccounts() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    this.sageIntacctAccounts = this.apiService.post(
-      `/workspaces/${workspaceId}/sage_intacct/accounts/`, {}
-    ).pipe(
-      map(data => data),
-      publishReplay(1),
-      refCount()
-    );
-
-    return this.sageIntacctAccounts;
+    return this.apiService.post(`/workspaces/${workspaceId}/sage_intacct/accounts/`, {});
   }
 
   postSageIntacctChargeCardAccounts() {

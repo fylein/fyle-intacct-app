@@ -151,14 +151,14 @@ export class DashboardComponent implements OnInit {
   updateDimensionTables() {
     const that = this;
     concat(
+      this.mappingsService.postSageIntacctLocations(),
+      this.mappingsService.postSageIntacctDepartments(),
+      this.mappingsService.postSageIntacctProjects(),
+      this.mappingsService.postSageIntacctChargeCardAccounts(),
+      this.mappingsService.postSageIntacctVendors(),
       this.mappingsService.postSageIntacctAccounts(),
       this.mappingsService.postSageIntacctEmployees(),
-      this.mappingsService.postSageIntacctVendors(),
-      this.mappingsService.postSageIntacctChargeCardAccounts(),
-      this.mappingsService.postSageIntacctDepartments(),
       this.mappingsService.postSageIntacctExpensetypes(),
-      this.mappingsService.postSageIntacctLocations(),
-      this.mappingsService.postSageIntacctProjects(),
       this.mappingsService.postFyleEmployees(),
       this.mappingsService.postFyleCategories(),
       this.mappingsService.postFyleProjects(),
