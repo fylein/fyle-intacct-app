@@ -17,6 +17,7 @@ enum onboardingStates {
   fyleConnected,
   sageIntacctConnected,
   configurationsDone,
+  generalMappingsDone,
   employeeMappingsDone,
   categoryMappingsDone,
   isOnboarded
@@ -86,6 +87,15 @@ export class DashboardComponent implements OnInit {
       ]
     ).toPromise().then((res) => {
       that.currentState = onboardingStates.configurationsDone;
+      return res;
+    });
+  }
+
+  getGeneralMappings() {
+    const that = this;
+    // TODO: remove promises and do with rxjs observables
+    return that.mappingsService.getGeneralMappings().toPromise().then((res) => {
+      that.currentState = onboardingStates.generalMappingsDone;
       return res;
     });
   }
@@ -185,6 +195,8 @@ export class DashboardComponent implements OnInit {
         }).then(() => {
           that.updateDimensionTables();
           return that.getConfigurations();
+        }).then(() => {
+          return that.getGeneralMappings();
         }).then(() => {
           return that.getEmployeeMappings();
         }).then(() => {

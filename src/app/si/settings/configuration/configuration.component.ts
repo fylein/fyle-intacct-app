@@ -4,6 +4,7 @@ import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { WindowReferenceService } from 'src/app/core/services/window.service';
 
 @Component({
   selector: 'app-configuration',
@@ -23,8 +24,16 @@ export class ConfigurationComponent implements OnInit {
   reimburExpenseFieldMapping: any;
   projectFieldMapping: any;
   costCenterFieldMapping: any;
+  windowReference: Window
 
-  constructor(private formBuilder: FormBuilder, private settingsService: SettingsService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar) { }
+  constructor(private formBuilder: FormBuilder,
+    private settingsService: SettingsService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private snackBar: MatSnackBar,
+    private windowReferenceService: WindowReferenceService) {
+      this.windowReference = this.windowReferenceService.nativeWindow;
+    }
 
   getEmployee(reimburExpenseMappedTo) {
     return {
@@ -231,7 +240,10 @@ export class ConfigurationComponent implements OnInit {
       ).subscribe(responses => {
         that.isLoading = true;
         that.snackBar.open('Configuration saved successfully');
-        that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
+        that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`).then(() => {
+          that.windowReference.location.reload();
+        });
+        that.isLoading = false;
       });
     } else {
       that.snackBar.open('Form has invalid fields');
