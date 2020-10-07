@@ -205,6 +205,8 @@ export class CategoryMappingsDialogComponent implements OnInit {
     const that = this;
     if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.reimbursable_expenses_object === that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'BILL') {
       return false;
+    } else if (!that.generalSettings.corporate_credit_card_expenses_object) {
+      return false;      
     }
     return true;
   }
