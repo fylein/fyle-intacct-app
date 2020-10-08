@@ -61,7 +61,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
     const fyleEmployee = that.form.value.fyleEmployee;
     const sageIntacctVendor = that.generalSettings.employee_field_mapping === 'VENDOR' ? that.form.value.sageIntacctVendor : '';
     const sageIntacctEmployee = that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.form.value.sageIntacctEmployee : '';
-    const creditCardAccount = that.form.value.creditCardAccount ? that.form.value.creditCardAccount.value : that.defaultCCCObj;
+    const creditCardAccount = that.form.value.creditCardAccount ? that.form.value.creditCardAccount.value : null;
 
     if (that.form.valid && (sageIntacctVendor || sageIntacctEmployee)) {
       const employeeMapping = [
@@ -73,7 +73,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
         })
       ];
 
-      if (creditCardAccount || (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'BILL')) {
+      if (creditCardAccount) {
         employeeMapping.push(
           that.mappingsService.postMappings({
             source_type: 'EMPLOYEE',
@@ -168,8 +168,6 @@ export class EmployeeMappingsDialogComponent implements OnInit {
     const that = this;
     if (that.generalSettings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
       that.defaultCCCObj = that.creditCardValue.filter(cccObj => cccObj.value === that.generalMappings.default_charge_card_name)[0];
-    } else if (that.generalSettings.corporate_credit_card_expenses_object === 'BILL') {
-      that.defaultCCCObj = that.creditCardValue.filter(cccObj => cccObj.value === that.generalMappings.default_ccc_vendor_name)[0];
     }
   }
 
@@ -218,7 +216,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
         fyleEmployee: ['', Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleEmployees)])],
         sageIntacctVendor: ['', that.generalSettings.employee_field_mapping === 'VENDOR' ? that.forbiddenSelectionValidator(that.sageIntacctVendors) : null],
         sageIntacctEmployee: ['', that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.forbiddenSelectionValidator(that.sageIntacctEmployees) : null],
-        creditCardAccount: [that.defaultCCCObj || '', (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'BILL') ? that.forbiddenSelectionValidator(that.creditCardValue) : null]
+        creditCardAccount: [that.defaultCCCObj || '', (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'BILLCHARGE_CARD_TRANSACTION') ? that.forbiddenSelectionValidator(that.creditCardValue) : null]
       });
       that.setupAutocompleteWatchers();
     });

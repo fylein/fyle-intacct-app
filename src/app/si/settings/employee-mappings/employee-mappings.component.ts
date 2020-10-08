@@ -86,7 +86,7 @@ export class EmployeeMappingsComponent implements OnInit {
       that.isLoading = false;
     });
 
-    if (that.generalSettings.corporate_credit_card_expenses_object) {
+    if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
       that.columnsToDisplay.push('ccc');
     }
   }

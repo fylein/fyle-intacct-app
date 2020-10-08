@@ -194,7 +194,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
         fyleCategory: ['', Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleCategories)])],
         sageIntacctAccount: ['', that.generalSettings.category_field_mapping === 'ACCOUNT' ? that.forbiddenSelectionValidator(that.sageIntacctAccounts) : null],
         sageIntacctExpenseTypes: ['', that.generalSettings.category_field_mapping === 'EXPENSE_TYPE' ? that.forbiddenSelectionValidator(that.sageIntacctExpenseTypes) : null],
-        sageIntacctCCCAccount: ['', (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT') ? that.forbiddenSelectionValidator(that.sageIntacctCCCAccounts) : null],
+        sageIntacctCCCAccount: ['', that.showSeparateCCCField() ? that.forbiddenSelectionValidator(that.sageIntacctCCCAccounts) : null],
       });
 
       that.setupAutocompleteWatchers();
@@ -203,12 +203,12 @@ export class CategoryMappingsDialogComponent implements OnInit {
 
   showSeparateCCCField() {
     const that = this;
-    if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.reimbursable_expenses_object === that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'BILL') {
-      return false;
-    } else if (!that.generalSettings.corporate_credit_card_expenses_object) {
-      return false;      
+    const settings = that.generalSettings;
+    if (settings.corporate_credit_card_expenses_object && settings.reimbursable_expenses_object === 'EXPENSE_REPORT') {
+      return true;
     }
-    return true;
+
+    return false;
   }
 
   ngOnInit() {

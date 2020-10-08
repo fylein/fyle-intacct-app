@@ -76,7 +76,7 @@ export class CategoryMappingsComponent implements OnInit {
     });
 
     const showOrHideCCCField = that.settingsService.getCombinedSettings(that.workspaceId).toPromise().then(settings => {
-      if (settings && settings.corporate_credit_card_expenses_object && settings.reimbursable_expenses_object !== settings.corporate_credit_card_expenses_object) {
+      if (settings.corporate_credit_card_expenses_object && settings.reimbursable_expenses_object === 'EXPENSE_REPORT') {
         that.columnsToDisplay = ['category', 'sageIntacct', 'ccc'];
       }
     });
