@@ -207,7 +207,7 @@ export class ConfigurationComponent implements OnInit {
       if (cccExpensesObject) {
         mappingsSettingsPayload.push({
           source_field: 'EMPLOYEE',
-          destination_field: 'CHARGE_CARD_ACCOUNT'
+          destination_field: 'CHARGE_CARD_NUMBER'
         });
 
         mappingsSettingsPayload.push({

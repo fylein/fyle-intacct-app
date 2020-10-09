@@ -77,7 +77,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
         employeeMapping.push(
           that.mappingsService.postMappings({
             source_type: 'EMPLOYEE',
-            destination_type: 'CHARGE_CARD_ACCOUNT',
+            destination_type: 'CHARGE_CARD_NUMBER',
             source_value: fyleEmployee.value,
             destination_value: creditCardAccount
           })
@@ -216,7 +216,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
         fyleEmployee: ['', Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleEmployees)])],
         sageIntacctVendor: ['', that.generalSettings.employee_field_mapping === 'VENDOR' ? that.forbiddenSelectionValidator(that.sageIntacctVendors) : null],
         sageIntacctEmployee: ['', that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.forbiddenSelectionValidator(that.sageIntacctEmployees) : null],
-        creditCardAccount: [that.defaultCCCObj || '', (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'BILLCHARGE_CARD_TRANSACTION') ? that.forbiddenSelectionValidator(that.creditCardValue) : null]
+        creditCardAccount: [that.defaultCCCObj || '', (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') ? that.forbiddenSelectionValidator(that.creditCardValue) : null]
       });
       that.setupAutocompleteWatchers();
     });
