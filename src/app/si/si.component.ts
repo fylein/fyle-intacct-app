@@ -56,8 +56,6 @@ export class SiComponent implements OnInit {
         settings => settings.source_field === 'PROJECT'
       )[0];
 
-      that.generalSettings.employee_field_mapping = employeeFieldMapping.destination_field;
-
       if (projectFieldMapping) {
         that.generalSettings.project_field_mapping = projectFieldMapping.destination_field;
       }

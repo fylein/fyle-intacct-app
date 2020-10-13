@@ -80,9 +80,9 @@ export class CategoryMappingsDialogComponent implements OnInit {
       mappings = [
         that.mappingsService.postMappings({
           source_type: 'CATEGORY',
-          destination_type: that.generalSettings.category_field_mapping,
+          destination_type: that.generalSettings.reimbursable_expenses_object === 'BILL' ? 'ACCOUNT' : 'EXPENSE_TYPE',
           source_value: fyleCategory.value,
-          destination_value: that.generalSettings.category_field_mapping === 'ACCOUNT' ? sageIntacctAccount.value : sageIntacctExpenseTypes.value
+          destination_value: that.generalSettings.reimbursable_expenses_object === 'BILL' ? sageIntacctAccount.value : sageIntacctExpenseTypes.value
         })
       ];
 

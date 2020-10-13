@@ -146,9 +146,6 @@ export class SettingsService {
         setting => setting.source_field === 'COST_CENTER'
       )[0];
 
-      generalSettings.employee_field_mapping = employeeFieldMapping.destination_field;
-      generalSettings.category_field_mapping = categoryFieldMapping.destination_field;
-
       if (projectFieldMapping) {
         generalSettings.project_field_mapping = projectFieldMapping.destination_field;
       }

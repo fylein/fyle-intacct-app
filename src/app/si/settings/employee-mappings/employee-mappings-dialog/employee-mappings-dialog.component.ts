@@ -59,17 +59,17 @@ export class EmployeeMappingsDialogComponent implements OnInit {
     const that = this;
 
     const fyleEmployee = that.form.value.fyleEmployee;
-    const sageIntacctVendor = that.generalSettings.employee_field_mapping === 'VENDOR' ? that.form.value.sageIntacctVendor : '';
-    const sageIntacctEmployee = that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.form.value.sageIntacctEmployee : '';
+    const sageIntacctVendor = that.generalSettings.reimbursable_expenses_object === 'BILL' ? that.form.value.sageIntacctVendor : '';
+    const sageIntacctEmployee = that.generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' ? that.form.value.sageIntacctEmployee : '';
     const creditCardAccount = that.form.value.creditCardAccount ? that.form.value.creditCardAccount.value : null;
 
     if (that.form.valid && (sageIntacctVendor || sageIntacctEmployee)) {
       const employeeMapping = [
         that.mappingsService.postMappings({
           source_type: 'EMPLOYEE',
-          destination_type: that.generalSettings.employee_field_mapping,
+          destination_type: that.generalSettings.reimbursable_expenses_object === 'BILL' ? 'VENDOR' : 'EMPLOYEE',
           source_value: fyleEmployee.value,
-          destination_value: that.generalSettings.employee_field_mapping === 'VENDOR' ? sageIntacctVendor.value : sageIntacctEmployee.value
+          destination_value: that.generalSettings.reimbursable_expenses_object === 'BILL' ? sageIntacctVendor.value : sageIntacctEmployee.value
         })
       ];
 
