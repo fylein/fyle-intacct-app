@@ -64,8 +64,8 @@ export class CategoryMappingsDialogComponent implements OnInit {
     const that = this;
 
     const fyleCategory = that.form.value.fyleCategory;
-    const sageIntacctAccount = that.generalSettings.category_field_mapping === 'ACCOUNT' ? that.form.value.sageIntacctAccount : '';
-    const sageIntacctExpenseTypes = that.generalSettings.category_field_mapping === 'EXPENSE_TYPE' ? that.form.value.sageIntacctExpenseTypes : '';
+    const sageIntacctAccount = that.generalSettings.reimbursable_expenses_object === 'BILL' ? that.form.value.sageIntacctAccount : '';
+    const sageIntacctExpenseTypes = that.generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' ? that.form.value.sageIntacctExpenseTypes : '';
 
     let sageIntacctCCCAccount;
     let mappings;
