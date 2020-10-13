@@ -214,8 +214,8 @@ export class EmployeeMappingsDialogComponent implements OnInit {
       that.getDefaultCCCObj();
       that.form = that.formBuilder.group({
         fyleEmployee: ['', Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleEmployees)])],
-        sageIntacctVendor: ['', that.generalSettings.employee_field_mapping === 'VENDOR' ? that.forbiddenSelectionValidator(that.sageIntacctVendors) : null],
-        sageIntacctEmployee: ['', that.generalSettings.employee_field_mapping === 'EMPLOYEE' ? that.forbiddenSelectionValidator(that.sageIntacctEmployees) : null],
+        sageIntacctVendor: ['', that.generalSettings.reimbursable_expenses_object === 'BILL' ? that.forbiddenSelectionValidator(that.sageIntacctVendors) : null],
+        sageIntacctEmployee: ['', that.generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' ? that.forbiddenSelectionValidator(that.sageIntacctEmployees) : null],
         creditCardAccount: [that.defaultCCCObj || '', (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') ? that.forbiddenSelectionValidator(that.creditCardValue) : null]
       });
       that.setupAutocompleteWatchers();

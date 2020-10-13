@@ -192,7 +192,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
 
       that.form = that.formBuilder.group({
         fyleCategory: ['', Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleCategories)])],
-        sageIntacctAccount: ['', that.generalSettings.reimbursable_expenses_object === 'BILL' || (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') ? that.forbiddenSelectionValidator(that.sageIntacctAccounts) : null],
+        sageIntacctAccount: ['', that.generalSettings.reimbursable_expenses_object === 'BILL' ? that.forbiddenSelectionValidator(that.sageIntacctAccounts) : null],
         sageIntacctExpenseTypes: ['', that.generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' ? that.forbiddenSelectionValidator(that.sageIntacctExpenseTypes) : null],
         sageIntacctCCCAccount: ['', that.showSeparateCCCField() ? that.forbiddenSelectionValidator(that.sageIntacctCCCAccounts) : null],
       });
