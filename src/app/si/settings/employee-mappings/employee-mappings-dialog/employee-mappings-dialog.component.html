@@ -65,11 +65,11 @@
       </mat-form-field>
       <div class="mat-body-strong" *ngIf="generalSettings.corporate_credit_card_expenses_object && generalSettings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION'">
         <strong class="mappings-dialog--label">
-          Choose Credit Card Equivalent
+          Choose Charge Card
         </strong>
       </div>
       <mat-form-field class="mappings-dialog--form-element" appearance="outline" *ngIf="generalSettings.corporate_credit_card_expenses_object && generalSettings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION'">
-        <input type="text" formControlName="creditCardAccount" placeholder="Corporate credit card account" matInput [matAutocomplete]="fyEmp">
+        <input type="text" formControlName="creditCardAccount" placeholder="Charge card" matInput [matAutocomplete]="fyEmp">
         <mat-autocomplete #fyEmp="matAutocomplete" [displayWith]="mappingDisplay">
           <mat-option *ngFor="let option of cccOptions" [value]="option">
             {{option.value}}
