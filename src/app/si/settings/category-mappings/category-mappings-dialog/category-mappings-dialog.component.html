@@ -37,7 +37,7 @@
           Gl Account
         </strong>
       </div>
-      <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="generalSettings.reimbursable_expenses_object === 'BILL || (generalSettings.corporate_credit_card_expenses_object && generalSettings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION')">
+      <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="generalSettings.reimbursable_expenses_object === 'BILL' || (generalSettings.corporate_credit_card_expenses_object && generalSettings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION')">
         <input type="text" formControlName="sageIntacctAccount" placeholder="Choose Sage Intacct account" matInput
           [matAutocomplete]="siAc" [errorStateMatcher]="matcher">
         <mat-autocomplete #siAc="matAutocomplete" [displayWith]="mappingDisplay">
