@@ -94,7 +94,7 @@ export class ExpenseGroupsComponent implements OnInit {
     that.state = that.route.snapshot.queryParams.state || 'FAILED';
     that.settingsService.getCombinedSettings(that.workspaceId).subscribe((settings) => {
       if (that.state === 'COMPLETE') {
-        that.columnsToDisplay = ['description', 'employee', 'export', 'expense-type'];
+        that.columnsToDisplay = ['export-date', 'description', 'employee', 'export', 'expense-type'];
       } else {
         that.columnsToDisplay = ['description', 'employee', 'expense-type'];
       }
@@ -111,7 +111,7 @@ export class ExpenseGroupsComponent implements OnInit {
 
         if (that.pageNumber !== pageNumber || that.pageSize !== pageSize || that.state !== state) {
           if (state === 'COMPLETE') {
-            that.columnsToDisplay = ['description', 'employee', 'export', 'expense-type'];
+            that.columnsToDisplay = ['export-date', 'description', 'employee', 'export', 'expense-type'];
           } else {
             that.columnsToDisplay = ['description', 'employee', 'expense-type'];
           }

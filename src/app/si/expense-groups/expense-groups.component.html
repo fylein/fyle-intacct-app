@@ -33,6 +33,12 @@
 <div *ngIf="count" [hidden]="isLoading">
   <table mat-table [dataSource]="expenseGroups" class="page-table" matSort matSortActive="created_at"
     matSortDisableClear matSortDirection="desc">
+
+    <ng-container matColumnDef="export-date">
+      <th mat-header-cell *matHeaderCellDef> Exported On </th>
+      <td mat-cell *matCellDef="let element"> {{element.exported_at | date}} </td>
+    </ng-container>
+
     <ng-container matColumnDef="description">
       <th mat-header-cell *matHeaderCellDef> Description </th>
       <td mat-cell *matCellDef="let element">
