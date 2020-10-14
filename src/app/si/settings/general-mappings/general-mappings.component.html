@@ -64,6 +64,35 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+
+      <div class="mat-body-strong" *ngIf="generalSettings.corporate_credit_card_expenses_object && generalSettings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION'">
+        <strong class="mappings-dialog--label">
+          Default Charge Card
+        </strong>
+      </div>
+      <mat-form-field class="mappings-dialog--form-element" appearance="outline" required 
+      *ngIf="generalSettings.corporate_credit_card_expenses_object && generalSettings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION'">
+        <mat-select placeholder="Default Charge Card" formControlName="chargeCard">
+          <mat-option *ngFor="let option of sageIntacctDefaultChargeCard" [value]="option.destination_id">
+            {{option.value}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="mat-body-strong" *ngIf="generalSettings.corporate_credit_card_expenses_object && generalSettings.corporate_credit_card_expenses_object === 'BILL'">
+        <strong class="mappings-dialog--label">
+          Default Credit Card Vendor
+        </strong>
+      </div>
+      <mat-form-field class="mappings-dialog--form-element" appearance="outline" required 
+      *ngIf="generalSettings.corporate_credit_card_expenses_object && generalSettings.corporate_credit_card_expenses_object === 'BILL'">
+        <mat-select placeholder="Default Credit Card Vendor" formControlName="defaultVendor">
+          <mat-option *ngFor="let option of sageIntacctDefaultVendor" [value]="option.destination_id">
+            {{option.value}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
     </div>
 
     <button class="configurations--save-btn" mat-flat-button color="primary" (click)="submit()" type="submit">

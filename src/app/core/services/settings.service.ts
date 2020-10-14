@@ -92,9 +92,10 @@ export class SettingsService {
   @CacheBuster({
     cacheBusterNotifier: generalSettingsCache
   })
-  postGeneralSettings(workspaceId: number, reimbursableExpensesObject: string) {
+  postGeneralSettings(workspaceId: number, reimbursableExpensesObject: string, corporateCreditCardExpensesObject: string) {
     return this.apiService.post(`/workspaces/${workspaceId}/settings/general/`, {
-      reimbursable_expenses_object: reimbursableExpensesObject
+      reimbursable_expenses_object: reimbursableExpensesObject,
+      corporate_credit_card_expenses_object: corporateCreditCardExpensesObject
     });
   }
 
@@ -144,9 +145,6 @@ export class SettingsService {
       const costCenterFieldMapping = mappingSettings.filter(
         setting => setting.source_field === 'COST_CENTER'
       )[0];
-
-      generalSettings.employee_field_mapping = employeeFieldMapping.destination_field;
-      generalSettings.category_field_mapping = categoryFieldMapping.destination_field;
 
       if (projectFieldMapping) {
         generalSettings.project_field_mapping = projectFieldMapping.destination_field;

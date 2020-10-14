@@ -58,7 +58,7 @@ export class EmployeeMappingsComponent implements OnInit {
 
   createEmployeeMappingsRows() {
     const that = this;
-    const employeeEVMappings = that.employeeMappings.filter(mapping => mapping.destination_type !== 'CREDIT_CARD_ACCOUNT');
+    const employeeEVMappings = that.employeeMappings.filter(mapping => mapping.destination_type !== 'CHARGE_CARD_NUMBER');
     const mappings = [];
 
     employeeEVMappings.forEach(employeeEVMapping => {
@@ -72,7 +72,7 @@ export class EmployeeMappingsComponent implements OnInit {
   }
 
   getCCCAccount(employeeMappings, employeeEVMapping) {
-    const empMapping = employeeMappings.filter(evMapping => evMapping.destination_type === 'CREDIT_CARD_ACCOUNT' && evMapping.source.value === employeeEVMapping.source.value);
+    const empMapping = employeeMappings.filter(evMapping => evMapping.destination_type === 'CHARGE_CARD_NUMBER' && evMapping.source.value === employeeEVMapping.source.value);
 
     return empMapping.length ? empMapping[0].destination.value : null;
   }
@@ -86,7 +86,7 @@ export class EmployeeMappingsComponent implements OnInit {
       that.isLoading = false;
     });
 
-    if (that.generalSettings.corporate_credit_card_expenses_object) {
+    if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
       that.columnsToDisplay.push('ccc');
     }
   }

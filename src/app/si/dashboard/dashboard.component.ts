@@ -17,6 +17,7 @@ enum onboardingStates {
   fyleConnected,
   sageIntacctConnected,
   configurationsDone,
+  generalMappingsDone,
   employeeMappingsDone,
   categoryMappingsDone,
   isOnboarded
@@ -90,6 +91,15 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  getGeneralMappings() {
+    const that = this;
+    // TODO: remove promises and do with rxjs observables
+    return that.mappingsService.getGeneralMappings().toPromise().then((res) => {
+      that.currentState = onboardingStates.generalMappingsDone;
+      return res;
+    });
+  }
+
   getEmployeeMappings() {
     const that = this;
     // TODO: remove promises and do with rxjs observables
@@ -151,13 +161,14 @@ export class DashboardComponent implements OnInit {
   updateDimensionTables() {
     const that = this;
     concat(
-      this.mappingsService.postSageIntacctAccounts(),
-      this.mappingsService.postSageIntacctEmployees(),
-      this.mappingsService.postSageIntacctVendors(),
-      this.mappingsService.postSageIntacctDepartments(),
-      this.mappingsService.postSageIntacctExpensetypes(),
       this.mappingsService.postSageIntacctLocations(),
+      this.mappingsService.postSageIntacctDepartments(),
       this.mappingsService.postSageIntacctProjects(),
+      this.mappingsService.postSageIntacctChargeCardAccounts(),
+      this.mappingsService.postSageIntacctVendors(),
+      this.mappingsService.postSageIntacctEmployees(),
+      this.mappingsService.postSageIntacctAccounts(),
+      this.mappingsService.postSageIntacctExpensetypes(),
       this.mappingsService.postFyleEmployees(),
       this.mappingsService.postFyleCategories(),
       this.mappingsService.postFyleProjects(),
@@ -184,6 +195,8 @@ export class DashboardComponent implements OnInit {
         }).then(() => {
           that.updateDimensionTables();
           return that.getConfigurations();
+        }).then(() => {
+          return that.getGeneralMappings();
         }).then(() => {
           return that.getEmployeeMappings();
         }).then(() => {

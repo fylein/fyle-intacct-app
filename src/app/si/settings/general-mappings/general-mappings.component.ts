@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MappingsService } from '../../../core/services/mappings.service';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SettingsService } from 'src/app/core/services/settings.service';
 
 @Component({
   selector: 'app-general-mappings',
@@ -18,10 +19,16 @@ export class GeneralMappingsComponent implements OnInit {
   sageIntacctLocations: any[];
   sageIntacctDepartments: any[];
   sageIntacctProjects: any[];
+  sageIntacctDefaultVendor: any[];
+  sageIntacctDefaultChargeCard: any[];
+  generalSettings: any;
+  defaultVendor: any[];
+  defaultChargeCard: any[];
 
   constructor(
     private route: ActivatedRoute,
     private mappingsService: MappingsService,
+    private settingsService: SettingsService,
     private formBuilder: FormBuilder,
     private router: Router,
     private snackBar: MatSnackBar) {
@@ -46,19 +53,36 @@ export class GeneralMappingsComponent implements OnInit {
       defaultProjectName = that.sageIntacctProjects.filter((element) => element.destination_id === that.form.value.project)[0].value;
     }
 
+    let defaultVendor;
+    if (that.form.value.defaultVendor) {
+      defaultVendor = that.sageIntacctDefaultVendor.filter((element) => element.destination_id === that.form.value.defaultVendor)[0].value;
+    }
+
+    let defaultChargeCard;
+    if (that.form.value.chargeCard) {
+      defaultChargeCard = that.sageIntacctDefaultChargeCard.filter((element) => element.destination_id === that.form.value.chargeCard)[0].value;
+    }
+
     const mapping = {
       default_location_name: defaultLocationName ? defaultLocationName : '',
       default_location_id: that.form.value.location ? that.form.value.location : '',
       default_department_name: defaultDepartmentName ? defaultDepartmentName : '',
       default_department_id: that.form.value.department ? that.form.value.department : '',
       default_project_name: defaultProjectName ? defaultProjectName : '',
-      default_project_id: that.form.value.project ? that.form.value.project : ''
+      default_project_id: that.form.value.project ? that.form.value.project : '',
+      default_ccc_vendor_name: defaultVendor ? defaultVendor : '',
+      default_ccc_vendor_id: that.form.value.defaultVendor ? that.form.value.defaultVendor : '',
+      default_charge_card_name: defaultChargeCard ? defaultChargeCard : '',
+      default_charge_card_id: that.form.value.chargeCard ? that.form.value.chargeCard : ''
     };
 
     that.mappingsService.postGeneralMappings(mapping).subscribe(response => {
       that.isLoading = false;
       that.snackBar.open('General mappings saved successfully');
       that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
+    }, (error) => {
+      that.isLoading = false;
+      that.snackBar.open('Please fill all required fields');
     });
   }
 
@@ -66,6 +90,10 @@ export class GeneralMappingsComponent implements OnInit {
   reset() {
     const that = this;
     that.isLoading = true;
+
+    that.settingsService.getCombinedSettings(that.workspaceId).subscribe(settings => {
+      that.generalSettings = settings;
+    });
 
     const getSageIntacctLocations = that.mappingsService.getSageIntacctLocations().toPromise().then(objects => {
       that.sageIntacctLocations = objects;
@@ -79,26 +107,42 @@ export class GeneralMappingsComponent implements OnInit {
       that.sageIntacctProjects = objects;
     });
 
+    const getSageIntacctDefaultVendor = that.mappingsService.getSageIntacctVendors().toPromise().then(objects => {
+      that.sageIntacctDefaultVendor = objects;
+    });
+
+    const getSageIntacctDefaultChargeCard = that.mappingsService.getSageIntacctChargeCard().toPromise().then(objects => {
+      that.sageIntacctDefaultChargeCard = objects;
+    });
+
     forkJoin(
       [
         getSageIntacctLocations,
         getSageIntacctDepartments,
-        getSageIntacctProjects
+        getSageIntacctProjects,
+        getSageIntacctDefaultVendor,
+        getSageIntacctDefaultChargeCard
       ]
     ).subscribe(responses => {
       that.isLoading = false;
       let locationId;
       let departmentId;
       let projectId;
+      let chargeCard;
+      let defaultVendor;
 
       if (that.generalMappings) {
         locationId = that.generalMappings.default_location_id ? that.generalMappings.default_location_id : null;
         departmentId = that.generalMappings.default_department_id ? that.generalMappings.default_department_id : null;
         projectId = that.generalMappings.default_project_id ? that.generalMappings.default_project_id : null;
+        chargeCard = that.generalMappings.default_charge_card_id ? that.generalMappings.default_charge_card_id : null;
+        defaultVendor = that.generalMappings.default_ccc_vendor_id ? that.generalMappings.default_ccc_vendor_id : null;
       }
 
       that.form = that.formBuilder.group({
         location: [locationId ? locationId : ''],
+        chargeCard: [chargeCard ? chargeCard: ''],
+        defaultVendor: [defaultVendor ? defaultVendor: ''],
         department: [departmentId ? departmentId : ''],
         project: [projectId ? projectId : '']
       });

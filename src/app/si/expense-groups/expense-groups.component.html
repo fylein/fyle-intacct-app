@@ -48,12 +48,22 @@
     <ng-container matColumnDef="export">
       <th mat-header-cell *matHeaderCellDef> Exported to Sage Intacct as </th>
       <td mat-cell *matCellDef="let element">
-        <div *ngIf="settings.reimbursable_expenses_object === 'EXPENSE_REPORT'">
+        <div *ngIf="element.fund_source === 'PERSONAL' && settings.reimbursable_expenses_object === 'EXPENSE_REPORT'">
           Expense Report
         </div>
-        <div *ngIf="settings.reimbursable_expenses_object === 'BILL'">
+        <div *ngIf="(element.fund_source === 'PERSONAL' && settings.reimbursable_expenses_object === 'BILL') || element.fund_source === 'CCC' && settings.corporate_credit_card_expenses_object === 'BILL'">
           Bill
         </div>
+        <div *ngIf="element.fund_source === 'CCC' && settings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION'">
+          Charge Card Transaction
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="expense-type">
+      <th mat-header-cell *matHeaderCellDef> Expense Type </th>
+      <td mat-cell *matCellDef="let element">
+        {{element.fund_source === 'PERSONAL' ? 'Reimbursable' : 'Corporate Credit Card'  }}
       </td>
     </ng-container>
 

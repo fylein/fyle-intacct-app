@@ -32,12 +32,12 @@
         </mat-error>
       </mat-form-field>
 
-      <div class="mat-body-strong" *ngIf="generalSettings.category_field_mapping === 'ACCOUNT'">
+      <div class="mat-body-strong" *ngIf="generalSettings.reimbursable_expenses_object === 'BILL'">
         <strong class="mappings-dialog--label">
           Gl Account
         </strong>
       </div>
-      <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="generalSettings.category_field_mapping === 'ACCOUNT'">
+      <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="generalSettings.reimbursable_expenses_object === 'BILL'">
         <input type="text" formControlName="sageIntacctAccount" placeholder="Choose Sage Intacct account" matInput
           [matAutocomplete]="siAc" [errorStateMatcher]="matcher">
         <mat-autocomplete #siAc="matAutocomplete" [displayWith]="mappingDisplay">
@@ -50,12 +50,12 @@
         </mat-error>
       </mat-form-field>
 
-      <div class="mat-body-strong" *ngIf="generalSettings.category_field_mapping === 'EXPENSE_TYPE'">
+      <div class="mat-body-strong" *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT'">
         <strong class="mappings-dialog--label">
           Expense Type
         </strong>
       </div>
-      <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="generalSettings.category_field_mapping === 'EXPENSE_TYPE'">
+      <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT'">
         <input type="text" formControlName="sageIntacctExpenseTypes" placeholder="Choose Sage Intacct expense type" matInput
           [matAutocomplete]="sageIntacctEt" [errorStateMatcher]="matcher">
         <mat-autocomplete #sageIntacctEt="matAutocomplete" [displayWith]="mappingDisplay">
@@ -67,6 +67,25 @@
           Please enter a valid value
         </mat-error>
       </mat-form-field>
+
+      <div class="mat-body-strong" *ngIf="showSeparateCCCField()">
+        <strong class="mappings-dialog--label">
+          Credit Card Expense Account
+        </strong>
+      </div>
+      <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="showSeparateCCCField()">
+        <input type="text" formControlName="sageIntacctCCCAccount" placeholder="Choose Sage Intacct account" matInput
+          [matAutocomplete]="sageIntacctCCCAcc" [errorStateMatcher]="matcher">
+        <mat-autocomplete #sageIntacctCCCAcc="matAutocomplete" [displayWith]="mappingDisplay">
+          <mat-option *ngFor="let option of sageIntacctCCCAccountOptions" [value]="option">
+            {{option.value}}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error class="mappings-dialog--error" *ngIf="form.controls.sageIntacctCCCAccount.hasError('forbiddenOption')">
+          Please enter a valid value
+        </mat-error>
+      </mat-form-field>
+
     </div>
   </form>
 </mat-dialog-content>
