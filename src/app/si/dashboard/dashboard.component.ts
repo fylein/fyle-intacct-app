@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { ActivatedRoute } from '@angular/router';
-import { forkJoin, concat } from 'rxjs';
+import { forkJoin, onErrorResumeNext } from 'rxjs';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { environment } from 'src/environments/environment';
 import { ExpenseGroupsService } from 'src/app/core/services/expense-groups.service';
@@ -160,22 +160,29 @@ export class DashboardComponent implements OnInit {
   // to be callled in background whenever dashboard is opened for syncing fyle data for org
   updateDimensionTables() {
     const that = this;
-    concat(
-      this.mappingsService.postSageIntacctLocations(),
-      this.mappingsService.postSageIntacctDepartments(),
-      this.mappingsService.postSageIntacctProjects(),
-      this.mappingsService.postSageIntacctChargeCardAccounts(),
-      this.mappingsService.postSageIntacctVendors(),
-      this.mappingsService.postSageIntacctEmployees(),
-      this.mappingsService.postSageIntacctAccounts(),
-      this.mappingsService.postSageIntacctExpensetypes(),
-      this.mappingsService.postFyleEmployees(),
-      this.mappingsService.postFyleCategories(),
-      this.mappingsService.postFyleProjects(),
-      this.mappingsService.postFyleCostCenters()
+    that.mappingsService.postFyleEmployees().subscribe(() => {});
+    that.mappingsService.postFyleCategories().subscribe(() => {});
+    that.mappingsService.postFyleProjects().subscribe(() => {});
+    that.mappingsService.postFyleCostCenters().subscribe(() => {});
+
+    onErrorResumeNext(
+      that.mappingsService.postSageIntacctLocations(),
+      that.mappingsService.postSageIntacctDepartments(),
+      that.mappingsService.postSageIntacctProjects(),
+      that.mappingsService.postSageIntacctChargeCardAccounts(),
+      that.mappingsService.postSageIntacctVendors(),
+      that.mappingsService.postSageIntacctEmployees(),
+      that.mappingsService.postSageIntacctAccounts(),
+      that.mappingsService.postSageIntacctExpensetypes()
     ).subscribe(() => {
       // that.snackBar.open('All employee data synced from your fyle account');
     });
+  }
+
+  openSchedule(event) {
+    const that = this;
+    event.preventDefault();
+    that.windowReference.open(`workspaces/${that.workspaceId}/settings/schedule`, '_blank');
   }
 
   ngOnInit() {

@@ -68,16 +68,16 @@ export class SettingsService {
   }
 
   // TODO: Add model
-  postSettings(workspaceId: number, nextRun: string, hours: number, scheduleEnabled: boolean) {
-    return this.apiService.post(`/workspaces/${workspaceId}/settings/`, {
+  postScheduleSettings(workspaceId: number, nextRun: string, hours: number, scheduleEnabled: boolean) {
+    return this.apiService.post(`/workspaces/${workspaceId}/schedule/`, {
       next_run: nextRun,
       hours,
       schedule_enabled: scheduleEnabled
     });
   }
 
-  getSettings(workspaceId: number): Observable<Settings> {
-    return this.apiService.get(`/workspaces/${workspaceId}/settings/`, {});
+  getScheduleSettings(workspaceId: number): Observable<Settings> {
+    return this.apiService.get(`/workspaces/${workspaceId}/schedule/`, {});
   }
 
   // TODO: Add model

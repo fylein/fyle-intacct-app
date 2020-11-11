@@ -162,6 +162,26 @@
           </div>
         </div>
       </mat-card>
+      <div class="schedule">
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <mat-icon class="schedule--info-icon">
+            info
+          </mat-icon>
+          <div class="schedule--info-desc">
+            You can also create an automated schedule to import and export your expenses.
+          </div>
+        </div>
+        <div class="schedule--redirect cursor-pointer">
+          <a (click)="openSchedule($event)" class="read-more-link" href="" fxLayout="row" fxLayoutAlign="start center">
+            <div>
+              Go to Automated Import/Export
+            </div>
+            <mat-icon class="schedule--redirect-icon read-more-link--icon">
+              open_in_new
+            </mat-icon>
+          </a>
+        </div>
+      </div>
     </div>
     <div class="dashboard--stats" fxLayout="row" fxLayoutAlign="center">
       <mat-card class="dashboard--stats-card">
