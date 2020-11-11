@@ -21,6 +21,7 @@ import { EmployeeMappingsComponent } from './settings/employee-mappings/employee
 import { CategoryMappingsComponent } from './settings/category-mappings/category-mappings.component';
 import { ProjectMappingsComponent } from './settings/project-mappings/project-mappings.component';
 import { CostCenterMappingsComponent } from './settings/cost-center-mappings/cost-center-mappings.component';
+import { ScheduleComponent } from './settings/schedule/schedule.component';
 
 const routes: Routes = [{
   path: '',
@@ -109,6 +110,11 @@ const routes: Routes = [{
         {
           path: 'cost_center_mappings',
           component: CostCenterMappingsComponent,
+          canActivate: [WorkspacesGuard]
+        },
+        {
+          path: 'schedule',
+          component: ScheduleComponent,
           canActivate: [WorkspacesGuard]
         }
       ]

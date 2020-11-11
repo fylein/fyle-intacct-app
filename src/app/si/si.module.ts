@@ -52,8 +52,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { from } from 'rxjs';
+import { ScheduleComponent } from './settings/schedule/schedule.component';
+
 @NgModule({
   declarations: [
     SiComponent,
@@ -78,7 +78,8 @@ import { from } from 'rxjs';
     EmployeeMappingsDialogComponent,
     CategoryMappingsDialogComponent,
     ProjectMappingsDialogComponent,
-    CostCenterMappingsDialogComponent
+    CostCenterMappingsDialogComponent,
+    ScheduleComponent
   ],
   entryComponents: [
     EmployeeMappingsDialogComponent,
