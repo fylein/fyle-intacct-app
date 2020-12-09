@@ -164,6 +164,7 @@ export class DashboardComponent implements OnInit {
     that.mappingsService.postFyleCategories().subscribe(() => {});
     that.mappingsService.postFyleProjects().subscribe(() => {});
     that.mappingsService.postFyleCostCenters().subscribe(() => {});
+    this.mappingsService.postExpenseCustomFields().subscribe(() => {});
 
     onErrorResumeNext(
       that.mappingsService.postSageIntacctLocations(),

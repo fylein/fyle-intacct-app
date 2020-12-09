@@ -9,7 +9,7 @@ import { WindowReferenceService } from 'src/app/core/services/window.service';
 @Component({
   selector: 'app-configuration',
   templateUrl: './configuration.component.html',
-  styleUrls: ['./configuration.component.scss', '../../si.component.scss']
+  styleUrls: ['./configuration.component.scss', '../../../si.component.scss']
 })
 export class ConfigurationComponent implements OnInit {
 
@@ -21,9 +21,6 @@ export class ConfigurationComponent implements OnInit {
   workspaceId: number;
   generalSettings: any;
   mappingSettings: any;
-  reimburExpenseFieldMapping: any;
-  projectFieldMapping: any;
-  costCenterFieldMapping: any;
   windowReference: Window
 
   constructor(private formBuilder: FormBuilder,
@@ -65,16 +62,6 @@ export class ConfigurationComponent implements OnInit {
     }[reimburExpenseMappedTo];
   }
 
-  configurationProjectCostCenterValidator: ValidatorFn = (fg: FormGroup) => {
-    const project = fg.get('projects').value;
-    const costCenter = fg.get('costCenters').value;
-    if (!project || !costCenter) {
-      return null;
-    }
-
-    return project === costCenter ? { projectCostCenterSame: true } : null;
-  }
-
   getAllSettings() {
     const that = this;
     that.isLoading = true;
@@ -86,23 +73,6 @@ export class ConfigurationComponent implements OnInit {
     ).subscribe(responses => {
       that.generalSettings = responses[0];
       that.mappingSettings = responses[1].results;
-
-      const reimburExpenseFieldMapping = that.mappingSettings.filter(
-        setting => (setting.source_field === 'EXPENSE_REPORT') &&
-          (setting.destination_field === 'EXPENSE_REPORT' || setting.destination_field === 'BILL')
-      )[0];
-
-      const projectFieldMapping = that.mappingSettings.filter(
-        settings => settings.source_field === 'PROJECT'
-      )[0];
-
-      const costCenterFieldMapping = that.mappingSettings.filter(
-        settings => settings.source_field === 'COST_CENTER'
-      )[0];
-
-      that.reimburExpenseFieldMapping = reimburExpenseFieldMapping ? reimburExpenseFieldMapping : {};
-      that.projectFieldMapping = projectFieldMapping ? projectFieldMapping : {};
-      that.costCenterFieldMapping = costCenterFieldMapping ? costCenterFieldMapping : {};
 
       that.expenseOptions = [{
         label: 'Expense Report',
@@ -123,26 +93,14 @@ export class ConfigurationComponent implements OnInit {
       }];
 
       that.generalSettingsForm = that.formBuilder.group({
-        reimburExpense: [that.reimburExpenseFieldMapping ? that.reimburExpenseFieldMapping.destination_field : ''],
+        reimburExpense: [that.generalSettings ? that.generalSettings.reimbursable_expenses_object : ''],
         cccExpense: [that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : ''],
-        projects: [that.projectFieldMapping ? that.projectFieldMapping.destination_field : ''],
-        costCenters: [that.costCenterFieldMapping ? that.costCenterFieldMapping.destination_field : '']
-      }, {
-        validators: [that.configurationProjectCostCenterValidator]
       });
 
       that.generalSettingsForm.controls.reimburExpense.disable();
 
       if (that.generalSettings.corporate_credit_card_expenses_object) {
         that.generalSettingsForm.controls.cccExpense.disable();
-      }
-
-      if (projectFieldMapping) {
-        that.generalSettingsForm.controls.projects.disable();
-      }
-
-      if (costCenterFieldMapping) {
-        that.generalSettingsForm.controls.costCenters.disable();
       }
 
       that.isLoading = false;
@@ -152,11 +110,7 @@ export class ConfigurationComponent implements OnInit {
       that.isLoading = false;
       that.generalSettingsForm = that.formBuilder.group({
         reimburExpense: ['', Validators.required],
-        cccExpense: [null],
-        projects: [null],
-        costCenters: [null],
-      }, {
-        validators: [that.configurationProjectCostCenterValidator]
+        cccExpense: [null]
       });
 
       that.expenseOptions = [{
@@ -182,22 +136,15 @@ export class ConfigurationComponent implements OnInit {
   save() {
     const that = this;
     if (that.generalSettingsForm.valid) {
-      const reimbursableExpensesObject = that.generalSettingsForm.value.reimburExpense || (that.reimburExpenseFieldMapping && that.reimburExpenseFieldMapping.destination_field);
+      const reimbursableExpensesObject = that.generalSettingsForm.value.reimburExpense || that.generalSettings.reimbursable_expenses_object || null;
       const cccExpensesObject = that.generalSettingsForm.value.cccExpense || that.generalSettings.corporate_credit_card_expenses_object || null;
       const categoryMappingObject = that.getCategory(reimbursableExpensesObject)[0].value;
       const employeeMappingsObject = that.getEmployee(reimbursableExpensesObject)[0].value;
-      const projectMappingObject = that.generalSettingsForm.value.projects || (that.projectFieldMapping && that.projectFieldMapping.destination_field);
-      const costCenterMappingObject = that.generalSettingsForm.value.costCenters || (that.costCenterFieldMapping && that.costCenterFieldMapping.destination_field);
 
       const mappingsSettingsPayload = [{
         source_field: 'EMPLOYEE',
         destination_field: employeeMappingsObject
       }];
-
-      mappingsSettingsPayload.push({
-        source_field: 'EXPENSE_REPORT',
-        destination_field: reimbursableExpensesObject
-      });
 
       mappingsSettingsPayload.push({
         source_field: 'CATEGORY',
@@ -213,20 +160,6 @@ export class ConfigurationComponent implements OnInit {
         mappingsSettingsPayload.push({
           source_field: 'CATEGORY',
           destination_field: 'CCC_ACCOUNT'
-        });
-      }
-
-      if (projectMappingObject) {
-        mappingsSettingsPayload.push({
-          source_field: 'PROJECT',
-          destination_field: projectMappingObject
-        });
-      }
-
-      if (costCenterMappingObject) {
-        mappingsSettingsPayload.push({
-          source_field: 'COST_CENTER',
-          destination_field: costCenterMappingObject
         });
       }
 
@@ -254,7 +187,7 @@ export class ConfigurationComponent implements OnInit {
   ngOnInit() {
     const that = this;
     that.isSaveDisabled = false;
-    that.workspaceId = that.route.snapshot.parent.params.workspace_id;
+    that.workspaceId = that.route.snapshot.parent.parent.params.workspace_id;
     that.getAllSettings();
   }
 

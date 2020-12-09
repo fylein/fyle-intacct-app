@@ -20,11 +20,13 @@ export class MappingsService {
   sageIntacctLocations: Observable<any[]>;
   sageIntacctProjects: Observable<any[]>;
   fyleProjects: Observable<any[]>;
+  fyleExpenseCustomFields: Observable<any[]>;
   sageIntacctDepartments: Observable<any[]>;
   fyleCostCenters: Observable<any[]>;
   accountPayables: Observable<any[]>;
   bankAccounts: Observable<any[]>;
   creditCardAccounts: Observable<any[]>;
+  expenseFields: Observable<any[]>;
 
   constructor(
     private apiService: ApiService,
@@ -80,6 +82,19 @@ export class MappingsService {
       );
     }
     return this.fyleCostCenters;
+  }
+
+  postExpenseCustomFields() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    if (!this.fyleExpenseCustomFields) {
+      this.fyleExpenseCustomFields = this.apiService.post(`/workspaces/${workspaceId}/fyle/expense_custom_fields/`, {}).pipe(
+        map(data => data),
+        publishReplay(1),
+        refCount()
+      );
+    }
+    return this.fyleExpenseCustomFields;
   }
 
   postSageIntacctVendors() {
@@ -147,7 +162,6 @@ export class MappingsService {
     return this.sageIntacctProjects;
   }
 
-
   postSageIntacctAccounts() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
@@ -200,6 +214,12 @@ export class MappingsService {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/categories/`, {});
+  }
+
+  getFyleExpenseFields() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_fields/`, {});
   }
 
   getSageIntacctVendors() {
@@ -262,6 +282,20 @@ export class MappingsService {
     return this.apiService.get(
       `/workspaces/${workspaceId}/sage_intacct/accounts/`, {}
     );
+  }
+
+  getSageIntacctFields() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/sage_intacct_fields/`, {});
+  }
+
+  getFyleExpenseCustomFields(attributeType: string) {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_custom_fields/`, {
+      attribute_type: attributeType
+    });
   }
 
   getMappings(sourceType): Observable<MappingsResponse> {

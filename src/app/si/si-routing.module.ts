@@ -14,14 +14,15 @@ import { SyncExportComponent } from './sync-export/sync-export.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SyncComponent } from './sync-export/sync/sync.component';
 import { ExportComponent } from './sync-export/export/export.component';
-import { ConfigurationComponent } from './settings/configuration/configuration.component';
 import { GeneralMappingsComponent } from './settings/general-mappings/general-mappings.component';
 import { ConnectSageIntacctComponent } from './settings/connect-sage-intacct/connect-sage-intacct';
 import { EmployeeMappingsComponent } from './settings/employee-mappings/employee-mappings.component';
 import { CategoryMappingsComponent } from './settings/category-mappings/category-mappings.component';
-import { ProjectMappingsComponent } from './settings/project-mappings/project-mappings.component';
-import { CostCenterMappingsComponent } from './settings/cost-center-mappings/cost-center-mappings.component';
 import { ScheduleComponent } from './settings/schedule/schedule.component';
+import { ConfigurationComponent } from './settings/sage-intacct-configurations/configuration/configuration.component';
+import { ExpenseFieldConfigurationComponent } from './settings/sage-intacct-configurations/expense-field-configuration/expense-field-configuration.component';
+import { GenericMappingsComponent } from './settings/generic-mappings/generic-mappings.component';
+import { SageIntacctConfigurationsComponent } from './settings/sage-intacct-configurations/sage-intacct-configurations.component';
 
 const routes: Routes = [{
   path: '',
@@ -81,10 +82,20 @@ const routes: Routes = [{
       children: [
         {
           path: 'configurations',
-          component: ConfigurationComponent
+          component: SageIntacctConfigurationsComponent,
+          children: [
+            {
+              path: 'general',
+              component: ConfigurationComponent
+            },
+            {
+              path: 'expense_fields',
+              component: ExpenseFieldConfigurationComponent
+            }
+          ]
         },
         {
-          path: 'general_mappings',
+          path: 'general/mappings',
           component: GeneralMappingsComponent,
           canActivate: [WorkspacesGuard]
         },
@@ -93,23 +104,18 @@ const routes: Routes = [{
           component: ConnectSageIntacctComponent
         },
         {
-          path: 'employee_mappings',
+          path: 'employee/mappings',
           component: EmployeeMappingsComponent,
           canActivate: [WorkspacesGuard]
         },
         {
-          path: 'category_mappings',
+          path: 'category/mappings',
           component: CategoryMappingsComponent,
           canActivate: [WorkspacesGuard]
         },
         {
-          path: 'project_mappings',
-          component: ProjectMappingsComponent,
-          canActivate: [WorkspacesGuard]
-        },
-        {
-          path: 'cost_center_mappings',
-          component: CostCenterMappingsComponent,
+          path: ':source_field/mappings',
+          component: GenericMappingsComponent,
           canActivate: [WorkspacesGuard]
         },
         {

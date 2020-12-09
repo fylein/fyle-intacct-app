@@ -10,7 +10,11 @@ $fy-info-dark: #2c304e;
   }
 
   &--sub-header-container {
-    min-height: 48px;
+    min-height: 8px;
+  }
+
+  &--sub-header-items {
+    margin-top: 6px;
   }
 
   &--created-by {

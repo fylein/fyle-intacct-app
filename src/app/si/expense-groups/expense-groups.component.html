@@ -39,13 +39,6 @@
       <td mat-cell *matCellDef="let element"> {{element.exported_at | date}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="description">
-      <th mat-header-cell *matHeaderCellDef> Description </th>
-      <td mat-cell *matCellDef="let element">
-        Grouped by {{element.description.claim_number}}
-      </td>
-    </ng-container>
-
     <ng-container matColumnDef="employee">
       <th mat-header-cell *matHeaderCellDef> Employee </th>
       <td mat-cell *matCellDef="let element"> {{element.description.employee_email}} </td>
