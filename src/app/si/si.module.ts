@@ -32,20 +32,15 @@ import { ExportComponent } from './sync-export/export/export.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { ConfigurationComponent } from './settings/configuration/configuration.component';
 import { ConnectSageIntacctComponent } from './settings/connect-sage-intacct/connect-sage-intacct';
 import { MatSelectModule } from '@angular/material/select';
 import { GeneralMappingsComponent } from './settings/general-mappings/general-mappings.component';
 import { EmployeeMappingsComponent } from './settings/employee-mappings/employee-mappings.component';
 import { CategoryMappingsComponent } from './settings/category-mappings/category-mappings.component';
-import { ProjectMappingsComponent } from './settings/project-mappings/project-mappings.component';
-import { CostCenterMappingsComponent } from './settings/cost-center-mappings/cost-center-mappings.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { EmployeeMappingsDialogComponent } from './settings/employee-mappings/employee-mappings-dialog/employee-mappings-dialog.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CategoryMappingsDialogComponent } from './settings/category-mappings/category-mappings-dialog/category-mappings-dialog.component';
-import { ProjectMappingsDialogComponent } from './settings/project-mappings/project-mappings-dialog/project-mappings-dialog.component';
-import { CostCenterMappingsDialogComponent } from './settings/cost-center-mappings/cost-center-mappings-dialog/cost-center-mappings-dialog.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -53,6 +48,13 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { ScheduleComponent } from './settings/schedule/schedule.component';
+import { ConfigurationComponent } from './settings/sage-intacct-configurations/configuration/configuration.component';
+import { ExpenseFieldConfigurationComponent } from './settings/sage-intacct-configurations/expense-field-configuration/expense-field-configuration.component';
+import { GenericMappingsComponent } from './settings/generic-mappings/generic-mappings.component';
+import { SageIntacctConfigurationsComponent } from './settings/sage-intacct-configurations/sage-intacct-configurations.component';
+import { RxReactiveFormsModule } from '@rxweb/reactive-form-validators';
+import { GenericMappingsDialogComponent } from './settings/generic-mappings/generic-mappings-dialog/generic-mappings-dialog.component';
+import { ExpenseGroupSettingsDialogComponent } from './sync-export/sync/expense-group-settings-dialog/expense-group-settings-dialog.component';
 
 @NgModule({
   declarations: [
@@ -73,19 +75,20 @@ import { ScheduleComponent } from './settings/schedule/schedule.component';
     ConnectSageIntacctComponent,
     EmployeeMappingsComponent,
     CategoryMappingsComponent,
-    ProjectMappingsComponent,
-    CostCenterMappingsComponent,
     EmployeeMappingsDialogComponent,
     CategoryMappingsDialogComponent,
-    ProjectMappingsDialogComponent,
-    CostCenterMappingsDialogComponent,
-    ScheduleComponent
+    ScheduleComponent,
+    SageIntacctConfigurationsComponent,
+    ExpenseFieldConfigurationComponent,
+    ExpenseGroupSettingsDialogComponent,
+    GenericMappingsComponent,
+    GenericMappingsDialogComponent
   ],
   entryComponents: [
     EmployeeMappingsDialogComponent,
     CategoryMappingsDialogComponent,
-    ProjectMappingsDialogComponent,
-    CostCenterMappingsDialogComponent
+    GenericMappingsDialogComponent,
+    ExpenseGroupSettingsDialogComponent
   ],
   imports: [
     CommonModule,
@@ -115,7 +118,8 @@ import { ScheduleComponent } from './settings/schedule/schedule.component';
     MatDatepickerModule,
     MatNativeDateModule,
     MatStepperModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    RxReactiveFormsModule
   ],
   providers: [
     {

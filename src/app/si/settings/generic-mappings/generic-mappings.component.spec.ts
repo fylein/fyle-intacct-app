@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CostCenterMappingsComponent } from './cost-center-mappings.component';
+import { GenericMappingsComponent } from './generic-mappings.component';
 
-describe('CostCenterMappingsComponent', () => {
-  let component: CostCenterMappingsComponent;
-  let fixture: ComponentFixture<CostCenterMappingsComponent>;
+describe('GenericMappingsComponent', () => {
+  let component: GenericMappingsComponent;
+  let fixture: ComponentFixture<GenericMappingsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CostCenterMappingsComponent ]
+      declarations: [ GenericMappingsComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CostCenterMappingsComponent);
+    fixture = TestBed.createComponent(GenericMappingsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

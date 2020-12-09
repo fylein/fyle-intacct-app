@@ -36,31 +36,19 @@ export class SiComponent implements OnInit {
     this.windowReference = this.windowReferenceService.nativeWindow;
   }
 
+  getTitle(name: string) {
+    return name.replace(/_/g, ' ');
+  }
+
   getGeneralSettings() {
     const that = this;
-    forkJoin(
-      [
-        that.settingsService.getGeneralSettings(that.workspace.id),
-        that.settingsService.getMappingSettings(that.workspace.id)
-      ]
-    ).subscribe((responses) => {
-      that.generalSettings = responses[0];
-      that.mappingSettings = responses[1].results;
-
-      const employeeFieldMapping = that.mappingSettings.filter(
-        setting => (setting.source_field === 'EMPLOYEE') &&
-          (setting.destination_field === 'EMPLOYEE' || setting.destination_field === 'VENDOR')
-      )[0];
-
-      const projectFieldMapping = that.mappingSettings.filter(
-        settings => settings.source_field === 'PROJECT'
-      )[0];
-
-      if (projectFieldMapping) {
-        that.generalSettings.project_field_mapping = projectFieldMapping.destination_field;
-      }
-
-      that.storageService.set('generalSettings', that.generalSettings);
+    that.settingsService.getMappingSettings(that.workspace.id).subscribe((response) => {
+      that.mappingSettings = response.results.filter(
+        setting => (setting.source_field !== 'EMPLOYEE' && setting.source_field !== 'CATEGORY')
+      );
+      that.isLoading = false;
+    }, () => {
+      that.isLoading = false;
     });
   }
 
@@ -72,7 +60,6 @@ export class SiComponent implements OnInit {
     const that = this;
     const pathName = that.windowReference.location.pathname;
     that.storageService.set('workspaceId', that.workspace.id);
-    that.isLoading = false;
     if (pathName === '/workspaces') {
       that.router.navigateByUrl(`/workspaces/${that.workspace.id}/dashboard`);
     }

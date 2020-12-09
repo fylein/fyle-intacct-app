@@ -1,12 +1,7 @@
 <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
   <app-loader></app-loader>
 </div>
-<div class="configurations" *ngIf="!isLoading">
-  <div class="page-header configurations--header">
-    <div class="page-header--name mat-h2">
-      Configurations
-    </div>
-  </div>
+<div class="configurations" *ngIf="!isLoading" fxLayout="column" fxLayoutAlign="start stretch">
   <div class="page-info">
     <div fxLayout="row" fxLayoutAlign="start center" class="page-info--description">
       <div>
@@ -42,54 +37,6 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-
-      <div class="configurations--label">
-        Map Projects from Fyle to
-      </div>
-      <mat-form-field floatLabel="always" appearance="outline">
-        <mat-select placeholder="Choose Sage Intacct equivalent of Projects" formControlName="projects">
-          <mat-option>
-            None
-          </mat-option>
-          <mat-option value="PROJECT">
-            Project
-          </mat-option>
-          <mat-option value="DEPARTMENT">
-            Department
-          </mat-option>
-          <mat-option value="LOCATION">
-            Location
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <div class="configurations--label">
-        Map Cost Centers from Fyle to
-      </div>
-      <mat-form-field floatLabel="always" appearance="outline">
-        <mat-select placeholder="Choose Sage Intacct equivalent of Cost Centers" formControlName="costCenters">
-          <mat-option>
-            None
-          </mat-option>
-          <mat-option value="PROJECT">
-            Project
-          </mat-option>
-          <mat-option value="DEPARTMENT">
-            Department
-          </mat-option>
-          <mat-option value="LOCATION">
-            Location
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <div class="configurations--errors" md-colors="{color:'warning'}" *ngIf="generalSettingsForm.errors">
-        <div *ngFor="let error of generalSettingsForm.errors | keyvalue">
-          <div *ngIf="error.key === 'projectCostCenterSame'">
-            Projects and Cost Centers cannot have the same value
-          </div>
-        </div>
-      </div>
 
       <button [disabled]="isSaveDisabled || !generalSettingsForm.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="save()" type="submit">
         Save

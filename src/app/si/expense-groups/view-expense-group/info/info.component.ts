@@ -25,6 +25,7 @@ export class InfoComponent implements OnInit {
   pageSize = 5;
   columnsToDisplay = ['expense_number', 'claimno', 'view'];
   windowReference: Window;
+  expenseGroupFields = [];
 
   constructor(
     private expenseGroupsService: ExpenseGroupsService,
@@ -38,6 +39,10 @@ export class InfoComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.expenses.filter = filterValue.trim().toLowerCase();
+  }
+
+  getTitle(name: string) {
+    return name.replace(/_/g, ' ');
   }
 
   initExpenseGroupExpenses() {
@@ -54,6 +59,7 @@ export class InfoComponent implements OnInit {
     // TODO: remove promises and do with rxjs observables
     return that.expenseGroupsService.getExpensesGroupById(that.expenseGroupId).toPromise().then((expenseGroup) => {
       that.expenseGroup = expenseGroup;
+      that.expenseGroupFields = Object.keys(expenseGroup.description);
     });
   }
 
