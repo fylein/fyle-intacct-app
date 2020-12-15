@@ -26,12 +26,13 @@ export class CategoryMappingsComponent implements OnInit {
     private storageService: StorageService,
     private settingsService: SettingsService) { }
 
-  open() {
+  open(selectedItem: any=null) {
     const that = this;
     const dialogRef = that.dialog.open(CategoryMappingsDialogComponent, {
       width: '450px',
       data: {
-        workspaceId: that.workspaceId
+        workspaceId: that.workspaceId,
+        rowElement: selectedItem
       }
     });
 

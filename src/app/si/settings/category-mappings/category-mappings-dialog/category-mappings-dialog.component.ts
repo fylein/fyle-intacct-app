@@ -33,6 +33,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
   sageIntacctCCCAccountOptions: any[];
   sageIntacctExpenseTypeOptions: any[];
   generalSettings: any;
+  editMapping: boolean;
   matcher = new MappingErrorStateMatcher();
 
   constructor(private formBuilder: FormBuilder,
@@ -63,7 +64,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
   submit() {
     const that = this;
 
-    const fyleCategory = that.form.value.fyleCategory;
+    const fyleCategory = that.form.controls.fyleCategory.value;
     const sageIntacctAccount = that.generalSettings.reimbursable_expenses_object === 'BILL' ? that.form.value.sageIntacctAccount : '';
     const sageIntacctExpenseTypes = that.generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' ? that.form.value.sageIntacctExpenseTypes : '';
 
@@ -72,10 +73,10 @@ export class CategoryMappingsDialogComponent implements OnInit {
 
     const cccObj = that.generalSettings.corporate_credit_card_expenses_object;
     if (cccObj && cccObj !== 'EXPENSE_REPORT') {
-      sageIntacctCCCAccount = that.form.value.sageIntacctCCCAccount.value || that.form.value.sageIntacctAccount.value;
+      sageIntacctCCCAccount = that.form.controls.sageIntacctCCCAccount.value || that.form.controls.sageIntacctAccount.value;
     }
 
-    if (sageIntacctAccount || sageIntacctExpenseTypes) {
+    if (that.form.valid && (sageIntacctAccount || sageIntacctExpenseTypes)) {
       that.isLoading = true;
       mappings = [
         that.mappingsService.postMappings({
@@ -92,7 +93,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
             source_type: 'CATEGORY',
             destination_type: 'CCC_ACCOUNT',
             source_value: fyleCategory.value,
-            destination_value: sageIntacctCCCAccount
+            destination_value: sageIntacctCCCAccount.value
           })
         );
       }
@@ -189,13 +190,21 @@ export class CategoryMappingsDialogComponent implements OnInit {
       from(getSageIntacctExpType)
     ]).subscribe((res) => {
       that.isLoading = false;
+      const fyleCategory = that.editMapping ? that.fyleCategories.filter(category => category.value === that.data.rowElement.fyle_value)[0] : '';
+      const sageIntacctAccount = that.editMapping ? that.sageIntacctAccounts.filter(siAccObj => siAccObj.value === that.data.rowElement.sage_intacct_value)[0]: '';
+      const sageIntacctExpenseTypes = that.editMapping ? that.sageIntacctExpenseTypes.filter(siExpTypeObj => siExpTypeObj.value === that.data.rowElement.sage_intacct_value)[0]: '';
+      const sageIntacctCCCAccount = that.editMapping ? that.sageIntacctCCCAccounts.filter(cccObj => cccObj.value === that.data.rowElement.ccc_account)[0]: '';
 
       that.form = that.formBuilder.group({
-        fyleCategory: ['', Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleCategories)])],
-        sageIntacctAccount: ['', that.generalSettings.reimbursable_expenses_object === 'BILL' ? that.forbiddenSelectionValidator(that.sageIntacctAccounts) : null],
-        sageIntacctExpenseTypes: ['', that.generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' ? that.forbiddenSelectionValidator(that.sageIntacctExpenseTypes) : null],
-        sageIntacctCCCAccount: ['', that.showSeparateCCCField() ? that.forbiddenSelectionValidator(that.sageIntacctCCCAccounts) : null],
+        fyleCategory: [fyleCategory, Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleCategories)])],
+        sageIntacctAccount: [sageIntacctAccount, that.generalSettings.reimbursable_expenses_object === 'BILL' ? that.forbiddenSelectionValidator(that.sageIntacctAccounts) : null],
+        sageIntacctExpenseTypes: [sageIntacctExpenseTypes, that.generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' ? that.forbiddenSelectionValidator(that.sageIntacctExpenseTypes) : null],
+        sageIntacctCCCAccount: [sageIntacctCCCAccount, that.showSeparateCCCField() ? that.forbiddenSelectionValidator(that.sageIntacctCCCAccounts) : null],
       });
+
+      if (that.editMapping) {
+        that.form.controls.fyleCategory.disable()
+      }
 
       that.setupAutocompleteWatchers();
     });
@@ -213,6 +222,10 @@ export class CategoryMappingsDialogComponent implements OnInit {
 
   ngOnInit() {
     const that = this;
+
+    if (that.data.rowElement) {
+      that.editMapping = true;
+    }
 
     that.workSpaceId = that.data.workspaceId;
     that.isLoading = true;
