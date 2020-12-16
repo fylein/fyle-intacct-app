@@ -31,12 +31,13 @@ export class EmployeeMappingsComponent implements OnInit {
               private storageService: StorageService) {
   }
 
-  open() {
+  open(selectedItem: any=null) {
     const that = this;
     const dialogRef = that.dialog.open(EmployeeMappingsDialogComponent, {
       width: '450px',
       data: {
-        workspaceId: that.workspaceId
+        workspaceId: that.workspaceId,
+        rowElement: selectedItem
       }
     });
 

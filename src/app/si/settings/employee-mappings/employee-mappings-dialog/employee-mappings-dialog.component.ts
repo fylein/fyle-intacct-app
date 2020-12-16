@@ -40,6 +40,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
   sageIntacctVendorOptions: any[];
   generalMappings: any;
   defaultCCCObj: any;
+  editMapping: boolean;
 
   matcher = new MappingErrorStateMatcher();
 
@@ -58,7 +59,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
   submit() {
     const that = this;
 
-    const fyleEmployee = that.form.value.fyleEmployee;
+    const fyleEmployee = that.form.controls.fyleEmployee.value;
     const sageIntacctVendor = that.generalSettings.reimbursable_expenses_object === 'BILL' ? that.form.value.sageIntacctVendor : '';
     const sageIntacctEmployee = that.generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' ? that.form.value.sageIntacctEmployee : '';
     const creditCardAccount = that.form.value.creditCardAccount ? that.form.value.creditCardAccount.value : null;
@@ -210,20 +211,34 @@ export class EmployeeMappingsDialogComponent implements OnInit {
       from(getGeneralMappings)
     ]).subscribe((res) => {
       that.isLoading = false;
-
       that.getDefaultCCCObj();
+
+      const fyleEmployee = that.editMapping ? that.fyleEmployees.filter(employee => employee.value === that.data.rowElement.fyle_value)[0] : '';
+      const sageIntacctVendor = that.editMapping ? that.sageIntacctVendors.filter(vendor => vendor.value === that.data.rowElement.sage_intacct_value)[0] : '';
+      const sageIntacctEmployee = that.editMapping ? that.sageIntacctEmployees.filter(employee => employee.value === that.data.rowElement.sage_intacct_value)[0] : '';
+
       that.form = that.formBuilder.group({
-        fyleEmployee: ['', Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleEmployees)])],
-        sageIntacctVendor: ['', that.generalSettings.reimbursable_expenses_object === 'BILL' ? that.forbiddenSelectionValidator(that.sageIntacctVendors) : null],
-        sageIntacctEmployee: ['', that.generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' ? that.forbiddenSelectionValidator(that.sageIntacctEmployees) : null],
+        fyleEmployee: [fyleEmployee, Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleEmployees)])],
+        sageIntacctVendor: [sageIntacctVendor, that.generalSettings.reimbursable_expenses_object === 'BILL' ? that.forbiddenSelectionValidator(that.sageIntacctVendors) : null],
+        sageIntacctEmployee: [sageIntacctEmployee, that.generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' ? that.forbiddenSelectionValidator(that.sageIntacctEmployees) : null],
         creditCardAccount: [that.defaultCCCObj || '', (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') ? that.forbiddenSelectionValidator(that.creditCardValue) : null]
       });
+
+      if (that.editMapping) {
+        that.form.controls.fyleEmployee.disable()
+      }
+
       that.setupAutocompleteWatchers();
     });
   }
 
   ngOnInit() {
     const that = this;
+
+    if (that.data.rowElement) {
+      that.editMapping = true;
+    }
+
     that.workSpaceId = that.data.workspaceId;
     that.isLoading = true;
     that.settingsService.getCombinedSettings(that.workSpaceId).subscribe(settings => {
