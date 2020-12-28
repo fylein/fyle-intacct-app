@@ -36,6 +36,11 @@ export class GenericMappingsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       that.getMappings();
+      const onboarded = that.storageService.get('onboarded');
+
+      if (onboarded === false) {
+        that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
+      }
     });
   }
 
@@ -48,11 +53,6 @@ export class GenericMappingsComponent implements OnInit {
     that.mappingsService.getMappings(that.setting.source_field).subscribe(mappings => {
       that.mappings = mappings.results;
       that.isLoading = false;
-      const onboarded = that.storageService.get('onboarded');
-
-        if (onboarded === false) {
-          that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
-        }
     });
   }
 
