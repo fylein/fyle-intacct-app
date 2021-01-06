@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ExpenseGroupsService } from 'src/app/core/services/expense-groups.service';
 import { ActivatedRoute } from '@angular/router';
 import { TasksService } from 'src/app/core/services/tasks.service';
-import { Task } from 'src/app/core/models/task.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormBuilder } from '@angular/forms';
 import { ExpenseGroupSettingsDialogComponent } from './expense-group-settings-dialog/expense-group-settings-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
+import { WorkspaceService } from 'src/app/core/services/workspace.service';
 
 @Component({
   selector: 'app-sync',
@@ -17,14 +17,14 @@ import { forkJoin } from 'rxjs';
 export class SyncComponent implements OnInit {
 
   workspaceId: number;
-  lastTask: Task;
+  workspace: any;
   isLoading: boolean;
   isExpensesSyncing: boolean;
   isEmployeesSyncing: boolean;
   errorOccurred = false;
   expenseGroupSettings: any;
 
-  constructor(private expenseGroupService: ExpenseGroupsService, private route: ActivatedRoute, private taskService: TasksService, private snackBar: MatSnackBar, private formBuilder: FormBuilder, public dialog: MatDialog) { }
+  constructor(private expenseGroupService: ExpenseGroupsService, private route: ActivatedRoute, private taskService: TasksService, private snackBar: MatSnackBar, private workspaceService: WorkspaceService, public dialog: MatDialog) { }
 
   syncExpenses() {
     const that = this;
@@ -100,15 +100,13 @@ export class SyncComponent implements OnInit {
     that.isLoading = true;
     forkJoin(
       [
-        that.taskService.getTasks(1, 0, 'ALL'),
+        that.workspaceService.getWorkspaceById(),
         that.expenseGroupService.getExpenseGroupSettings()
       ]
     )
 
     .subscribe((res) => {
-      if (res[0].count > 0) {
-        that.lastTask = res[0].results[0];
-      }
+      that.workspace = res[0];
       that.expenseGroupSettings = res[1];
       that.isLoading = false;
     });
