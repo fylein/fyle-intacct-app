@@ -141,8 +141,8 @@ export class GeneralMappingsComponent implements OnInit {
 
       that.form = that.formBuilder.group({
         location: [locationId ? locationId : ''],
-        chargeCard: [chargeCard ? chargeCard: ''],
-        defaultVendor: [defaultVendor ? defaultVendor: ''],
+        chargeCard: [chargeCard ? chargeCard : ''],
+        defaultVendor: [defaultVendor ? defaultVendor : ''],
         department: [departmentId ? departmentId : ''],
         project: [projectId ? projectId : '']
       });

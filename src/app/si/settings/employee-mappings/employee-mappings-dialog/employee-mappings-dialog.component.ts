@@ -45,11 +45,11 @@ export class EmployeeMappingsDialogComponent implements OnInit {
   matcher = new MappingErrorStateMatcher();
 
   constructor(private formBuilder: FormBuilder,
-    public dialogRef: MatDialogRef<EmployeeMappingsDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private mappingsService: MappingsService,
-    private snackBar: MatSnackBar,
-    private settingsService: SettingsService) { }
+              public dialogRef: MatDialogRef<EmployeeMappingsDialogComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any,
+              private mappingsService: MappingsService,
+              private snackBar: MatSnackBar,
+              private settingsService: SettingsService) { }
 
 
   mappingDisplay(mappingObject) {
@@ -225,7 +225,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
       });
 
       if (that.editMapping) {
-        that.form.controls.fyleEmployee.disable()
+        that.form.controls.fyleEmployee.disable();
       }
 
       that.setupAutocompleteWatchers();

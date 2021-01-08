@@ -18,12 +18,13 @@ export class ConnectSageIntacctComponent implements OnInit {
   connectSageIntacctForm: FormGroup;
   workspaceId: number;
 
-  constructor(private formBuilder: FormBuilder, 
-              private settingsService: SettingsService, 
-              private route: ActivatedRoute, 
-              private router: Router, 
-              private snackBar: MatSnackBar,
-              private si: SiComponent) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private settingsService: SettingsService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private snackBar: MatSnackBar,
+    private si: SiComponent) { }
 
   save() {
     const that = this;
@@ -65,7 +66,7 @@ export class ConnectSageIntacctComponent implements OnInit {
       that.connectSageIntacctForm = that.formBuilder.group({
         userID: res.si_user_id ? res.si_user_id : '',
         companyID: res.si_company_id ? res.si_company_id : '',
-        companyName: res.si_company_name? res.si_company_name : '',
+        companyName: res.si_company_name ? res.si_company_name : '',
         userPassword: ''
       });
       that.isLoading = false;

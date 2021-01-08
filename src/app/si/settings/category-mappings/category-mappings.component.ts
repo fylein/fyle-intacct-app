@@ -26,7 +26,7 @@ export class CategoryMappingsComponent implements OnInit {
     private storageService: StorageService,
     private settingsService: SettingsService) { }
 
-  open(selectedItem: any=null) {
+  open(selectedItem: any = null) {
     const that = this;
     const dialogRef = that.dialog.open(CategoryMappingsDialogComponent, {
       width: '450px',
@@ -90,7 +90,7 @@ export class CategoryMappingsComponent implements OnInit {
       that.isLoading = false;
     }, (err) => {
       that.isLoading = false;
-    })
+    });
   }
 
 

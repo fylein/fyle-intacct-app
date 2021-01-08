@@ -148,7 +148,7 @@ export class ExportComponent implements OnInit {
     const that = this;
     that.settingsService.getSageIntacctCredentials(that.workspaceId).subscribe(res => {
       that.companyName = res && res.si_company_name;
-    })
+    });
   }
 
   ngOnInit() {

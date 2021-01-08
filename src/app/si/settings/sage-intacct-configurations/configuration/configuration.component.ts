@@ -21,16 +21,16 @@ export class ConfigurationComponent implements OnInit {
   workspaceId: number;
   generalSettings: any;
   mappingSettings: any;
-  windowReference: Window
+  windowReference: Window;
 
   constructor(private formBuilder: FormBuilder,
-    private settingsService: SettingsService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private snackBar: MatSnackBar,
-    private windowReferenceService: WindowReferenceService) {
-      this.windowReference = this.windowReferenceService.nativeWindow;
-    }
+              private settingsService: SettingsService,
+              private route: ActivatedRoute,
+              private router: Router,
+              private snackBar: MatSnackBar,
+              private windowReferenceService: WindowReferenceService) {
+                this.windowReference = this.windowReferenceService.nativeWindow;
+              }
 
   getEmployee(reimburExpenseMappedTo) {
     return {

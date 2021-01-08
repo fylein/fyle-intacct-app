@@ -103,7 +103,7 @@ export class SiComponent implements OnInit {
     that.settingsService.getSageIntacctCredentials(that.workspace.id).subscribe(res => {
       that.connectSageIntacct = false;
       that.companyName = res && res.si_company_name;
-    })
+    });
   }
 
   setupWorkspace() {

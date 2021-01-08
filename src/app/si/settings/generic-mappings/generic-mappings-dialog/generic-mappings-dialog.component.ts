@@ -139,15 +139,15 @@ export class GenericMappingsDialogComponent implements OnInit {
       sageIntacctPromise
     ]).subscribe(() => {
       that.isLoading = false;
-      const sourceField = that.editMapping ? that.fyleAttributes.filter(sourceField => sourceField.value === that.data.rowElement.source.value)[0] : '';
-      const destinationField = that.editMapping ? that.sageIntacctElements.filter(destinationField => destinationField.value === that.data.rowElement.destination.value)[0] : '';
+      const sourceField = that.editMapping ? that.fyleAttributes.filter(field => field.value === that.data.rowElement.source.value)[0] : '';
+      const destinationField = that.editMapping ? that.sageIntacctElements.filter(field => field.value === that.data.rowElement.destination.value)[0] : '';
       that.form = that.formBuilder.group({
         sourceField: [sourceField, Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleAttributes)])],
         destinationField: [destinationField, that.forbiddenSelectionValidator(that.sageIntacctElements)],
       });
 
-      if(that.editMapping) {
-        that.form.controls.sourceField.disable()
+      if (that.editMapping) {
+        that.form.controls.sourceField.disable();
       }
 
       that.setupAutcompleteWathcers();
@@ -161,9 +161,9 @@ export class GenericMappingsDialogComponent implements OnInit {
     if (that.data.rowElement) {
       that.editMapping = true;
     }
-    
+
     that.setting = that.data.setting;
-    
+
     that.isLoading = false;
     that.reset();
   }

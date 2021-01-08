@@ -40,16 +40,16 @@ export class SageIntacctConfigurationsComponent implements OnInit {
     }
 
     return false;
-  } 
+  }
 
   ngOnInit() {
-    const that = this; 
+    const that = this;
     that.isParentLoading = true;
 
     that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
     that.state = that.route.snapshot.firstChild.routeConfig.path.toUpperCase() || 'GENERAL';
-    
-    that.settingsService.getSageIntacctCredentials(that.workspaceId).subscribe(response => {
+
+    that.settingsService.getSageIntacctCredentials(that.workspaceId).subscribe(() => {
       that.sageIntacctConnectionDone = true;
       forkJoin(
         [
@@ -63,7 +63,7 @@ export class SageIntacctConfigurationsComponent implements OnInit {
       }, () => {
         that.isParentLoading = false;
       });
-      
+
     });
   }
 }

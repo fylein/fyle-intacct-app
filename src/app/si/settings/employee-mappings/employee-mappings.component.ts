@@ -31,7 +31,7 @@ export class EmployeeMappingsComponent implements OnInit {
               private storageService: StorageService) {
   }
 
-  open(selectedItem: any=null) {
+  open(selectedItem: any = null) {
     const that = this;
     const dialogRef = that.dialog.open(EmployeeMappingsDialogComponent, {
       width: '450px',
