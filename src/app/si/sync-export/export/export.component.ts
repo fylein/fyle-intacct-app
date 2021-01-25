@@ -80,13 +80,13 @@ export class ExportComponent implements OnInit {
     this.windowReference.open(`workspaces/${that.workspaceId}/expense_groups?state=COMPLETE`, '_blank');
   }
 
-  checkResultsOfExport(filteredIds) {
+  checkResultsOfExport(filteredIds: number[]) {
     const that = this;
     interval(3000).pipe(
-      switchMap(() => from(that.taskService.getTasks(10, 0, 'ALL'))),
-      takeWhile((response) => response.results.filter(task => task.status === 'IN_PROGRESS').length > 0, true)
+      switchMap(() => from(that.taskService.getAllTasks('ALL'))),
+      takeWhile((response) => response.results.filter(task => task.status === 'IN_PROGRESS'  && task.type !== 'FETCHING_EXPENSES' && filteredIds.includes(task.expense_group)).length > 0, true)
     ).subscribe((res) => {
-      if (res.results.filter(task => task.status === 'IN_PROGRESS').length === 0) {
+      if (res.results.filter(task => task.status === 'IN_PROGRESS'  && task.type !== 'FETCHING_EXPENSES' && filteredIds.includes(task.expense_group)).length === 0) {
         that.taskService.getAllTasks('FAILED').subscribe((taskResponse) => {
           that.failedExpenseGroupCount = taskResponse.count;
           that.successfulExpenseGroupCount = filteredIds.length - that.failedExpenseGroupCount;
