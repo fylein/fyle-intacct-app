@@ -48,11 +48,17 @@ export class GenericMappingsComponent implements OnInit {
     return name.replace(/_/g, ' ');
   }
 
-  getMappings() {
+  getMappings(next = null, tempMappings = null) {
     const that = this;
-    that.mappingsService.getMappings(that.setting.source_field).subscribe(mappings => {
-      that.mappings = mappings.results;
-      that.isLoading = false;
+    that.mappingsService.getMappings(that.setting.source_field, next).subscribe(mappings => {
+      next = mappings.next;
+      tempMappings = tempMappings ? tempMappings.concat(mappings.results) : mappings.results;
+      if (next) {
+        that.getMappings(next, tempMappings);
+      } else {
+        that.mappings = tempMappings;
+        that.isLoading = false;
+      }
     });
   }
 

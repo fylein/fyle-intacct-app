@@ -298,13 +298,10 @@ export class MappingsService {
     });
   }
 
-  getMappings(sourceType): Observable<MappingsResponse> {
+  getMappings(sourceType, uri): Observable<MappingsResponse> {
     const workspaceId = this.workspaceService.getWorkspaceId();
-    return this.apiService.get(
-      `/workspaces/${workspaceId}/mappings/`, {
-        source_type: sourceType
-      }
-    );
+    const url = uri ? uri.split('api')[1] : `/workspaces/${workspaceId}/mappings/?source_type=${sourceType}&offset=0&limit=500`;
+    return this.apiService.get(url ,{});
   }
 
   postMappings(mapping: any) {
