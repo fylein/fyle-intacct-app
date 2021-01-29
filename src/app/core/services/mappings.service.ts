@@ -19,6 +19,7 @@ export class MappingsService {
   sageIntacctExpenseTypes: Observable<any[]>;
   sageIntacctLocations: Observable<any[]>;
   sageIntacctProjects: Observable<any[]>;
+  sageIntacctItems: Observable<any[]>;
   fyleProjects: Observable<any[]>;
   fyleExpenseCustomFields: Observable<any[]>;
   sageIntacctDepartments: Observable<any[]>;
@@ -136,6 +137,19 @@ export class MappingsService {
     return this.sageIntacctExpenseTypes;
   }
 
+  postSageIntacctItems() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    if (!this.sageIntacctItems) {
+      this.sageIntacctItems = this.apiService.post(`/workspaces/${workspaceId}/sage_intacct/items/`, {}).pipe( //item-> items/
+        map(data => data),
+        publishReplay(1),
+        refCount()
+      );
+    }
+    return this.sageIntacctItems;
+  }
+
   postSageIntacctLocations() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
@@ -231,7 +245,7 @@ export class MappingsService {
   getSageIntacctChargeCard() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/charge_card_accounts/`, {});
+    return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/charge_card_accounts/`, {}); //item-> items/
   }
 
   getSageIntacctEmployees() {
@@ -298,7 +312,7 @@ export class MappingsService {
     });
   }
 
-  getMappings(sourceType, uri): Observable<MappingsResponse> {
+  getMappings(sourceType, uri = null): Observable<MappingsResponse> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     const url = uri ? uri.split('api')[1] : `/workspaces/${workspaceId}/mappings/?source_type=${sourceType}&offset=0&limit=500`;
     return this.apiService.get(url, {});
