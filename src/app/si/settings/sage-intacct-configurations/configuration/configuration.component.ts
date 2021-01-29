@@ -183,9 +183,9 @@ export class ConfigurationComponent implements OnInit {
       ).subscribe(responses => {
         that.isLoading = true;
         that.snackBar.open('Configuration saved successfully');
-        // that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`).then(() => {
-        //   that.windowReference.location.reload();
-        // });
+        that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`).then(() => {
+          that.windowReference.location.reload();
+        });
         that.isLoading = false;
       });
     } else {
