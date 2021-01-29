@@ -92,10 +92,11 @@ export class SettingsService {
   @CacheBuster({
     cacheBusterNotifier: generalSettingsCache
   })
-  postGeneralSettings(workspaceId: number, reimbursableExpensesObject: string, corporateCreditCardExpensesObject: string) {
+  postGeneralSettings(workspaceId: number, reimbursableExpensesObject: string, corporateCreditCardExpensesObject: string, importProjects: boolean) {
     return this.apiService.post(`/workspaces/${workspaceId}/settings/general/`, {
       reimbursable_expenses_object: reimbursableExpensesObject,
-      corporate_credit_card_expenses_object: corporateCreditCardExpensesObject
+      corporate_credit_card_expenses_object: corporateCreditCardExpensesObject,
+      import_projects: importProjects
     });
   }
 

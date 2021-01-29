@@ -301,7 +301,7 @@ export class MappingsService {
   getMappings(sourceType, uri): Observable<MappingsResponse> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     const url = uri ? uri.split('api')[1] : `/workspaces/${workspaceId}/mappings/?source_type=${sourceType}&offset=0&limit=500`;
-    return this.apiService.get(url ,{});
+    return this.apiService.get(url, {});
   }
 
   postMappings(mapping: any) {

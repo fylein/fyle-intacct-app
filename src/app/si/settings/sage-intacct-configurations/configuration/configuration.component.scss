@@ -2,6 +2,17 @@
 
 $text-error: #ff6e40;
 
+.schedule {
+  margin-bottom: 32px;
+  &--header {
+    border-bottom: 1px solid $fy-layout-background;
+  }
+
+  &--toggle-text {
+    font-size: 14px;
+  }
+}
+
 ::ng-deep .configurations {
   &--header {
     border-bottom: 1px solid $fy-layout-background;

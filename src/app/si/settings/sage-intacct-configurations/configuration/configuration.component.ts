@@ -95,6 +95,7 @@ export class ConfigurationComponent implements OnInit {
       that.generalSettingsForm = that.formBuilder.group({
         reimburExpense: [that.generalSettings ? that.generalSettings.reimbursable_expenses_object : ''],
         cccExpense: [that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : ''],
+        importProjects: [that.generalSettings.import_projects],
       });
 
       that.generalSettingsForm.controls.reimburExpense.disable();
@@ -110,7 +111,8 @@ export class ConfigurationComponent implements OnInit {
       that.isLoading = false;
       that.generalSettingsForm = that.formBuilder.group({
         reimburExpense: ['', Validators.required],
-        cccExpense: [null]
+        cccExpense: [null],
+        importProjects: [false],
       });
 
       that.expenseOptions = [{
@@ -140,6 +142,7 @@ export class ConfigurationComponent implements OnInit {
       const cccExpensesObject = that.generalSettingsForm.value.cccExpense || that.generalSettings.corporate_credit_card_expenses_object || null;
       const categoryMappingObject = that.getCategory(reimbursableExpensesObject)[0].value;
       const employeeMappingsObject = that.getEmployee(reimbursableExpensesObject)[0].value;
+      const importProjects = that.generalSettingsForm.value.importProjects;
 
       const mappingsSettingsPayload = [{
         source_field: 'EMPLOYEE',
@@ -150,6 +153,13 @@ export class ConfigurationComponent implements OnInit {
         source_field: 'CATEGORY',
         destination_field: categoryMappingObject
       });
+
+      if (importProjects) {
+        mappingsSettingsPayload.push({
+          source_field: 'PROJECT',
+          destination_field: 'PROJECT'
+        });
+      }
 
       if (cccExpensesObject) {
         mappingsSettingsPayload.push({
@@ -168,14 +178,14 @@ export class ConfigurationComponent implements OnInit {
       forkJoin(
         [
           that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject)
+          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, importProjects)
         ]
       ).subscribe(responses => {
         that.isLoading = true;
         that.snackBar.open('Configuration saved successfully');
-        that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`).then(() => {
-          that.windowReference.location.reload();
-        });
+        // that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`).then(() => {
+        //   that.windowReference.location.reload();
+        // });
         that.isLoading = false;
       });
     } else {
