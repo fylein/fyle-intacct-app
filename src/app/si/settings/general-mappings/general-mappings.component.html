@@ -92,6 +92,20 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+      
+      <div class="mat-body-strong" *ngIf="generalSettings.import_projects">
+        <strong class="mappings-dialog--label">
+          Default Item
+        </strong>
+      </div>
+      <mat-form-field class="mappings-dialog--form-element" appearance="outline" required 
+       *ngIf="generalSettings.import_projects">
+        <mat-select placeholder="Default Item" formControlName="defaultItem">
+          <mat-option *ngFor="let option of sageIntacctDefaultItem" [value]="option.destination_id">
+            {{option.value}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
     </div>
 

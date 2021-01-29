@@ -141,7 +141,7 @@ export class MappingsService {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.sageIntacctItems) {
-      this.sageIntacctItems = this.apiService.post(`/workspaces/${workspaceId}/sage_intacct/items/`, {}).pipe( //item-> items/
+      this.sageIntacctItems = this.apiService.post(`/workspaces/${workspaceId}/sage_intacct/items/`, {}).pipe(
         map(data => data),
         publishReplay(1),
         refCount()
@@ -245,7 +245,13 @@ export class MappingsService {
   getSageIntacctChargeCard() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/charge_card_accounts/`, {}); //item-> items/
+    return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/charge_card_accounts/`, {});
+  }
+
+  getSageIntacctItem() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/items/`, {});
   }
 
   getSageIntacctEmployees() {
