@@ -320,7 +320,7 @@ export class MappingsService {
 
   getMappings(sourceType, uri = null): Observable<MappingsResponse> {
     const workspaceId = this.workspaceService.getWorkspaceId();
-    const url = uri ? uri.split('api')[1] : `/workspaces/${workspaceId}/mappings/?limit=5&offset=0&source_type=${sourceType}`;
+    const url = uri ? uri.split('api')[1] : `/workspaces/${workspaceId}/mappings/?limit=500&offset=0&source_type=${sourceType}`;
     return this.apiService.get(url, {});
   }
 
@@ -339,7 +339,7 @@ export class MappingsService {
 
   // Following is traditional method of recursive calls emplying two methods for recursive calls to API
 
-  // getAllMappings(sourceType): Observable<MappingsResponse[]> { 
+  // getAllMappings(sourceType): Observable<MappingsResponse[]> {
   //   return from(this.getAllMappingsInternal(sourceType));
   // }
 
