@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map, publishReplay, refCount } from 'rxjs/operators';
+import { empty, Observable, from } from 'rxjs';
+import { concatMap, expand, map, publishReplay, refCount, reduce } from 'rxjs/operators';
 import { ApiService } from 'src/app/core/services/api.service';
 import { MappingsResponse } from '../models/mappings-response.model';
 import { WorkspaceService } from './workspace.service';
@@ -320,9 +320,40 @@ export class MappingsService {
 
   getMappings(sourceType, uri = null): Observable<MappingsResponse> {
     const workspaceId = this.workspaceService.getWorkspaceId();
-    const url = uri ? uri.split('api')[1] : `/workspaces/${workspaceId}/mappings/?source_type=${sourceType}&offset=0&limit=500`;
+    const url = uri ? uri.split('api')[1] : `/workspaces/${workspaceId}/mappings/?limit=5&offset=0&source_type=${sourceType}`;
     return this.apiService.get(url, {});
   }
+
+  // Following is new method of doing the recursive calls replaced with rxjs methods like expand, concatMap and reduce.
+
+  getAllMappings(sourceType) {
+    const that = this;
+    return this.getMappings(sourceType).pipe(expand((res: any) => {
+      return res.next ? that.getMappings(sourceType, res.next) : empty();
+    }), concatMap((res: any) => res.results),
+      reduce((arr, val) => {
+        arr.push(val);
+        return arr;
+      }, []));
+  }
+
+  // Following is traditional method of recursive calls emplying two methods for recursive calls to API
+
+  // getAllMappings(sourceType): Observable<MappingsResponse[]> { 
+  //   return from(this.getAllMappingsInternal(sourceType));
+  // }
+
+  // private getAllMappingsInternal(sourceType, tempMappings = null, uri = null): Promise<MappingsResponse[]> {
+  //   const that = this;
+  //   return that.getMappings(sourceType, uri).toPromise().then(response => {
+  //     tempMappings = tempMappings ? tempMappings.concat(response.results) : response.results;
+  //     if (response.next) {
+  //       return that.getAllMappingsInternal(sourceType, tempMappings, response.next);
+  //     } else {
+  //       return tempMappings;
+  //     }
+  //   });
+  // }
 
   postMappings(mapping: any) {
     const workspaceId = this.workspaceService.getWorkspaceId();
