@@ -112,7 +112,7 @@ export class ConfigurationComponent implements OnInit {
       that.generalSettingsForm = that.formBuilder.group({
         reimburExpense: ['', Validators.required],
         cccExpense: [null],
-        importProjects: [false],
+        importProjects: [false]
       });
 
       that.expenseOptions = [{
