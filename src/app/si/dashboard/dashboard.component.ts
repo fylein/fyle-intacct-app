@@ -177,7 +177,7 @@ export class DashboardComponent implements OnInit {
       that.mappingsService.postSageIntacctExpensetypes(),
       that.mappingsService.postSageIntacctItems()
       ).subscribe(() => {
-      
+
     });
   }
 
