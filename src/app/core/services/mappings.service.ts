@@ -248,7 +248,7 @@ export class MappingsService {
     return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/charge_card_accounts/`, {});
   }
 
-  getSageIntacctItem() {
+  getSageIntacctItems() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/items/`, {});
@@ -324,8 +324,6 @@ export class MappingsService {
     return this.apiService.get(url, {});
   }
 
-  // Following is new method of doing the recursive calls replaced with rxjs methods like expand, concatMap and reduce.
-
   getAllMappings(sourceType) {
     const that = this;
     return this.getMappings(sourceType).pipe(expand((res: any) => {
@@ -336,24 +334,6 @@ export class MappingsService {
         return arr;
       }, []));
   }
-
-  // Following is traditional method of recursive calls emplying two methods for recursive calls to API
-
-  // getAllMappings(sourceType): Observable<MappingsResponse[]> {
-  //   return from(this.getAllMappingsInternal(sourceType));
-  // }
-
-  // private getAllMappingsInternal(sourceType, tempMappings = null, uri = null): Promise<MappingsResponse[]> {
-  //   const that = this;
-  //   return that.getMappings(sourceType, uri).toPromise().then(response => {
-  //     tempMappings = tempMappings ? tempMappings.concat(response.results) : response.results;
-  //     if (response.next) {
-  //       return that.getAllMappingsInternal(sourceType, tempMappings, response.next);
-  //     } else {
-  //       return tempMappings;
-  //     }
-  //   });
-  // }
 
   postMappings(mapping: any) {
     const workspaceId = this.workspaceService.getWorkspaceId();

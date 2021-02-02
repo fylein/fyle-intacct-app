@@ -124,7 +124,7 @@ export class GeneralMappingsComponent implements OnInit {
       that.sageIntacctDefaultChargeCard = objects;
     });
 
-    const getSageIntacctItem = that.mappingsService.getSageIntacctItem().toPromise().then(objects => {
+    const getSageIntacctItems = that.mappingsService.getSageIntacctItems().toPromise().then(objects => {
       that.sageIntacctDefaultItem = objects;
     });
 
@@ -135,7 +135,7 @@ export class GeneralMappingsComponent implements OnInit {
         getSageIntacctProjects,
         getSageIntacctDefaultVendor,
         getSageIntacctDefaultChargeCard,
-        getSageIntacctItem
+        getSageIntacctItems
       ]
     ).subscribe(responses => {
       that.isLoading = false;
