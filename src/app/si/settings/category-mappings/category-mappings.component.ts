@@ -71,8 +71,8 @@ export class CategoryMappingsComponent implements OnInit {
   reset() {
     const that = this;
 
-    const getCategoryMappings = that.mappingsService.getMappings('CATEGORY').toPromise().then(categoryMappings => {
-      that.categoryMappings = categoryMappings.results;
+    const getCategoryMappings = that.mappingsService.getAllMappings('CATEGORY').toPromise().then(categoryMappings => {
+      that.categoryMappings = categoryMappings;
       that.createCategoryMappingsRows();
     });
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map, publishReplay, refCount } from 'rxjs/operators';
+import { empty, Observable, from } from 'rxjs';
+import { concatMap, expand, map, publishReplay, refCount, reduce } from 'rxjs/operators';
 import { ApiService } from 'src/app/core/services/api.service';
 import { MappingsResponse } from '../models/mappings-response.model';
 import { WorkspaceService } from './workspace.service';
@@ -19,6 +19,7 @@ export class MappingsService {
   sageIntacctExpenseTypes: Observable<any[]>;
   sageIntacctLocations: Observable<any[]>;
   sageIntacctProjects: Observable<any[]>;
+  sageIntacctItems: Observable<any[]>;
   fyleProjects: Observable<any[]>;
   fyleExpenseCustomFields: Observable<any[]>;
   sageIntacctDepartments: Observable<any[]>;
@@ -136,6 +137,19 @@ export class MappingsService {
     return this.sageIntacctExpenseTypes;
   }
 
+  postSageIntacctItems() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    if (!this.sageIntacctItems) {
+      this.sageIntacctItems = this.apiService.post(`/workspaces/${workspaceId}/sage_intacct/items/`, {}).pipe(
+        map(data => data),
+        publishReplay(1),
+        refCount()
+      );
+    }
+    return this.sageIntacctItems;
+  }
+
   postSageIntacctLocations() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
@@ -234,6 +248,12 @@ export class MappingsService {
     return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/charge_card_accounts/`, {});
   }
 
+  getSageIntacctItems() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/items/`, {});
+  }
+
   getSageIntacctEmployees() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
@@ -298,13 +318,21 @@ export class MappingsService {
     });
   }
 
-  getMappings(sourceType): Observable<MappingsResponse> {
+  getMappings(sourceType, uri = null): Observable<MappingsResponse> {
     const workspaceId = this.workspaceService.getWorkspaceId();
-    return this.apiService.get(
-      `/workspaces/${workspaceId}/mappings/`, {
-        source_type: sourceType
-      }
-    );
+    const url = uri ? uri.split('api')[1] : `/workspaces/${workspaceId}/mappings/?limit=500&offset=0&source_type=${sourceType}`;
+    return this.apiService.get(url, {});
+  }
+
+  getAllMappings(sourceType) {
+    const that = this;
+    return this.getMappings(sourceType).pipe(expand((res: any) => {
+      return res.next ? that.getMappings(sourceType, res.next) : empty();
+    }), concatMap((res: any) => res.results),
+      reduce((arr, val) => {
+        arr.push(val);
+        return arr;
+      }, []));
   }
 
   postMappings(mapping: any) {
