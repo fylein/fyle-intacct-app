@@ -270,7 +270,7 @@ export class MappingsService {
 
     return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/payment_accounts/`, {});
   }
-  
+
   getSageIntacctItems() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 

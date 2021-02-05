@@ -219,7 +219,7 @@ export class ConfigurationComponent implements OnInit {
 
   showPaymentsFields(reimbursableExpensesObject) {
     const that = this;
-    if (reimbursableExpensesObject && reimbursableExpensesObject != 'CHARGE_CARD_TRANSACTION') {
+    if (reimbursableExpensesObject && reimbursableExpensesObject !== 'CHARGE_CARD_TRANSACTION') {
       that.showPaymentsField = true;
     } else {
       that.showPaymentsField = false;
