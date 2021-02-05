@@ -13,6 +13,17 @@ $text-error: #ff6e40;
   }
 }
 
+.info-icon {
+  text-align: center;
+  cursor: pointer;
+  padding-left: 5px;
+  padding-bottom: 5px;
+  max-width: 24px;
+  max-height: 24px;
+  font-size: 20px;
+  vertical-align: middle;
+}
+
 ::ng-deep .configurations {
   &--header {
     border-bottom: 1px solid $fy-layout-background;

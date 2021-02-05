@@ -38,6 +38,27 @@
         </mat-select>
       </mat-form-field>
 
+      <div class="configurations--label" *ngIf="showPaymentsField">
+        Auto Sync Payments
+        <mat-icon [inline]="true" class="info-icon" matTooltip="Sync payments between Fyle and Sage Intacct" matTooltipPosition="after">info</mat-icon>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="start center" *ngIf="showPaymentsField">
+        <mat-form-field floatLabel="always" appearance="outline" fxFlex="100">
+          <mat-select placeholder="Choose Auto Sync Payments"
+            formControlName="paymentsSync">
+            <mat-option>
+              None
+            </mat-option>
+            <mat-option [value]="'sync_fyle_to_sage_intacct_payments'">
+              Export Fyle ACH Payments to Sage Intacct
+            </mat-option>
+            <mat-option [value]="'sync_sage_intacct_to_fyle_payments'">
+              Import Sage Intacct Payments into Fyle
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
       <mat-slide-toggle color="primary" class="schedule" formControlName="importProjects">
         <div class="schedule--toggle-text">Import Sage Intacct Projects into Fyle</div>
       </mat-slide-toggle>
