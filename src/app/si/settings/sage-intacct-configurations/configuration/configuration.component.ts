@@ -22,7 +22,6 @@ export class ConfigurationComponent implements OnInit {
   generalSettings: any;
   mappingSettings: any;
   windowReference: Window;
-  showPaymentsField: boolean;
 
   constructor(private formBuilder: FormBuilder,
               private settingsService: SettingsService,
@@ -93,8 +92,6 @@ export class ConfigurationComponent implements OnInit {
         value: 'BILL'
       }];
 
-      that.showPaymentsFields(that.generalSettings.reimbursable_expenses_object);
-
       let paymentsSyncOption = '';
       if (that.generalSettings.sync_fyle_to_sage_intacct_payments) {
         paymentsSyncOption = 'sync_fyle_to_sage_intacct_payments';
@@ -125,10 +122,6 @@ export class ConfigurationComponent implements OnInit {
         cccExpense: [null],
         importProjects: [false],
         paymentsSync: [null]
-      });
-
-      that.generalSettingsForm.controls.reimburExpense.valueChanges.subscribe((reimbursableExpenseMappedTo) => {
-        that.showPaymentsFields(reimbursableExpenseMappedTo);
       });
 
       that.expenseOptions = [{
@@ -214,15 +207,6 @@ export class ConfigurationComponent implements OnInit {
     } else {
       that.snackBar.open('Form has invalid fields');
       that.generalSettingsForm.markAllAsTouched();
-    }
-  }
-
-  showPaymentsFields(reimbursableExpensesObject) {
-    const that = this;
-    if (reimbursableExpensesObject && reimbursableExpensesObject !== 'CHARGE_CARD_TRANSACTION') {
-      that.showPaymentsField = true;
-    } else {
-      that.showPaymentsField = false;
     }
   }
 

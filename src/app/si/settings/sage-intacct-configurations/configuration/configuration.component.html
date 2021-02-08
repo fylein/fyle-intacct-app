@@ -38,11 +38,11 @@
         </mat-select>
       </mat-form-field>
 
-      <div class="configurations--label" *ngIf="showPaymentsField">
+      <div class="configurations--label">
         Auto Sync Payments
         <mat-icon [inline]="true" class="info-icon" matTooltip="Sync payments between Fyle and Sage Intacct" matTooltipPosition="after">info</mat-icon>
       </div>
-      <div fxLayout="row" fxLayoutAlign="start center" *ngIf="showPaymentsField">
+      <div fxLayout="row" fxLayoutAlign="start center">
         <mat-form-field floatLabel="always" appearance="outline" fxFlex="100">
           <mat-select placeholder="Choose Auto Sync Payments"
             formControlName="paymentsSync">
