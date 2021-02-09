@@ -160,11 +160,13 @@ export class DashboardComponent implements OnInit {
   // to be callled in background whenever dashboard is opened for syncing fyle data for org
   updateDimensionTables() {
     const that = this;
-    that.mappingsService.postFyleEmployees().subscribe(() => {});
-    that.mappingsService.postFyleCategories().subscribe(() => {});
-    that.mappingsService.postFyleProjects().subscribe(() => {});
-    that.mappingsService.postFyleCostCenters().subscribe(() => {});
-    this.mappingsService.postExpenseCustomFields().subscribe(() => {});
+    onErrorResumeNext(
+      that.mappingsService.postFyleEmployees(),
+      that.mappingsService.postFyleCategories(),
+      that.mappingsService.postFyleProjects(),
+      that.mappingsService.postFyleCostCenters(),
+      this.mappingsService.postExpenseCustomFields()
+    ).subscribe(() => {});
 
     onErrorResumeNext(
       that.mappingsService.postSageIntacctLocations(),
