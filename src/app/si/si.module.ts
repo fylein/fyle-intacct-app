@@ -55,6 +55,7 @@ import { SageIntacctConfigurationsComponent } from './settings/sage-intacct-conf
 import { RxReactiveFormsModule } from '@rxweb/reactive-form-validators';
 import { GenericMappingsDialogComponent } from './settings/generic-mappings/generic-mappings-dialog/generic-mappings-dialog.component';
 import { ExpenseGroupSettingsDialogComponent } from './sync-export/sync/expense-group-settings-dialog/expense-group-settings-dialog.component';
+import { MatTooltipModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -119,7 +120,8 @@ import { ExpenseGroupSettingsDialogComponent } from './sync-export/sync/expense-
     MatNativeDateModule,
     MatStepperModule,
     MatProgressBarModule,
-    RxReactiveFormsModule
+    RxReactiveFormsModule,
+    MatTooltipModule
   ],
   providers: [
     {

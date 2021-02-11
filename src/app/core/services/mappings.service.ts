@@ -27,6 +27,7 @@ export class MappingsService {
   accountPayables: Observable<any[]>;
   bankAccounts: Observable<any[]>;
   creditCardAccounts: Observable<any[]>;
+  paymentAccounts: Observable<any[]>;
   expenseFields: Observable<any[]>;
 
   constructor(
@@ -205,6 +206,22 @@ export class MappingsService {
     return this.sageIntacctChargeCardAccounts;
   }
 
+  postSageIntacctPaymentAccounts() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    if (!this.paymentAccounts) {
+      this.paymentAccounts = this.apiService.post(
+        `/workspaces/${workspaceId}/sage_intacct/payment_accounts/`, {}
+      ).pipe(
+        map(data => data),
+        publishReplay(1),
+        refCount()
+      );
+    }
+    return this.paymentAccounts;
+  }
+
+
   postSageIntacctDepartments() {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
@@ -246,6 +263,12 @@ export class MappingsService {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/charge_card_accounts/`, {});
+  }
+
+  getSageIntacctPaymentAccounts() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/payment_accounts/`, {});
   }
 
   getSageIntacctItems() {

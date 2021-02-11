@@ -171,6 +171,7 @@ export class DashboardComponent implements OnInit {
       that.mappingsService.postSageIntacctDepartments(),
       that.mappingsService.postSageIntacctProjects(),
       that.mappingsService.postSageIntacctChargeCardAccounts(),
+      that.mappingsService.postSageIntacctPaymentAccounts(),
       that.mappingsService.postSageIntacctVendors(),
       that.mappingsService.postSageIntacctEmployees(),
       that.mappingsService.postSageIntacctAccounts(),
