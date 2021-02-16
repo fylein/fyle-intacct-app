@@ -130,6 +130,10 @@ export class GenericMappingsDialogComponent implements OnInit {
       sageIntacctPromise = that.mappingsService.getSageIntacctLocations().toPromise().then(objects => {
         that.sageIntacctElements = objects;
       });
+    } else if (that.setting.destination_field === 'ITEM') {
+      sageIntacctPromise = that.mappingsService.getSageIntacctItems().toPromise().then(objects => {
+        that.sageIntacctElements = objects;
+      });
     }
 
     that.isLoading = true;

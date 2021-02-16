@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, ValidatorFn } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -92,10 +92,18 @@ export class ConfigurationComponent implements OnInit {
         value: 'BILL'
       }];
 
+      let paymentsSyncOption = '';
+      if (that.generalSettings.sync_fyle_to_sage_intacct_payments) {
+        paymentsSyncOption = 'sync_fyle_to_sage_intacct_payments';
+      } else if (that.generalSettings.sync_sage_intacct_to_fyle_payments) {
+        paymentsSyncOption = 'sync_sage_intacct_to_fyle_payments';
+      }
+
       that.generalSettingsForm = that.formBuilder.group({
         reimburExpense: [that.generalSettings ? that.generalSettings.reimbursable_expenses_object : ''],
         cccExpense: [that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : ''],
         importProjects: [that.generalSettings.import_projects],
+        paymentsSync: [paymentsSyncOption]
       });
 
       that.generalSettingsForm.controls.reimburExpense.disable();
@@ -112,7 +120,8 @@ export class ConfigurationComponent implements OnInit {
       that.generalSettingsForm = that.formBuilder.group({
         reimburExpense: ['', Validators.required],
         cccExpense: [null],
-        importProjects: [false]
+        importProjects: [false],
+        paymentsSync: [null]
       });
 
       that.expenseOptions = [{
@@ -143,6 +152,8 @@ export class ConfigurationComponent implements OnInit {
       const categoryMappingObject = that.getCategory(reimbursableExpensesObject)[0].value;
       const employeeMappingsObject = that.getEmployee(reimbursableExpensesObject)[0].value;
       const importProjects = that.generalSettingsForm.value.importProjects;
+      let fyleToSageIntacct = false;
+      let sageIntacctToFyle = false;
 
       const mappingsSettingsPayload = [{
         source_field: 'EMPLOYEE',
@@ -173,12 +184,17 @@ export class ConfigurationComponent implements OnInit {
         });
       }
 
+      if (that.generalSettingsForm.controls.paymentsSync.value) {
+        fyleToSageIntacct = that.generalSettingsForm.value.paymentsSync === 'sync_fyle_to_sage_intacct_payments' ? true : false;
+        sageIntacctToFyle = that.generalSettingsForm.value.paymentsSync === 'sync_sage_intacct_to_fyle_payments' ? true : false;
+      }
+
       that.isLoading = true;
 
       forkJoin(
         [
           that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, importProjects)
+          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, importProjects, fyleToSageIntacct, sageIntacctToFyle)
         ]
       ).subscribe(responses => {
         that.isLoading = true;
