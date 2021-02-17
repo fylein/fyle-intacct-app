@@ -25,6 +25,7 @@
         <th mat-header-cell *matHeaderCellDef> Employee Email </th>
         <td mat-cell *matCellDef="let element">
           {{element.fyle_value}}
+          <mat-icon class="auto-map" [inline]="true" matTooltip="Auto mapped row from Fyle and NetSuite" matTooltipPosition="after" *ngIf="element.auto_mapped">bolt</mat-icon>
         </td>
       </ng-container>
 

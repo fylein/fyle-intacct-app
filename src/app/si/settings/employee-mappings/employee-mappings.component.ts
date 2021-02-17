@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MappingsService } from '../../../core/services/mappings.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -66,7 +66,8 @@ export class EmployeeMappingsComponent implements OnInit {
       mappings.push({
         fyle_value: employeeEVMapping.source.value,
         sage_intacct_value: employeeEVMapping.destination.value,
-        ccc_account: that.getCCCAccount(that.employeeMappings, employeeEVMapping)
+        ccc_account: that.getCCCAccount(that.employeeMappings, employeeEVMapping),
+        auto_mapped: employeeEVMapping.source.auto_mapped
       });
     });
     that.employeeMappings = mappings;
