@@ -63,6 +63,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
     const sageIntacctVendor = that.generalSettings.reimbursable_expenses_object === 'BILL' ? that.form.value.sageIntacctVendor : '';
     const sageIntacctEmployee = that.generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' ? that.form.value.sageIntacctEmployee : '';
     const creditCardAccount = that.form.value.creditCardAccount ? that.form.value.creditCardAccount.value : null;
+    const creditCardAccountId = that.form.value.creditCardAccount ? that.form.value.creditCardAccount.destination_id : that.generalMappings.default_charge_card_name;
 
     if (that.form.valid && (sageIntacctVendor || sageIntacctEmployee)) {
       const employeeMapping = [
@@ -70,7 +71,8 @@ export class EmployeeMappingsDialogComponent implements OnInit {
           source_type: 'EMPLOYEE',
           destination_type: that.generalSettings.reimbursable_expenses_object === 'BILL' ? 'VENDOR' : 'EMPLOYEE',
           source_value: fyleEmployee.value,
-          destination_value: that.generalSettings.reimbursable_expenses_object === 'BILL' ? sageIntacctVendor.value : sageIntacctEmployee.value
+          destination_value: that.generalSettings.reimbursable_expenses_object === 'BILL' ? sageIntacctVendor.value : sageIntacctEmployee.value,
+          destination_id: that.generalSettings.reimbursable_expenses_object === 'VENDOR' ? sageIntacctVendor.destination_id : sageIntacctEmployee.destination_id
         })
       ];
 
@@ -80,7 +82,8 @@ export class EmployeeMappingsDialogComponent implements OnInit {
             source_type: 'EMPLOYEE',
             destination_type: 'CHARGE_CARD_NUMBER',
             source_value: fyleEmployee.value,
-            destination_value: creditCardAccount
+            destination_value: creditCardAccount,
+            destination_id: creditCardAccountId
           })
         );
       }
