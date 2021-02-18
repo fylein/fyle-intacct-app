@@ -64,19 +64,19 @@
       </div>
       <div fxLayout="row" fxLayoutAlign="start center">
         <mat-form-field floatLabel="always" appearance="outline" fxFlex="100">
-          <mat-select placeholder="Choose how to auto map employees between Fyle and NetSuite"
+          <mat-select placeholder="Choose how to auto map employees between Fyle and Sage Intacct"
             formControlName="autoMapEmployees">
             <mat-option>
               None
             </mat-option>
             <mat-option [value]="'EMAIL'">
-              Match emails on Fyle and Quickbooks online
+              Match emails on Fyle and Sage Intacct
             </mat-option>
             <mat-option [value]="'NAME'">
-              Match names on Fyle and Quickbooks Online
+              Match names on Fyle and Sage Intacct
             </mat-option>
             <mat-option [value]="'EMPLOYEE_CODE'">
-              Match Fyle Employee Code to Quickbooks Online Name
+              Match Fyle Employee Code to Sage Intacct Name
             </mat-option>
           </mat-select>
         </mat-form-field>
