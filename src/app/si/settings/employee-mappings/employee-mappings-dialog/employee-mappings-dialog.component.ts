@@ -58,7 +58,6 @@ export class EmployeeMappingsDialogComponent implements OnInit {
 
   submit() {
     const that = this;
-
     const fyleEmployee = that.form.controls.fyleEmployee.value;
     const sageIntacctVendor = that.generalSettings.reimbursable_expenses_object === 'BILL' ? that.form.value.sageIntacctVendor : '';
     const sageIntacctEmployee = that.generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' ? that.form.value.sageIntacctEmployee : '';
@@ -67,14 +66,14 @@ export class EmployeeMappingsDialogComponent implements OnInit {
 
     if (that.form.valid && (sageIntacctVendor || sageIntacctEmployee)) {
       const employeeMapping = [
-        that.mappingsService.postMappings({
-          source_type: 'EMPLOYEE',
-          destination_type: that.generalSettings.reimbursable_expenses_object === 'BILL' ? 'VENDOR' : 'EMPLOYEE',
-          source_value: fyleEmployee.value,
-          destination_value: that.generalSettings.reimbursable_expenses_object === 'BILL' ? sageIntacctVendor.value : sageIntacctEmployee.value,
-          destination_id: that.generalSettings.reimbursable_expenses_object === 'VENDOR' ? sageIntacctVendor.destination_id : sageIntacctEmployee.destination_id
-        })
-      ];
+      that.mappingsService.postMappings({
+        source_type: 'EMPLOYEE',
+        destination_type: that.generalSettings.reimbursable_expenses_object === 'BILL' ? 'VENDOR' : 'EMPLOYEE',
+        source_value: fyleEmployee.value,
+        destination_value: that.generalSettings.reimbursable_expenses_object === 'BILL' ? sageIntacctVendor.value : sageIntacctEmployee.value,
+        destination_id: that.generalSettings.reimbursable_expenses_object === 'BILL' ? sageIntacctVendor.destination_id : sageIntacctEmployee.destination_id
+      })
+    ];
 
       if (creditCardAccount) {
         employeeMapping.push(
