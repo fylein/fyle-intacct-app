@@ -9,6 +9,8 @@ export class MappingDestination {
   created_at: Date;
   updated_at: Date;
   workspace: number;
-  detail: any;
+  detail: {
+    email: string;
+  };
 }
 
