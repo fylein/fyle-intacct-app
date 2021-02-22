@@ -363,6 +363,11 @@ export class MappingsService {
     return this.apiService.post(`/workspaces/${workspaceId}/mappings/`, mapping);
   }
 
+  triggerAutoMapEmployees() {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+    return this.apiService.post(`/workspaces/${workspaceId}/mappings/auto_map_employees/trigger/`, {});
+  }
+
   getCategoryMappings() {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.get(

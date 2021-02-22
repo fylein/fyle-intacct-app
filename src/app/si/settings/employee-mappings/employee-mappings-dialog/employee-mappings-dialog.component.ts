@@ -58,21 +58,21 @@ export class EmployeeMappingsDialogComponent implements OnInit {
 
   submit() {
     const that = this;
-
     const fyleEmployee = that.form.controls.fyleEmployee.value;
     const sageIntacctVendor = that.generalSettings.reimbursable_expenses_object === 'BILL' ? that.form.value.sageIntacctVendor : '';
     const sageIntacctEmployee = that.generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' ? that.form.value.sageIntacctEmployee : '';
     const creditCardAccount = that.form.value.creditCardAccount ? that.form.value.creditCardAccount.value : null;
-
+    const creditCardAccountId = that.form.value.creditCardAccount ? that.form.value.creditCardAccount.destination_id : null;
     if (that.form.valid && (sageIntacctVendor || sageIntacctEmployee)) {
       const employeeMapping = [
-        that.mappingsService.postMappings({
-          source_type: 'EMPLOYEE',
-          destination_type: that.generalSettings.reimbursable_expenses_object === 'BILL' ? 'VENDOR' : 'EMPLOYEE',
-          source_value: fyleEmployee.value,
-          destination_value: that.generalSettings.reimbursable_expenses_object === 'BILL' ? sageIntacctVendor.value : sageIntacctEmployee.value
-        })
-      ];
+      that.mappingsService.postMappings({
+        source_type: 'EMPLOYEE',
+        destination_type: that.generalSettings.reimbursable_expenses_object === 'BILL' ? 'VENDOR' : 'EMPLOYEE',
+        source_value: fyleEmployee.value,
+        destination_value: that.generalSettings.reimbursable_expenses_object === 'BILL' ? sageIntacctVendor.value : sageIntacctEmployee.value,
+        destination_id: that.generalSettings.reimbursable_expenses_object === 'BILL' ? sageIntacctVendor.destination_id : sageIntacctEmployee.destination_id
+      })
+    ];
 
       if (creditCardAccount) {
         employeeMapping.push(
@@ -80,7 +80,8 @@ export class EmployeeMappingsDialogComponent implements OnInit {
             source_type: 'EMPLOYEE',
             destination_type: 'CHARGE_CARD_NUMBER',
             source_value: fyleEmployee.value,
-            destination_value: creditCardAccount
+            destination_value: creditCardAccount,
+            destination_id: creditCardAccountId
           })
         );
       }

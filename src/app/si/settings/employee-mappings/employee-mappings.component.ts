@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MappingsService } from '../../../core/services/mappings.service';
 import { MatDialog } from '@angular/material/dialog';
 import { EmployeeMappingsDialogComponent } from './employee-mappings-dialog/employee-mappings-dialog.component';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { StorageService } from 'src/app/core/services/storage.service';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-employee-mappings',
@@ -26,6 +27,7 @@ export class EmployeeMappingsComponent implements OnInit {
   constructor(public dialog: MatDialog,
               private route: ActivatedRoute,
               private mappingsService: MappingsService,
+              private snackBar: MatSnackBar,
               private router: Router,
               private settingsService: SettingsService,
               private storageService: StorageService) {
@@ -66,7 +68,8 @@ export class EmployeeMappingsComponent implements OnInit {
       mappings.push({
         fyle_value: employeeEVMapping.source.value,
         sage_intacct_value: employeeEVMapping.destination.value,
-        ccc_account: that.getCCCAccount(that.employeeMappings, employeeEVMapping)
+        ccc_account: that.getCCCAccount(that.employeeMappings, employeeEVMapping),
+        auto_mapped: employeeEVMapping.source.auto_mapped
       });
     });
     that.employeeMappings = mappings;
@@ -90,6 +93,18 @@ export class EmployeeMappingsComponent implements OnInit {
     if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
       that.columnsToDisplay.push('ccc');
     }
+  }
+
+  triggerAutoMapEmployees() {
+    const that = this;
+    that.isLoading = true;
+    that.mappingsService.triggerAutoMapEmployees().subscribe(() => {
+      that.isLoading = false;
+      that.snackBar.open('Auto mapping of employees may take up to 10 minutes');
+    }, error => {
+      that.isLoading = false;
+      that.snackBar.open(error.error.message);
+    });
   }
 
   ngOnInit() {

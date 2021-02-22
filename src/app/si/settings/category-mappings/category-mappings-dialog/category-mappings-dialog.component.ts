@@ -82,7 +82,8 @@ export class CategoryMappingsDialogComponent implements OnInit {
           source_type: 'CATEGORY',
           destination_type: that.generalSettings.reimbursable_expenses_object === 'BILL' ? 'ACCOUNT' : 'EXPENSE_TYPE',
           source_value: fyleCategory.value,
-          destination_value: that.generalSettings.reimbursable_expenses_object === 'BILL' ? sageIntacctAccount.value : sageIntacctExpenseTypes.value
+          destination_value: that.generalSettings.reimbursable_expenses_object === 'BILL' ? sageIntacctAccount.value : sageIntacctExpenseTypes.value,
+          destination_id: that.generalSettings.reimbursable_expenses_object === 'BILL' ? sageIntacctAccount.destination_id : sageIntacctExpenseTypes.destination_id
         })
       ];
 
@@ -92,7 +93,8 @@ export class CategoryMappingsDialogComponent implements OnInit {
             source_type: 'CATEGORY',
             destination_type: 'CCC_ACCOUNT',
             source_value: fyleCategory.value,
-            destination_value: sageIntacctCCCAccount.value
+            destination_value: sageIntacctCCCAccount.value,
+            destination_id: sageIntacctCCCAccount.destination_id
           })
         );
       }

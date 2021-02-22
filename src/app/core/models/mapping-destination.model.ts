@@ -1,4 +1,7 @@
 /* tslint:disable */
+
+import { DestinationAttributeDetail } from "./destination-attribute-details.model";
+
 // TODO: Use something for serialization / deserialization
 export class MappingDestination {
   id: number;
@@ -8,5 +11,7 @@ export class MappingDestination {
   destination_id: number;
   created_at: Date;
   updated_at: Date;
-  workspace: number
+  workspace: number;
+  detail: DestinationAttributeDetail;
 }
+

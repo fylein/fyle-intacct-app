@@ -59,6 +59,29 @@
         </mat-form-field>
       </div>
 
+      <div class="configurations--label">
+        Auto Map Employees from Fyle
+      </div>
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <mat-form-field floatLabel="always" appearance="outline" fxFlex="100">
+          <mat-select placeholder="Choose how to auto map employees between Fyle and Sage Intacct"
+            formControlName="autoMapEmployees">
+            <mat-option>
+              None
+            </mat-option>
+            <mat-option [value]="'EMAIL'">
+              Match emails on Fyle and Sage Intacct
+            </mat-option>
+            <mat-option [value]="'NAME'">
+              Match names on Fyle and Sage Intacct
+            </mat-option>
+            <mat-option [value]="'EMPLOYEE_CODE'">
+              Match Fyle Employee Code to Sage Intacct Name
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
       <mat-slide-toggle color="primary" class="schedule" formControlName="importProjects">
         <div class="schedule--toggle-text">Import Sage Intacct Projects into Fyle</div>
       </mat-slide-toggle>

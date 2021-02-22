@@ -103,7 +103,8 @@ export class ConfigurationComponent implements OnInit {
         reimburExpense: [that.generalSettings ? that.generalSettings.reimbursable_expenses_object : ''],
         cccExpense: [that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : ''],
         importProjects: [that.generalSettings.import_projects],
-        paymentsSync: [paymentsSyncOption]
+        paymentsSync: [paymentsSyncOption],
+        autoMapEmployees: [that.generalSettings.auto_map_employees]
       });
 
       that.generalSettingsForm.controls.reimburExpense.disable();
@@ -121,7 +122,8 @@ export class ConfigurationComponent implements OnInit {
         reimburExpense: ['', Validators.required],
         cccExpense: [null],
         importProjects: [false],
-        paymentsSync: [null]
+        paymentsSync: [null],
+        autoMapEmployees: [null]
       });
 
       that.expenseOptions = [{
@@ -152,6 +154,8 @@ export class ConfigurationComponent implements OnInit {
       const categoryMappingObject = that.getCategory(reimbursableExpensesObject)[0].value;
       const employeeMappingsObject = that.getEmployee(reimbursableExpensesObject)[0].value;
       const importProjects = that.generalSettingsForm.value.importProjects;
+      const autoMapEmployees = that.generalSettingsForm.value.autoMapEmployees ? that.generalSettingsForm.value.autoMapEmployees : null;
+
       let fyleToSageIntacct = false;
       let sageIntacctToFyle = false;
 
@@ -194,11 +198,18 @@ export class ConfigurationComponent implements OnInit {
       forkJoin(
         [
           that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, importProjects, fyleToSageIntacct, sageIntacctToFyle)
+          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, importProjects, fyleToSageIntacct, sageIntacctToFyle, autoMapEmployees)
         ]
       ).subscribe(responses => {
         that.isLoading = true;
         that.snackBar.open('Configuration saved successfully');
+
+        if (autoMapEmployees) {
+          setTimeout(() => {
+            that.snackBar.open('Auto mapping of employees may take up to 10 minutes');
+          }, 1500);
+        }
+
         that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`).then(() => {
           that.windowReference.location.reload();
         });
