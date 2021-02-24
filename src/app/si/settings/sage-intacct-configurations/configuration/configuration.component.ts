@@ -21,6 +21,7 @@ export class ConfigurationComponent implements OnInit {
   workspaceId: number;
   generalSettings: any;
   mappingSettings: any;
+  showAutoCreate: boolean;
   windowReference: Window;
 
   constructor(private formBuilder: FormBuilder,
@@ -91,6 +92,7 @@ export class ConfigurationComponent implements OnInit {
         label: 'Bill',
         value: 'BILL'
       }];
+      that.showAutoCreateOption(that.generalSettings.auto_map_employees);
 
       let paymentsSyncOption = '';
       if (that.generalSettings.sync_fyle_to_sage_intacct_payments) {
@@ -104,10 +106,16 @@ export class ConfigurationComponent implements OnInit {
         cccExpense: [that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : ''],
         importProjects: [that.generalSettings.import_projects],
         paymentsSync: [paymentsSyncOption],
-        autoMapEmployees: [that.generalSettings.auto_map_employees]
+        autoMapEmployees: [that.generalSettings.auto_map_employees],
+        autoCreateDestinationEntity: [that.generalSettings.auto_create_destination_entity]
       });
 
       that.generalSettingsForm.controls.reimburExpense.disable();
+
+      that.generalSettingsForm.controls.autoMapEmployees.valueChanges.subscribe((employeeMappingPreference) => {
+        that.showAutoCreateOption(employeeMappingPreference);
+      });
+
 
       if (that.generalSettings.corporate_credit_card_expenses_object) {
         that.generalSettingsForm.controls.cccExpense.disable();
@@ -123,7 +131,12 @@ export class ConfigurationComponent implements OnInit {
         cccExpense: [null],
         importProjects: [false],
         paymentsSync: [null],
-        autoMapEmployees: [null]
+        autoMapEmployees: [null],
+        autoCreateDestinationEntity: [false]
+      });
+
+      that.generalSettingsForm.controls.autoMapEmployees.valueChanges.subscribe((employeeMappingPreference) => {
+        that.showAutoCreateOption(employeeMappingPreference);
       });
 
       that.expenseOptions = [{
@@ -155,6 +168,7 @@ export class ConfigurationComponent implements OnInit {
       const employeeMappingsObject = that.getEmployee(reimbursableExpensesObject)[0].value;
       const importProjects = that.generalSettingsForm.value.importProjects;
       const autoMapEmployees = that.generalSettingsForm.value.autoMapEmployees ? that.generalSettingsForm.value.autoMapEmployees : null;
+      const autoCreateDestinationEntity = that.generalSettingsForm.value.autoCreateDestinationEntity;
 
       let fyleToSageIntacct = false;
       let sageIntacctToFyle = false;
@@ -198,7 +212,7 @@ export class ConfigurationComponent implements OnInit {
       forkJoin(
         [
           that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, importProjects, fyleToSageIntacct, sageIntacctToFyle, autoMapEmployees)
+          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, importProjects, fyleToSageIntacct, sageIntacctToFyle, autoMapEmployees, autoCreateDestinationEntity)
         ]
       ).subscribe(responses => {
         that.isLoading = true;
@@ -218,6 +232,15 @@ export class ConfigurationComponent implements OnInit {
     } else {
       that.snackBar.open('Form has invalid fields');
       that.generalSettingsForm.markAllAsTouched();
+    }
+  }
+
+  showAutoCreateOption(autoMapEmployees) {
+    const that = this;
+    if (autoMapEmployees) {
+      that.showAutoCreate = true;
+    } else {
+      that.showAutoCreate = false;
     }
   }
 
