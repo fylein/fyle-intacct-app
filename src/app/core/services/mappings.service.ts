@@ -350,6 +350,7 @@ export class MappingsService {
   getAllMappings(sourceType: string) {
     const that = this;
     return this.getMappings(sourceType).pipe(expand((res: any) => {
+      // tslint:disable-next-line
       return res.next ? that.getMappings(sourceType, 500, res.next) : empty();
     }), concatMap((res: any) => res.results),
       reduce((arr, val) => {

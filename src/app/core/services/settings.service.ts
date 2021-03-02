@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject, merge, forkJoin, from } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { ApiService } from 'src/app/core/services/api.service';
 import { Cacheable, CacheBuster, globalCacheBusterNotifier } from 'ngx-cacheable';
 import { FyleCredentials } from '../models/fyle-credentials.model';
 import { SageIntacctCredentials } from '../models/si-credentials.model';
-import { Settings } from '../models/settings.model';
+import { ScheduleSettings } from '../models/schedule-setting.model';
 
 const fyleCredentialsCache = new Subject<void>();
 const sageIntacctCredentialsCache = new Subject<void>();
@@ -76,7 +76,7 @@ export class SettingsService {
     });
   }
 
-  getScheduleSettings(workspaceId: number): Observable<Settings> {
+  getScheduleSettings(workspaceId: number): Observable<ScheduleSettings> {
     return this.apiService.get(`/workspaces/${workspaceId}/schedule/`, {});
   }
 
@@ -118,48 +118,5 @@ export class SettingsService {
   })
   getGeneralSettings(workspaceId: number) {
     return this.apiService.get(`/workspaces/${workspaceId}/settings/general/`, {});
-  }
-
-  // TODO: Add model
-  @Cacheable({
-    cacheBusterObserver: merge(generalSettingsCache, generalSettingsCache)
-  })
-  getCombinedSettings(workspaceId: number) {
-    // TODO: remove promises and do with rxjs observables
-    return from(forkJoin(
-      [
-        this.getGeneralSettings(workspaceId),
-        this.getMappingSettings(workspaceId)
-      ]
-    ).toPromise().then(responses => {
-      const generalSettings = responses[0];
-      const mappingSettings = responses[1].results;
-
-      const employeeFieldMapping = mappingSettings.filter(
-        setting => setting.source_field === 'EMPLOYEE'
-      )[0];
-
-      const categoryFieldMapping = mappingSettings.filter(
-        setting => setting.source_field === 'CATEGORY'
-      )[0];
-
-      const projectFieldMapping = mappingSettings.filter(
-        setting => setting.source_field === 'PROJECT'
-      )[0];
-
-      const costCenterFieldMapping = mappingSettings.filter(
-        setting => setting.source_field === 'COST_CENTER'
-      )[0];
-
-      if (projectFieldMapping) {
-        generalSettings.project_field_mapping = projectFieldMapping.destination_field;
-      }
-
-      if (costCenterFieldMapping) {
-        generalSettings.cost_center_field_mapping = costCenterFieldMapping.destination_field;
-      }
-
-      return generalSettings;
-    }));
   }
 }

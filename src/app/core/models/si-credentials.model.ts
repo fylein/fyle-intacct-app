@@ -1,6 +1,6 @@
 /* tslint:disable */
 // TODO: Use something for serialization / deserialization
-export class SageIntacctCredentials {
+export type SageIntacctCredentials = {
   id: number;
   si_user_id: string;
   si_company_id: string;
@@ -8,4 +8,4 @@ export class SageIntacctCredentials {
   created_at: Date;
   updated_at: Date;
   workspace: number;
-}
+};

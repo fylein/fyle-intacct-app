@@ -101,7 +101,7 @@ export class ExportComponent implements OnInit {
   createSageIntacctItems() {
     const that = this;
     that.isExporting = true;
-    that.settingsService.getCombinedSettings(that.workspaceId).subscribe((settings) => {
+    that.settingsService.getGeneralSettings(that.workspaceId).subscribe((settings) => {
       that.generalSettings = settings;
       const promises = [];
       let allFilteredIds = [];

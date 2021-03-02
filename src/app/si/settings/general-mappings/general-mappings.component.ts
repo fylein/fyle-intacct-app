@@ -109,7 +109,7 @@ export class GeneralMappingsComponent implements OnInit {
     const that = this;
     that.isLoading = true;
 
-    that.settingsService.getCombinedSettings(that.workspaceId).subscribe(settings => {
+    that.settingsService.getGeneralSettings(that.workspaceId).subscribe(settings => {
       that.generalSettings = settings;
     });
 
