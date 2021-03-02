@@ -12,8 +12,6 @@ export type GeneralMapping = {
   default_charge_card_id: string;
   default_ccc_vendor_id: string;
   default_ccc_vendor_name: string;
-  bill_payment_account_id: string;
-  bill_payment_account_name: string;
   default_item_name: string;
   default_item_id: string;
   payment_account_id: string;

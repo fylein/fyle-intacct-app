@@ -5,6 +5,9 @@ import { MappingsService } from '../../../core/services/mappings.service';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SettingsService } from 'src/app/core/services/settings.service';
+import { GeneralMapping } from 'src/app/core/models/general-mapping.model';
+import { MappingDestination } from 'src/app/core/models/mapping-destination.model';
+import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 
 @Component({
   selector: 'app-general-mappings',
@@ -14,20 +17,20 @@ import { SettingsService } from 'src/app/core/services/settings.service';
 export class GeneralMappingsComponent implements OnInit {
   form: FormGroup;
   workspaceId: number;
-  generalMappings: any;
+  generalMappings: GeneralMapping;
   isLoading = true;
-  sageIntacctLocations: any[];
-  sageIntacctDepartments: any[];
-  sageIntacctProjects: any[];
-  sageIntacctDefaultVendor: any[];
-  sageIntacctDefaultChargeCard: any[];
-  sageIntacctDefaultItem: any[];
-  sageIntacctPaymentAccounts: any[];
-  generalSettings: any;
-  defaultVendor: any[];
-  defaultChargeCard: any[];
-  defaultItem: any[];
-  paymentAccount: any[];
+  sageIntacctLocations: MappingDestination[];
+  sageIntacctDepartments: MappingDestination[];
+  sageIntacctProjects: MappingDestination[];
+  sageIntacctDefaultVendor: MappingDestination[];
+  sageIntacctDefaultChargeCard: MappingDestination[];
+  sageIntacctDefaultItem: MappingDestination[];
+  sageIntacctPaymentAccounts: MappingDestination[];
+  defaultVendor: MappingDestination[];
+  defaultChargeCard: MappingDestination[];
+  defaultItem: MappingDestination[];
+  paymentAccount: MappingDestination[];
+  generalSettings: GeneralSetting;
 
   constructor(
     private route: ActivatedRoute,
@@ -40,57 +43,30 @@ export class GeneralMappingsComponent implements OnInit {
 
   submit() {
     const that = this;
-
     that.isLoading = true;
-    let defaultLocationName;
-    if (that.form.value.location) {
-      defaultLocationName = that.sageIntacctLocations.filter((element) => element.destination_id === that.form.value.location)[0].value;
-    }
 
-    let defaultDepartmentName;
-    if (that.form.value.department) {
-      defaultDepartmentName = that.sageIntacctDepartments.filter((element) => element.destination_id === that.form.value.department)[0].value;
-    }
+    const defaultLocationName: MappingDestination[] = that.sageIntacctLocations.filter((element) => element.destination_id === that.form.value.location);
+    const defaultDepartmentName: MappingDestination[] = that.sageIntacctDepartments.filter((element) => element.destination_id === that.form.value.department);
+    const defaultProjectName: MappingDestination[] = that.sageIntacctProjects.filter((element) => element.destination_id === that.form.value.project);
+    const defaultVendor: MappingDestination[] = that.sageIntacctDefaultVendor.filter((element) => element.destination_id === that.form.value.defaultVendor);
+    const defaultChargeCard: MappingDestination[] = that.sageIntacctDefaultChargeCard.filter((element) => element.destination_id === that.form.value.chargeCard);
+    const defaultItem: MappingDestination[] = that.sageIntacctDefaultItem.filter((element) => element.destination_id === that.form.value.defaultItem);
+    const paymentAccount: MappingDestination[] = that.sageIntacctPaymentAccounts.filter((element) => element.destination_id === that.form.value.paymentAccount);
 
-    let defaultProjectName;
-    if (that.form.value.project) {
-      defaultProjectName = that.sageIntacctProjects.filter((element) => element.destination_id === that.form.value.project)[0].value;
-    }
-
-    let defaultVendor;
-    if (that.form.value.defaultVendor) {
-      defaultVendor = that.sageIntacctDefaultVendor.filter((element) => element.destination_id === that.form.value.defaultVendor)[0].value;
-    }
-
-    let defaultChargeCard;
-    if (that.form.value.chargeCard) {
-      defaultChargeCard = that.sageIntacctDefaultChargeCard.filter((element) => element.destination_id === that.form.value.chargeCard)[0].value;
-    }
-
-    let defaultItem;
-    if (that.form.value.defaultItem) {
-      defaultItem = that.sageIntacctDefaultItem.filter((element) => element.destination_id === that.form.value.defaultItem)[0].value;
-    }
-
-    let paymentAccount;
-    if (that.form.value.paymentAccount) {
-      paymentAccount = that.sageIntacctPaymentAccounts.filter((element) => element.destination_id === that.form.value.paymentAccount)[0].value;
-    }
-
-    const mapping = {
-      default_location_name: defaultLocationName ? defaultLocationName : '',
+    const mapping: GeneralMapping = {
+      default_location_name: defaultLocationName[0] ? defaultLocationName[0].value : '',
       default_location_id: that.form.value.location ? that.form.value.location : '',
-      default_department_name: defaultDepartmentName ? defaultDepartmentName : '',
+      default_department_name: defaultDepartmentName[0] ? defaultDepartmentName[0].value : '',
       default_department_id: that.form.value.department ? that.form.value.department : '',
-      default_project_name: defaultProjectName ? defaultProjectName : '',
+      default_project_name: defaultProjectName[0] ? defaultProjectName[0].value : '',
       default_project_id: that.form.value.project ? that.form.value.project : '',
-      default_ccc_vendor_name: defaultVendor ? defaultVendor : '',
+      default_ccc_vendor_name: defaultVendor[0] ? defaultVendor[0].value : '',
       default_ccc_vendor_id: that.form.value.defaultVendor ? that.form.value.defaultVendor : '',
-      default_charge_card_name: defaultChargeCard ? defaultChargeCard : '',
-      default_item_id: that.form.value.defaultItem ? that.form.value.defaultItem : '',
-      default_item_name: defaultItem ? defaultItem : '',
+      default_charge_card_name: defaultChargeCard[0] ? defaultChargeCard[0].value : '',
       default_charge_card_id: that.form.value.chargeCard ? that.form.value.chargeCard : '',
-      payment_account_name: paymentAccount ? paymentAccount : '',
+      default_item_id: that.form.value.defaultItem ? that.form.value.defaultItem : '',
+      default_item_name: defaultItem[0] ? defaultItem[0].value : '',
+      payment_account_name: paymentAccount[0] ? paymentAccount[0].value : '',
       payment_account_id: that.form.value.paymentAccount ? that.form.value.paymentAccount : ''
     };
 

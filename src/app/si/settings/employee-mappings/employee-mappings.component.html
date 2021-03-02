@@ -38,7 +38,7 @@
           <span *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT'">Sage Intacct Employee</span>
         </th>
         <td mat-cell *matCellDef="let element">
-          {{element.sage_intacct_value}}
+          {{element.si_value}}
         </td>
       </ng-container>
 
@@ -46,7 +46,7 @@
       <ng-container matColumnDef="ccc">
         <th mat-header-cell *matHeaderCellDef> Charge Card</th>
         <td mat-cell *matCellDef="let element">
-          {{ element.ccc_account }}
+          {{ element.ccc_value }}
         </td>
       </ng-container>
 

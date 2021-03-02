@@ -12,6 +12,11 @@ import { forkJoin, from } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { MappingSource } from 'src/app/core/models/mapping-source.model';
+import { MappingDestination } from 'src/app/core/models/mapping-destination.model';
+import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { GeneralMapping } from 'src/app/core/models/general-mapping.model';
+import { MappingModal } from 'src/app/core/models/mapping-modal.model';
 
 export class MappingErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -28,25 +33,24 @@ export class EmployeeMappingsDialogComponent implements OnInit {
   isLoading = false;
   form: FormGroup;
   workSpaceId: number;
-  // TODO: replace any with relevant models
-  fyleEmployees: any[];
-  sageIntacctEmployees: any[];
-  creditCardValue: any[];
-  sageIntacctVendors: any[];
-  generalSettings: any;
-  employeeOptions: any[];
-  sageIntacctEmployeeOptions: any[];
-  cccOptions: any[];
-  sageIntacctVendorOptions: any[];
-  generalMappings: any;
-  defaultCCCObj: any;
+  fyleEmployees: MappingSource[];
+  employeeOptions: MappingSource[];
+  sageIntacctEmployees: MappingDestination[];
+  creditCardValue: MappingDestination[];
+  sageIntacctVendors: MappingDestination[];
+  sageIntacctEmployeeOptions: MappingDestination[];
+  cccOptions: MappingDestination[];
+  sageIntacctVendorOptions: MappingDestination[];
+  generalSettings: GeneralSetting;
+  generalMappings: GeneralMapping;
+  defaultCCCObj: MappingDestination;
   editMapping: boolean;
 
   matcher = new MappingErrorStateMatcher();
 
   constructor(private formBuilder: FormBuilder,
               public dialogRef: MatDialogRef<EmployeeMappingsDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any,
+              @Inject(MAT_DIALOG_DATA) public data: MappingModal,
               private mappingsService: MappingsService,
               private snackBar: MatSnackBar,
               private settingsService: SettingsService) { }
@@ -102,8 +106,8 @@ export class EmployeeMappingsDialogComponent implements OnInit {
     }
   }
 
-  forbiddenSelectionValidator(options: any[]): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
+  forbiddenSelectionValidator(options: (MappingSource|MappingDestination)[]): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: object } | null => {
       const forbidden = !options.some((option) => {
         return control.value.id && option.id === control.value.id;
       });
@@ -215,8 +219,8 @@ export class EmployeeMappingsDialogComponent implements OnInit {
       that.getDefaultCCCObj();
 
       const fyleEmployee = that.editMapping ? that.fyleEmployees.filter(employee => employee.value === that.data.rowElement.fyle_value)[0] : '';
-      const sageIntacctVendor = that.editMapping ? that.sageIntacctVendors.filter(vendor => vendor.value === that.data.rowElement.sage_intacct_value)[0] : '';
-      const sageIntacctEmployee = that.editMapping ? that.sageIntacctEmployees.filter(employee => employee.value === that.data.rowElement.sage_intacct_value)[0] : '';
+      const sageIntacctVendor = that.editMapping ? that.sageIntacctVendors.filter(vendor => vendor.value === that.data.rowElement.si_value)[0] : '';
+      const sageIntacctEmployee = that.editMapping ? that.sageIntacctEmployees.filter(employee => employee.value === that.data.rowElement.si_value)[0] : '';
 
       that.form = that.formBuilder.group({
         fyleEmployee: [fyleEmployee, Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleEmployees)])],

@@ -6,6 +6,10 @@ import { WorkspaceService } from '../core/services/workspace.service';
 import { SettingsService } from '../core/services/settings.service';
 import { StorageService } from '../core/services/storage.service';
 import { WindowReferenceService } from '../core/services/window.service';
+import { UserProfile } from '../core/models/user-profile.model';
+import { Workspace } from '../core/models/workspace.model';
+import { GeneralSetting } from '../core/models/general-setting.model';
+import { MappingSetting } from '../core/models/mapping-setting.model';
 
 @Component({
   selector: 'app-si',
@@ -13,15 +17,15 @@ import { WindowReferenceService } from '../core/services/window.service';
   styleUrls: ['./si.component.scss']
 })
 export class SiComponent implements OnInit {
-  user: any;
+  user: UserProfile;
   orgsCount: number;
-  workspace: any = {};
+  workspace: Workspace;
   isLoading = true;
-  fyleConnected = false;
+  fyleConnected: boolean;
   companyName: string;
-  generalSettings: any;
-  mappingSettings: any;
-  showSwitchOrg = false;
+  generalSettings: GeneralSetting;
+  mappingSettings: MappingSetting[];
+  showSwitchOrg: boolean;
   navDisabled = true;
   windowReference: Window;
   connectSageIntacct = true;

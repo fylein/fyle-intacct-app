@@ -3,6 +3,8 @@ import { SettingsService } from 'src/app/core/services/settings.service';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { ExpenseField } from 'src/app/core/models/expense-field.model';
+import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 
 @Component({
   selector: 'app-sage-intacct-configurations',
@@ -14,8 +16,8 @@ export class SageIntacctConfigurationsComponent implements OnInit {
   state: string;
   workspaceId: number;
   isParentLoading: boolean;
-  fyleFields: any;
-  generalSettings: any;
+  fyleFields: ExpenseField[];
+  generalSettings: GeneralSetting;
   sageIntacctConnectionDone: boolean;
 
   constructor(private route: ActivatedRoute, private router: Router, private mappingsService: MappingsService, private settingsService: SettingsService) { }

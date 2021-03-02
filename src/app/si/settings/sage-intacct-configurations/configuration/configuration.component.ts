@@ -5,6 +5,8 @@ import { SettingsService } from 'src/app/core/services/settings.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
+import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
 
 @Component({
   selector: 'app-configuration',
@@ -19,8 +21,8 @@ export class ConfigurationComponent implements OnInit {
   expenseOptions: { label: string, value: string }[];
   cccExpenseOptions: { label: string, value: string }[];
   workspaceId: number;
-  generalSettings: any;
-  mappingSettings: any;
+  generalSettings: GeneralSetting;
+  mappingSettings: MappingSetting[];
   windowReference: Window;
 
   constructor(private formBuilder: FormBuilder,
@@ -116,8 +118,6 @@ export class ConfigurationComponent implements OnInit {
 
       that.isLoading = false;
     }, error => {
-      that.generalSettings = {};
-      that.mappingSettings = {};
       that.isLoading = false;
       that.generalSettingsForm = that.formBuilder.group({
         reimburExpense: ['', Validators.required],

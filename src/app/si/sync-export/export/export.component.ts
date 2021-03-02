@@ -11,6 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { ChargeCardTransactionsService } from 'src/app/core/services/charge-card-transactions.service';
+import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 
 @Component({
   selector: 'app-export',
@@ -23,7 +24,7 @@ export class ExportComponent implements OnInit {
   isExporting: boolean;
   workspaceId: number;
   exportableExpenseGroups: ExpenseGroup[];
-  generalSettings: any;
+  generalSettings: GeneralSetting;
   failedExpenseGroupCount = 0;
   successfulExpenseGroupCount = 0;
   companyName: string;

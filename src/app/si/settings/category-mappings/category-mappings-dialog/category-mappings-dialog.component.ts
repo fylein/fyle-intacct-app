@@ -7,6 +7,10 @@ import { debounceTime } from 'rxjs/internal/operators/debounceTime';
 import { forkJoin, from } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { MappingSource } from 'src/app/core/models/mapping-source.model';
+import { MappingDestination } from 'src/app/core/models/mapping-destination.model';
+import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { MappingModal } from 'src/app/core/models/mapping-modal.model';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MappingErrorStateMatcher implements ErrorStateMatcher {
@@ -24,21 +28,21 @@ export class CategoryMappingsDialogComponent implements OnInit {
   isLoading = false;
   form: FormGroup;
   workSpaceId: number;
-  fyleCategories: any[];
-  sageIntacctAccounts: any[];
-  sageIntacctCCCAccounts: any[];
-  sageIntacctExpenseTypes: any[];
-  fyleCategoryOptions: any[];
-  sageIntacctAccountOptions: any[];
-  sageIntacctCCCAccountOptions: any[];
-  sageIntacctExpenseTypeOptions: any[];
-  generalSettings: any;
+  fyleCategories: MappingSource[];
+  fyleCategoryOptions: MappingSource[];
+  sageIntacctAccounts: MappingDestination[];
+  sageIntacctCCCAccounts: MappingDestination[];
+  sageIntacctExpenseTypes: MappingDestination[];
+  sageIntacctAccountOptions: MappingDestination[];
+  sageIntacctCCCAccountOptions: MappingDestination[];
+  sageIntacctExpenseTypeOptions: MappingDestination[];
+  generalSettings: GeneralSetting;
   editMapping: boolean;
   matcher = new MappingErrorStateMatcher();
 
   constructor(private formBuilder: FormBuilder,
               public dialogRef: MatDialogRef<CategoryMappingsDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any,
+              @Inject(MAT_DIALOG_DATA) public data: MappingModal,
               private mappingsService: MappingsService,
               private snackBar: MatSnackBar,
               private settingsService: SettingsService) { }
@@ -47,8 +51,8 @@ export class CategoryMappingsDialogComponent implements OnInit {
     return mappingObject ? mappingObject.value : '';
   }
 
-  forbiddenSelectionValidator(options: any[]): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
+  forbiddenSelectionValidator(options: (MappingSource|MappingDestination)[]): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: object } | null => {
       const forbidden = !options.some((option) => {
         return control.value.id && option.id === control.value.id;
       });
@@ -192,9 +196,9 @@ export class CategoryMappingsDialogComponent implements OnInit {
     ]).subscribe((res) => {
       that.isLoading = false;
       const fyleCategory = that.editMapping ? that.fyleCategories.filter(category => category.value === that.data.rowElement.fyle_value)[0] : '';
-      const sageIntacctAccount = that.generalSettings.reimbursable_expenses_object === 'BILL' && that.editMapping ? that.sageIntacctAccounts.filter(siAccObj => siAccObj.value === that.data.rowElement.sage_intacct_value)[0] : '';
-      const sageIntacctExpenseTypes = that.generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' && that.editMapping ? that.sageIntacctExpenseTypes.filter(siExpTypeObj => siExpTypeObj.value === that.data.rowElement.sage_intacct_value)[0] : '';
-      const sageIntacctCCCAccount = that.showSeparateCCCField() && that.editMapping ? that.sageIntacctCCCAccounts.filter(cccObj => cccObj.value === that.data.rowElement.ccc_account)[0] : '';
+      const sageIntacctAccount = that.generalSettings.reimbursable_expenses_object === 'BILL' && that.editMapping ? that.sageIntacctAccounts.filter(siAccObj => siAccObj.value === that.data.rowElement.si_value)[0] : '';
+      const sageIntacctExpenseTypes = that.generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' && that.editMapping ? that.sageIntacctExpenseTypes.filter(siExpTypeObj => siExpTypeObj.value === that.data.rowElement.si_value)[0] : '';
+      const sageIntacctCCCAccount = that.showSeparateCCCField() && that.editMapping ? that.sageIntacctCCCAccounts.filter(cccObj => cccObj.value === that.data.rowElement.ccc_value)[0] : '';
 
       that.form = that.formBuilder.group({
         fyleCategory: [fyleCategory, Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleCategories)])],
