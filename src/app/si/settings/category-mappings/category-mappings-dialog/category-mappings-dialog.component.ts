@@ -170,31 +170,22 @@ export class CategoryMappingsDialogComponent implements OnInit {
 
   reset() {
     const that = this;
-    // TODO: remove promises and do with rxjs observables
-    const getFyleCategories = that.mappingsService.getFyleCategories().toPromise().then(fyleCategories => {
-      that.fyleCategories = fyleCategories;
-    });
-
-    // TODO: remove promises and do with rxjs observables
-    const getSageIntacctAcc = that.mappingsService.getSageIntacctAccounts().toPromise().then(sageIntacctAccounts => {
-      that.sageIntacctAccounts = sageIntacctAccounts;
-      if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT') {
-        that.sageIntacctCCCAccounts = sageIntacctAccounts;
-      }
-    });
-
-    // TODO: remove promises and do with rxjs observables
-    const getSageIntacctExpType = that.mappingsService.getSageIntacctExpensetypes().toPromise().then((sageIntacctExpenseTypes) => {
-      that.sageIntacctExpenseTypes = sageIntacctExpenseTypes;
-    });
-
     that.isLoading = true;
+
     forkJoin([
-      from(getFyleCategories),
-      from(getSageIntacctAcc),
-      from(getSageIntacctExpType)
-    ]).subscribe((res) => {
+      that.mappingsService.getFyleCategories(),
+      that.mappingsService.getSageIntacctAccounts(),
+      that.mappingsService.getSageIntacctExpensetypes()
+    ]).subscribe(response => {
       that.isLoading = false;
+
+      that.fyleCategories = response[0];
+      that.sageIntacctAccounts = response[1];
+      if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT') {
+        that.sageIntacctCCCAccounts = response[1];
+      }
+      that.sageIntacctExpenseTypes = response[2];
+
       const fyleCategory = that.editMapping ? that.fyleCategories.filter(category => category.value === that.data.rowElement.fyle_value)[0] : '';
       const sageIntacctAccount = that.generalSettings.reimbursable_expenses_object === 'BILL' && that.editMapping ? that.sageIntacctAccounts.filter(siAccObj => siAccObj.value === that.data.rowElement.si_value)[0] : '';
       const sageIntacctExpenseTypes = that.generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' && that.editMapping ? that.sageIntacctExpenseTypes.filter(siExpTypeObj => siExpTypeObj.value === that.data.rowElement.si_value)[0] : '';

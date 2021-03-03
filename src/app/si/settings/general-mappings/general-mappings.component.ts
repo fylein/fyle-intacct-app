@@ -85,76 +85,39 @@ export class GeneralMappingsComponent implements OnInit {
     const that = this;
     that.isLoading = true;
 
-    that.settingsService.getGeneralSettings(that.workspaceId).subscribe(settings => {
-      that.generalSettings = settings;
-    });
-
-    const getSageIntacctLocations = that.mappingsService.getSageIntacctLocations().toPromise().then(objects => {
-      that.sageIntacctLocations = objects;
-    });
-
-    const getSageIntacctDepartments = that.mappingsService.getSageIntacctDepartments().toPromise().then(objects => {
-      that.sageIntacctDepartments = objects;
-    });
-
-    const getSageIntacctProjects = that.mappingsService.getSageIntacctProjects().toPromise().then(objects => {
-      that.sageIntacctProjects = objects;
-    });
-
-    const getSageIntacctDefaultVendor = that.mappingsService.getSageIntacctVendors().toPromise().then(objects => {
-      that.sageIntacctDefaultVendor = objects;
-    });
-
-    const getSageIntacctDefaultChargeCard = that.mappingsService.getSageIntacctChargeCard().toPromise().then(objects => {
-      that.sageIntacctDefaultChargeCard = objects;
-    });
-
-    const getSageIntacctItems = that.mappingsService.getSageIntacctItems().toPromise().then(objects => {
-      that.sageIntacctDefaultItem = objects;
-    });
-
-    const getSageIntacctPaymentAccounts = that.mappingsService.getSageIntacctPaymentAccounts().toPromise().then(objects => {
-      that.sageIntacctPaymentAccounts = objects;
+    that.settingsService.getGeneralSettings(that.workspaceId).subscribe((setting: GeneralSetting) => {
+      that.generalSettings = setting;
     });
 
     forkJoin(
       [
-        getSageIntacctLocations,
-        getSageIntacctDepartments,
-        getSageIntacctProjects,
-        getSageIntacctDefaultVendor,
-        getSageIntacctDefaultChargeCard,
-        getSageIntacctItems,
-        getSageIntacctPaymentAccounts
+        that.mappingsService.getSageIntacctLocations(),
+        that.mappingsService.getSageIntacctDepartments(),
+        that.mappingsService.getSageIntacctProjects(),
+        that.mappingsService.getSageIntacctVendors(),
+        that.mappingsService.getSageIntacctChargeCard(),
+        that.mappingsService.getSageIntacctItems(),
+        that.mappingsService.getSageIntacctPaymentAccounts()
       ]
-    ).subscribe(responses => {
+    ).subscribe(response => {
       that.isLoading = false;
-      let locationId;
-      let departmentId;
-      let projectId;
-      let chargeCard;
-      let defaultVendor;
-      let defaultItem;
-      let paymentAccount;
 
-      if (that.generalMappings) {
-        locationId = that.generalMappings.default_location_id ? that.generalMappings.default_location_id : null;
-        departmentId = that.generalMappings.default_department_id ? that.generalMappings.default_department_id : null;
-        projectId = that.generalMappings.default_project_id ? that.generalMappings.default_project_id : null;
-        chargeCard = that.generalMappings.default_charge_card_id ? that.generalMappings.default_charge_card_id : null;
-        defaultVendor = that.generalMappings.default_ccc_vendor_id ? that.generalMappings.default_ccc_vendor_id : null;
-        defaultItem = that.generalMappings.default_item_id ? that.generalMappings.default_item_id : null;
-        paymentAccount = that.generalMappings.payment_account_id ? that.generalMappings.payment_account_id : null;
-      }
+      that.sageIntacctLocations = response[0];
+      that.sageIntacctDepartments = response[1];
+      that.sageIntacctProjects = response[2];
+      that.sageIntacctDefaultVendor = response[3];
+      that.sageIntacctDefaultChargeCard = response[4];
+      that.sageIntacctDefaultItem = response[5];
+      that.sageIntacctPaymentAccounts = response[6];
 
       that.form = that.formBuilder.group({
-        location: [locationId ? locationId : ''],
-        chargeCard: [chargeCard ? chargeCard : ''],
-        defaultVendor: [defaultVendor ? defaultVendor : ''],
-        defaultItem: [defaultItem ? defaultItem : ''],
-        department: [departmentId ? departmentId : ''],
-        project: [projectId ? projectId : ''],
-        paymentAccount: [paymentAccount ? paymentAccount : ''],
+        location: [that.generalMappings ? that.generalMappings.default_location_id : null],
+        chargeCard: [that.generalMappings ? that.generalMappings.default_charge_card_id : null],
+        defaultVendor: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : null],
+        defaultItem: [that.generalMappings ? that.generalMappings.default_item_id : null],
+        department: [that.generalMappings ? that.generalMappings.default_department_id : null],
+        project: [that.generalMappings ? that.generalMappings.default_project_id : null],
+        paymentAccount: [that.generalMappings ? that.generalMappings.payment_account_id : null]
       });
     });
   }

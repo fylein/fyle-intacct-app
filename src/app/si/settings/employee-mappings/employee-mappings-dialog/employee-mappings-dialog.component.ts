@@ -179,43 +179,28 @@ export class EmployeeMappingsDialogComponent implements OnInit {
 
   reset() {
     const that = this;
-
-    const getFyleEmployees = that.mappingsService.getFyleEmployees().toPromise().then((fyleEmployees) => {
-      that.fyleEmployees = fyleEmployees;
-    });
-
-    const settings = that.generalSettings;
-
-    const getSageIntacctEmployee = that.mappingsService.getSageIntacctEmployees().toPromise().then((sageIntacctEmployees) => {
-      that.sageIntacctEmployees = sageIntacctEmployees;
-    });
-
-    const getSageIntacctVendor = that.mappingsService.getSageIntacctVendors().toPromise().then((sageIntacctVendors) => {
-      that.sageIntacctVendors = sageIntacctVendors;
-      if (settings.corporate_credit_card_expenses_object === 'BILL') {
-        that.creditCardValue = sageIntacctVendors;
-      }
-    });
-
-    const getSageIntacctChargeCard = that.mappingsService.getSageIntacctChargeCard().toPromise().then((getSageIntacctChargeCards) => {
-      if (settings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
-        that.creditCardValue = getSageIntacctChargeCards;
-      }
-    });
-
-    const getGeneralMappings = that.mappingsService.getGeneralMappings().toPromise().then((generalMappings) => {
-      that.generalMappings = generalMappings;
-    });
-
     that.isLoading = true;
+
     forkJoin([
-      from(getFyleEmployees),
-      from(getSageIntacctEmployee),
-      from(getSageIntacctVendor),
-      from(getSageIntacctChargeCard),
-      from(getGeneralMappings)
-    ]).subscribe((res) => {
+      that.mappingsService.getFyleEmployees(),
+      that.mappingsService.getSageIntacctEmployees(),
+      that.mappingsService.getSageIntacctVendors(),
+      that.mappingsService.getSageIntacctChargeCard(),
+      that.mappingsService.getGeneralMappings()
+    ]).subscribe(response => {
       that.isLoading = false;
+      const settings = that.generalSettings;
+
+      that.fyleEmployees = response[0];
+      that.sageIntacctEmployees = response[1];
+      that.sageIntacctVendors = response[2];
+      if (settings.corporate_credit_card_expenses_object === 'BILL') {
+        that.creditCardValue = response[2];
+      } else if (settings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
+        that.creditCardValue = response[3];
+      }
+      that.generalMappings = response[4];
+
       that.getDefaultCCCObj();
 
       const fyleEmployee = that.editMapping ? that.fyleEmployees.filter(employee => employee.value === that.data.rowElement.fyle_value)[0] : '';

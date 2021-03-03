@@ -79,24 +79,20 @@ export class SiComponent implements OnInit {
         that.settingsService.getGeneralSettings(that.workspace.id),
         that.settingsService.getMappingSettings(that.workspace.id)
       ]
-    ).toPromise();
+    );
   }
 
   setupAccessiblePathWatchers() {
     const that = this;
-    that.getConfigurations().then(() => {
+    that.getConfigurations().subscribe(() => {
       that.navDisabled = false;
-    }).catch(() => {
-      // do nothing
     });
 
     that.router.events.subscribe(() => {
       const onboarded = that.storageService.get('onboarded');
       if (onboarded !== true) {
-        that.getConfigurations().then(() => {
+        that.getConfigurations().subscribe(() => {
           that.navDisabled = false;
-        }).catch(() => {
-          // do nothing
         });
       }
     });

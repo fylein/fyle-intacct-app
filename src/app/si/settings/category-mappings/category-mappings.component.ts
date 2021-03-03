@@ -73,34 +73,27 @@ export class CategoryMappingsComponent implements OnInit {
 
   reset() {
     const that = this;
+    that.isLoading = true;
 
-    const getCategoryMappings = that.mappingsService.getAllMappings('CATEGORY').toPromise().then(categoryMappings => {
-      that.categoryMappings = categoryMappings;
+    forkJoin([
+      that.mappingsService.getAllMappings('CATEGORY'),
+      that.settingsService.getGeneralSettings(that.workspaceId)
+    ]).subscribe(response => {
+      that.isLoading = false;
+
+      that.categoryMappings = response[0];
       that.createCategoryMappingsRows();
-    });
-
-    const showOrHideCCCField = that.settingsService.getGeneralSettings(that.workspaceId).toPromise().then(settings => {
-      if (settings.corporate_credit_card_expenses_object && settings.reimbursable_expenses_object === 'EXPENSE_REPORT') {
+      if (response[1].corporate_credit_card_expenses_object && response[1].reimbursable_expenses_object === 'EXPENSE_REPORT') {
         that.columnsToDisplay = ['category', 'sageIntacct', 'ccc'];
       }
-    });
-
-    that.isLoading = true;
-    forkJoin([
-      from(getCategoryMappings),
-      from(showOrHideCCCField),
-    ]).subscribe(() => {
-      that.isLoading = false;
     }, (err) => {
       that.isLoading = false;
     });
   }
-
 
   ngOnInit() {
     const that = this;
     that.workspaceId = that.route.parent.snapshot.params.workspace_id;
     that.reset();
   }
-
 }
