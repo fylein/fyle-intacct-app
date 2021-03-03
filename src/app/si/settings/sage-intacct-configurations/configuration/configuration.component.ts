@@ -105,6 +105,7 @@ export class ConfigurationComponent implements OnInit {
         reimburExpense: [that.generalSettings ? that.generalSettings.reimbursable_expenses_object : ''],
         cccExpense: [that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : ''],
         importProjects: [that.generalSettings.import_projects],
+        importCategories: [that.generalSettings.import_categories],
         paymentsSync: [paymentsSyncOption],
         autoMapEmployees: [that.generalSettings.auto_map_employees],
         autoCreateDestinationEntity: [that.generalSettings.auto_create_destination_entity]
@@ -130,6 +131,7 @@ export class ConfigurationComponent implements OnInit {
         reimburExpense: ['', Validators.required],
         cccExpense: [null],
         importProjects: [false],
+        importCategories: [false],
         paymentsSync: [null],
         autoMapEmployees: [null],
         autoCreateDestinationEntity: [false]
@@ -167,6 +169,7 @@ export class ConfigurationComponent implements OnInit {
       const categoryMappingObject = that.getCategory(reimbursableExpensesObject)[0].value;
       const employeeMappingsObject = that.getEmployee(reimbursableExpensesObject)[0].value;
       const importProjects = that.generalSettingsForm.value.importProjects;
+      const importCategories = that.generalSettingsForm.value.importCategories;
       const autoMapEmployees = that.generalSettingsForm.value.autoMapEmployees ? that.generalSettingsForm.value.autoMapEmployees : null;
       const autoCreateDestinationEntity = that.generalSettingsForm.value.autoCreateDestinationEntity;
 
@@ -212,7 +215,7 @@ export class ConfigurationComponent implements OnInit {
       forkJoin(
         [
           that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, importProjects, fyleToSageIntacct, sageIntacctToFyle, autoMapEmployees, autoCreateDestinationEntity)
+          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, importProjects, importCategories, fyleToSageIntacct, sageIntacctToFyle, autoMapEmployees, autoCreateDestinationEntity)
         ]
       ).subscribe(responses => {
         that.isLoading = true;

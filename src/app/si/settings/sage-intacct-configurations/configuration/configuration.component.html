@@ -90,6 +90,10 @@
         <div class="schedule--toggle-text">Import Sage Intacct Projects into Fyle</div>
       </mat-slide-toggle>
 
+      <mat-slide-toggle color="primary" class="schedule" formControlName="importCategories">
+        <div class="schedule--toggle-text">Import Sage Intacct Expense Types / GL Accounts into Fyle</div>
+      </mat-slide-toggle>
+
       <button [disabled]="isSaveDisabled || !generalSettingsForm.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="save()" type="submit">
         Save
       </button>

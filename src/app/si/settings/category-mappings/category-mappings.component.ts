@@ -55,6 +55,7 @@ export class CategoryMappingsComponent implements OnInit {
       mappings.push({
         fyle_value: categoryMapping.source.value,
         sage_intacct_value: categoryMapping.destination.value,
+        auto_mapped: categoryMapping.source.auto_mapped,
         ccc_account: that.getCCCAccount(that.categoryMappings, categoryMapping)
       });
     });
