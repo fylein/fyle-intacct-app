@@ -92,7 +92,7 @@ export class SettingsService {
   @CacheBuster({
     cacheBusterNotifier: generalSettingsCache
   })
-  postGeneralSettings(workspaceId: number, reimbursableExpensesObject: string, corporateCreditCardExpensesObject: string, importProjects: boolean, importCategories: boolean, fyleToSageIntacct: boolean, sageIntacctToFyle: boolean, autoMapEmployees: string = null) {
+  postGeneralSettings(workspaceId: number, reimbursableExpensesObject: string, corporateCreditCardExpensesObject: string, importProjects: boolean, importCategories: boolean, fyleToSageIntacct: boolean, sageIntacctToFyle: boolean, autoMapEmployees: string = null, autoCreateDestinationEntity: boolean) {
     return this.apiService.post(`/workspaces/${workspaceId}/settings/general/`, {
       reimbursable_expenses_object: reimbursableExpensesObject,
       corporate_credit_card_expenses_object: corporateCreditCardExpensesObject,
@@ -100,7 +100,8 @@ export class SettingsService {
       import_categories: importCategories,
       sync_fyle_to_sage_intacct_payments: fyleToSageIntacct,
       sync_sage_intacct_to_fyle_payments: sageIntacctToFyle,
-      auto_map_employees: autoMapEmployees
+      auto_map_employees: autoMapEmployees,
+      auto_create_destination_entity: autoCreateDestinationEntity
     });
   }
 
