@@ -30,7 +30,6 @@ enum onboardingStates {
 export class DashboardComponent implements OnInit {
   workspaceId: number;
   isLoading = false;
-  generalSettings: any;
 
   currentState = onboardingStates.initialized;
 
@@ -87,7 +86,6 @@ export class DashboardComponent implements OnInit {
         that.settingsService.getMappingSettings(that.workspaceId)
       ]
     ).toPromise().then((res) => {
-      that.generalSettings = res[0];
       that.currentState = onboardingStates.configurationsDone;
       return res;
     });
@@ -105,19 +103,14 @@ export class DashboardComponent implements OnInit {
   getEmployeeMappings() {
     const that = this;
     // TODO: remove promises and do with rxjs observables
-    if (that.generalSettings && that.generalSettings.auto_create_destination_entity) {
-      that.currentState = onboardingStates.employeeMappingsDone;
-      return;
-    } else {
-      return that.mappingsService.getMappings('EMPLOYEE', 1).toPromise().then((res) => {
-        if (res.results.length > 0) {
-          that.currentState = onboardingStates.employeeMappingsDone;
-        } else {
-          throw new Error('employee mappings have no entries');
-        }
-        return res;
-      });
-    }
+    return that.mappingsService.getMappings('EMPLOYEE', 1).toPromise().then((res) => {
+      if (res.results.length > 0) {
+        that.currentState = onboardingStates.employeeMappingsDone;
+      } else {
+        throw new Error('employee mappings have no entries');
+      }
+      return res;
+    });
   }
 
   getCategoryMappings() {
