@@ -94,7 +94,6 @@ export class ConfigurationComponent implements OnInit {
         label: 'Bill',
         value: 'BILL'
       }];
-      that.showAutoCreateOption(that.generalSettings.auto_map_employees);
 
       let paymentsSyncOption = '';
       if (that.generalSettings.sync_fyle_to_sage_intacct_payments) {
@@ -112,6 +111,8 @@ export class ConfigurationComponent implements OnInit {
         autoMapEmployees: [that.generalSettings.auto_map_employees],
         autoCreateDestinationEntity: [that.generalSettings.auto_create_destination_entity]
       });
+
+      that.showAutoCreateOption(that.generalSettings.auto_map_employees);
 
       that.generalSettingsForm.controls.reimburExpense.disable();
 
@@ -243,6 +244,7 @@ export class ConfigurationComponent implements OnInit {
       that.showAutoCreate = true;
     } else {
       that.showAutoCreate = false;
+      that.generalSettingsForm.controls.autoCreateDestinationEntity.setValue(false);
     }
   }
 
