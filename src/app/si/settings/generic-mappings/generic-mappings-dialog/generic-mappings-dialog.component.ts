@@ -6,6 +6,10 @@ import { forkJoin } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { MappingSource } from 'src/app/core/models/mapping-source.model';
+import { MappingDestination } from 'src/app/core/models/mapping-destination.model';
+import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
+import { MappingModal } from 'src/app/core/models/mapping-modal.model';
 
 export class MappingErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -23,17 +27,17 @@ export class GenericMappingsDialogComponent implements OnInit {
 
   isLoading = false;
   form: FormGroup;
-  fyleAttributes: any[];
-  sageIntacctElements: any[];
-  fyleAttributeOptions: any[];
-  sageIntacctOptions: any[];
-  setting: any;
+  fyleAttributes: MappingSource[];
+  fyleAttributeOptions: MappingSource[];
+  sageIntacctElements: MappingDestination[];
+  sageIntacctOptions: MappingDestination[];
+  setting: MappingSetting;
   editMapping: boolean;
   matcher = new MappingErrorStateMatcher();
 
   constructor(private formBuilder: FormBuilder,
               public dialogRef: MatDialogRef<GenericMappingsDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any,
+              @Inject(MAT_DIALOG_DATA) public data: MappingModal,
               private mappingsService: MappingsService,
               private snackBar: MatSnackBar) { }
 
@@ -69,8 +73,8 @@ export class GenericMappingsDialogComponent implements OnInit {
     }
   }
 
-  forbiddenSelectionValidator(options: any[]): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} | null => {
+  forbiddenSelectionValidator(options: (MappingSource|MappingDestination)[]): ValidatorFn {
+    return (control: AbstractControl): {[key: string]: object} | null => {
       const forbidden = !options.some((option) => {
         return control.value.id && option.id === control.value.id;
       });
@@ -112,38 +116,28 @@ export class GenericMappingsDialogComponent implements OnInit {
 
   reset() {
     const that = this;
-    // TODO: remove promises and do with rxjs observables
-    const getFyleAttributes = that.mappingsService.getFyleExpenseCustomFields(that.setting.source_field).toPromise().then(attributes => {
-      that.fyleAttributes = attributes;
-    });
 
     let sageIntacctPromise;
     if (that.setting.destination_field === 'PROJECT') {
-      // TODO: remove promises and do with rxjs observables
-      sageIntacctPromise = that.mappingsService.getSageIntacctProjects().toPromise().then(objects => {
-        that.sageIntacctElements = objects;
-      });
+      sageIntacctPromise = that.mappingsService.getSageIntacctProjects();
     } else if (that.setting.destination_field === 'DEPARTMENT') {
-      sageIntacctPromise = that.mappingsService.getSageIntacctDepartments().toPromise().then(objects => {
-        that.sageIntacctElements = objects;
-      });
+      sageIntacctPromise = that.mappingsService.getSageIntacctDepartments();
     } else if (that.setting.destination_field === 'LOCATION') {
-      sageIntacctPromise = that.mappingsService.getSageIntacctLocations().toPromise().then(objects => {
-        that.sageIntacctElements = objects;
-      });
+      sageIntacctPromise = that.mappingsService.getSageIntacctLocations();
     } else if (that.setting.destination_field === 'ITEM') {
-      sageIntacctPromise = that.mappingsService.getSageIntacctItems().toPromise().then(objects => {
-        that.sageIntacctElements = objects;
-      });
+      sageIntacctPromise = that.mappingsService.getSageIntacctItems();
     }
 
     that.isLoading = true;
-    // TODO: remove promises and do with rxjs observables
     forkJoin([
-      getFyleAttributes,
+      that.mappingsService.getFyleExpenseCustomFields(that.setting.source_field),
       sageIntacctPromise
-    ]).subscribe(() => {
+    ]).subscribe(response => {
       that.isLoading = false;
+
+      that.fyleAttributes = response[0];
+      that.sageIntacctElements = response[1];
+
       const sourceField = that.editMapping ? that.fyleAttributes.filter(field => field.value === that.data.rowElement.source.value)[0] : '';
       const destinationField = that.editMapping ? that.sageIntacctElements.filter(field => field.value === that.data.rowElement.destination.value)[0] : '';
       that.form = that.formBuilder.group({

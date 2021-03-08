@@ -5,6 +5,8 @@ import { SettingsService } from 'src/app/core/services/settings.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
+import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
 
 @Component({
   selector: 'app-configuration',
@@ -19,8 +21,8 @@ export class ConfigurationComponent implements OnInit {
   expenseOptions: { label: string, value: string }[];
   cccExpenseOptions: { label: string, value: string }[];
   workspaceId: number;
-  generalSettings: any;
-  mappingSettings: any;
+  generalSettings: GeneralSetting;
+  mappingSettings: MappingSetting[];
   showAutoCreate: boolean;
   windowReference: Window;
 
@@ -117,15 +119,12 @@ export class ConfigurationComponent implements OnInit {
         that.showAutoCreateOption(employeeMappingPreference);
       });
 
-
       if (that.generalSettings.corporate_credit_card_expenses_object) {
         that.generalSettingsForm.controls.cccExpense.disable();
       }
 
       that.isLoading = false;
     }, error => {
-      that.generalSettings = {};
-      that.mappingSettings = {};
       that.isLoading = false;
       that.generalSettingsForm = that.formBuilder.group({
         reimburExpense: ['', Validators.required],
@@ -215,7 +214,7 @@ export class ConfigurationComponent implements OnInit {
       forkJoin(
         [
           that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, importProjects, importCategories, fyleToSageIntacct, sageIntacctToFyle, autoMapEmployees, autoCreateDestinationEntity)
+          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, importProjects, importCategories, fyleToSageIntacct, sageIntacctToFyle, autoCreateDestinationEntity, autoMapEmployees)
         ]
       ).subscribe(responses => {
         that.isLoading = true;

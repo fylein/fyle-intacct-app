@@ -7,6 +7,8 @@ import { MappingsService } from 'src/app/core/services/mappings.service';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { SiComponent } from 'src/app/si/si.component';
+import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
+import { ExpenseField } from 'src/app/core/models/expense-field.model';
 
 @Component({
   selector: 'app-expense-field-configuration',
@@ -18,12 +20,11 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
   expenseFields: FormArray;
   workspaceId: number;
   isLoading: boolean;
-  mappingSettings: any;
-  fyleExpenseFields: any;
-  sageIntacctFields: any;
-  fyleFormFieldList: any;
-  selectedFyleFields: string[] = [];
-  sageIntacctFormFieldList: any;
+  mappingSettings: MappingSetting[];
+  fyleExpenseFields: ExpenseField[];
+  sageIntacctFields: ExpenseField[];
+  fyleFormFieldList: ExpenseField[];
+  sageIntacctFormFieldList: ExpenseField[];
   windowReference: Window;
 
   constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private settingsService: SettingsService, private mappingsService: MappingsService, private si: SiComponent, private windowReferenceService: WindowReferenceService) {

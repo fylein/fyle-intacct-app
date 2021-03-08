@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { ExpenseGroupsService } from 'src/app/core/services/expense-groups.service';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
+import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 
 const FYLE_URL = environment.fyle_url;
 const FYLE_CLIENT_ID = environment.fyle_client_id;
@@ -30,7 +31,7 @@ enum onboardingStates {
 export class DashboardComponent implements OnInit {
   workspaceId: number;
   isLoading = false;
-  generalSettings: any;
+  generalSettings: GeneralSetting;
 
   currentState = onboardingStates.initialized;
 

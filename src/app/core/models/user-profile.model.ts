@@ -1,6 +1,6 @@
 /* tslint:disable */
 // TODO: Use something for serialization / deserialization
-export class UserProfile {
+export type UserProfile = {
   id: string;
   user_id: string;
   created_at: Date;
@@ -42,4 +42,4 @@ export class UserProfile {
   disabled: boolean;
   org_id: string;
   org_name: string;
-}
+};

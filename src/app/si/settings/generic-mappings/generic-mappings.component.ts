@@ -5,6 +5,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { GenericMappingsDialogComponent } from './generic-mappings-dialog/generic-mappings-dialog.component';
 import { SettingsService } from 'src/app/core/services/settings.service';
+import { Mapping } from 'src/app/core/models/mappings.model';
+import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
+import { MappingRow } from 'src/app/core/models/mapping-row.model';
 
 @Component({
   selector: 'app-generic-mappings',
@@ -15,15 +19,15 @@ export class GenericMappingsComponent implements OnInit {
   workspaceId: number;
   sourceField: string;
   isLoading: boolean;
-  mappings: any[];
-  generalSettings: any;
-  setting: any;
-  rowElement: any;
+  mappings: Mapping[];
+  generalSettings: GeneralSetting;
+  setting: MappingSetting;
+  rowElement: Mapping;
   columnsToDisplay = ['sourceField', 'destinationField'];
 
   constructor(private mappingsService: MappingsService, private router: Router, private route: ActivatedRoute, public dialog: MatDialog, private storageService: StorageService, private settingsService: SettingsService) { }
 
-  open(selectedItem: any = null) {
+  open(selectedItem: MappingRow = null) {
     const that = this;
     const dialogRef = that.dialog.open(GenericMappingsDialogComponent, {
       width: '450px',

@@ -2,39 +2,43 @@ import { Injectable } from '@angular/core';
 import { empty, Observable, from } from 'rxjs';
 import { concatMap, expand, map, publishReplay, refCount, reduce } from 'rxjs/operators';
 import { ApiService } from 'src/app/core/services/api.service';
+import { ExpenseField } from '../models/expense-field.model';
+import { GeneralMapping } from '../models/general-mapping.model';
+import { MappingDestination } from '../models/mapping-destination.model';
+import { MappingSource } from '../models/mapping-source.model';
 import { MappingsResponse } from '../models/mappings-response.model';
+import { Mapping } from '../models/mappings.model';
 import { WorkspaceService } from './workspace.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MappingsService {
-  // TODO: Map models to each of these and the methods below
-  fyleCategories: Observable<any[]>;
-  sageIntacctAccounts: Observable<any[]>;
-  sageIntacctChargeCardAccounts: Observable<any[]>;
-  fyleEmployees: Observable<any[]>;
-  sageIntacctVendors: Observable<any[]>;
-  sageIntacctEmployees: Observable<any[]>;
-  sageIntacctExpenseTypes: Observable<any[]>;
-  sageIntacctLocations: Observable<any[]>;
-  sageIntacctProjects: Observable<any[]>;
-  sageIntacctItems: Observable<any[]>;
-  fyleProjects: Observable<any[]>;
-  fyleExpenseCustomFields: Observable<any[]>;
-  sageIntacctDepartments: Observable<any[]>;
-  fyleCostCenters: Observable<any[]>;
-  accountPayables: Observable<any[]>;
-  bankAccounts: Observable<any[]>;
-  creditCardAccounts: Observable<any[]>;
-  paymentAccounts: Observable<any[]>;
-  expenseFields: Observable<any[]>;
+  fyleCategories: Observable<MappingSource[]>;
+  fyleEmployees: Observable<MappingSource[]>;
+  fyleProjects: Observable<MappingSource[]>;
+  fyleExpenseCustomFields: Observable<MappingSource[]>;
+  fyleCostCenters: Observable<MappingSource[]>;
+  sageIntacctAccounts: Observable<MappingDestination[]>;
+  sageIntacctChargeCardAccounts: Observable<MappingDestination[]>;
+  sageIntacctVendors: Observable<MappingDestination[]>;
+  sageIntacctEmployees: Observable<MappingDestination[]>;
+  sageIntacctExpenseTypes: Observable<MappingDestination[]>;
+  sageIntacctLocations: Observable<MappingDestination[]>;
+  sageIntacctProjects: Observable<MappingDestination[]>;
+  sageIntacctItems: Observable<MappingDestination[]>;
+  sageIntacctDepartments: Observable<MappingDestination[]>;
+  accountPayables: Observable<MappingDestination[]>;
+  bankAccounts: Observable<MappingDestination[]>;
+  creditCardAccounts: Observable<MappingDestination[]>;
+  paymentAccounts: Observable<MappingDestination[]>;
+  expenseFields: Observable<ExpenseField[]>;
 
   constructor(
     private apiService: ApiService,
     private workspaceService: WorkspaceService) { }
 
-  postFyleEmployees() {
+  postFyleEmployees(): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.fyleEmployees) {
@@ -47,7 +51,7 @@ export class MappingsService {
     return this.fyleEmployees;
   }
 
-  postFyleCategories() {
+  postFyleCategories(): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.fyleCategories) {
@@ -60,7 +64,7 @@ export class MappingsService {
     return this.fyleCategories;
   }
 
-  postFyleProjects() {
+  postFyleProjects(): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.fyleProjects) {
@@ -73,7 +77,7 @@ export class MappingsService {
     return this.fyleProjects;
   }
 
-  postFyleCostCenters() {
+  postFyleCostCenters(): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.fyleCostCenters) {
@@ -86,7 +90,7 @@ export class MappingsService {
     return this.fyleCostCenters;
   }
 
-  postExpenseCustomFields() {
+  postExpenseCustomFields(): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.fyleExpenseCustomFields) {
@@ -99,7 +103,7 @@ export class MappingsService {
     return this.fyleExpenseCustomFields;
   }
 
-  postSageIntacctVendors() {
+  postSageIntacctVendors(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.sageIntacctVendors) {
@@ -112,7 +116,7 @@ export class MappingsService {
     return this.sageIntacctVendors;
   }
 
-  postSageIntacctEmployees() {
+  postSageIntacctEmployees(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.sageIntacctEmployees) {
@@ -125,7 +129,7 @@ export class MappingsService {
     return this.sageIntacctEmployees;
   }
 
-  postSageIntacctExpensetypes() {
+  postSageIntacctExpensetypes(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.sageIntacctExpenseTypes) {
@@ -138,7 +142,7 @@ export class MappingsService {
     return this.sageIntacctExpenseTypes;
   }
 
-  postSageIntacctItems() {
+  postSageIntacctItems(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.sageIntacctItems) {
@@ -151,7 +155,7 @@ export class MappingsService {
     return this.sageIntacctItems;
   }
 
-  postSageIntacctLocations() {
+  postSageIntacctLocations(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.sageIntacctLocations) {
@@ -164,7 +168,7 @@ export class MappingsService {
     return this.sageIntacctLocations;
   }
 
-  postSageIntacctProjects() {
+  postSageIntacctProjects(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.sageIntacctProjects) {
@@ -177,7 +181,7 @@ export class MappingsService {
     return this.sageIntacctProjects;
   }
 
-  postSageIntacctAccounts() {
+  postSageIntacctAccounts(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.sageIntacctAccounts) {
@@ -191,7 +195,7 @@ export class MappingsService {
     return this.sageIntacctAccounts;
   }
 
-  postSageIntacctChargeCardAccounts() {
+  postSageIntacctChargeCardAccounts(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.sageIntacctChargeCardAccounts) {
@@ -206,7 +210,7 @@ export class MappingsService {
     return this.sageIntacctChargeCardAccounts;
   }
 
-  postSageIntacctPaymentAccounts() {
+  postSageIntacctPaymentAccounts(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.paymentAccounts) {
@@ -222,7 +226,7 @@ export class MappingsService {
   }
 
 
-  postSageIntacctDepartments() {
+  postSageIntacctDepartments(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     if (!this.sageIntacctDepartments) {
@@ -235,91 +239,79 @@ export class MappingsService {
     return this.sageIntacctDepartments;
   }
 
-  getFyleEmployees() {
+  getFyleEmployees(): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/employees/`, {});
   }
 
-  getFyleCategories() {
+  getFyleCategories(): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/categories/`, {});
   }
 
-  getFyleExpenseFields() {
+  getFyleExpenseFields(): Observable<ExpenseField[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_fields/`, {});
   }
 
-  getSageIntacctVendors() {
+  getSageIntacctVendors(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/vendors/`, {});
   }
 
-  getSageIntacctChargeCard() {
+  getSageIntacctChargeCard(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/charge_card_accounts/`, {});
   }
 
-  getSageIntacctPaymentAccounts() {
+  getSageIntacctPaymentAccounts(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/payment_accounts/`, {});
   }
 
-  getSageIntacctItems() {
+  getSageIntacctItems(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/items/`, {});
   }
 
-  getSageIntacctEmployees() {
+  getSageIntacctEmployees(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/employees/`, {});
   }
 
-  getSageIntacctExpensetypes() {
+  getSageIntacctExpensetypes(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/expense_types/`, {});
   }
 
-  getFyleProjects() {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(`/workspaces/${workspaceId}/fyle/projects/`, {});
-  }
-
-  getFyleCostCenters() {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(`/workspaces/${workspaceId}/fyle/cost_centers/`, {});
-  }
-
-  getSageIntacctDepartments() {
+  getSageIntacctDepartments(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/departments/`, {});
   }
 
-  getSageIntacctLocations() {
+  getSageIntacctLocations(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/locations/`, {});
   }
 
-  getSageIntacctProjects() {
+  getSageIntacctProjects(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/projects/`, {});
   }
 
-  getSageIntacctAccounts() {
+  getSageIntacctAccounts(): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(
@@ -327,13 +319,13 @@ export class MappingsService {
     );
   }
 
-  getSageIntacctFields() {
+  getSageIntacctFields(): Observable<ExpenseField[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/sage_intacct_fields/`, {});
   }
 
-  getFyleExpenseCustomFields(attributeType: string) {
+  getFyleExpenseCustomFields(attributeType: string): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_custom_fields/`, {
@@ -347,18 +339,19 @@ export class MappingsService {
     return this.apiService.get(url, {});
   }
 
-  getAllMappings(sourceType: string) {
+  getAllMappings(sourceType: string): Observable<Mapping[]> {
     const that = this;
-    return this.getMappings(sourceType).pipe(expand((res: any) => {
+    return this.getMappings(sourceType).pipe(expand((res: MappingsResponse) => {
+      // tslint:disable-next-line
       return res.next ? that.getMappings(sourceType, 500, res.next) : empty();
-    }), concatMap((res: any) => res.results),
-      reduce((arr, val) => {
+    }), concatMap((res: MappingsResponse) => res.results),
+      reduce((arr: Mapping[], val: Mapping) => {
         arr.push(val);
         return arr;
       }, []));
   }
 
-  postMappings(mapping: any) {
+  postMappings(mapping: Mapping): Observable<Mapping> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.post(`/workspaces/${workspaceId}/mappings/`, mapping);
   }
@@ -368,22 +361,7 @@ export class MappingsService {
     return this.apiService.post(`/workspaces/${workspaceId}/mappings/auto_map_employees/trigger/`, {});
   }
 
-  getCategoryMappings() {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-    return this.apiService.get(
-      `/workspaces/${workspaceId}/mappings/categories/`, {}
-    );
-  }
-
-  getEmployeeMappings() {
-    const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(
-      `/workspaces/${workspaceId}/mappings/employees/`, {}
-    );
-  }
-
-  getGeneralMappings() {
+  getGeneralMappings(): Observable<GeneralMapping> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(
@@ -391,7 +369,7 @@ export class MappingsService {
     );
   }
 
-  postGeneralMappings(mapping: any) {
+  postGeneralMappings(mapping: GeneralMapping): Observable<GeneralMapping> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.post(

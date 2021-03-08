@@ -10,7 +10,6 @@ export class ChargeCardTransactionsService {
     private apiService: ApiService,
     private workspaceService: WorkspaceService) {}
 
-  // TODO: Map response to a model
   createChargeCardTransactions(expenseGroupIds: number[]) {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.post(

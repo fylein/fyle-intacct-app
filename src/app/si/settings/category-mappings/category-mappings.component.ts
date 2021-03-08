@@ -6,6 +6,8 @@ import { CategoryMappingsDialogComponent } from './category-mappings-dialog/cate
 import { StorageService } from 'src/app/core/services/storage.service';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { forkJoin, from } from 'rxjs';
+import { Mapping } from 'src/app/core/models/mappings.model';
+import { MappingRow } from 'src/app/core/models/mapping-row.model';
 
 @Component({
   selector: 'app-category-mappings',
@@ -15,7 +17,7 @@ import { forkJoin, from } from 'rxjs';
 export class CategoryMappingsComponent implements OnInit {
   isLoading = false;
   workspaceId: number;
-  categoryMappings: any[];
+  categoryMappings: Mapping[];
   columnsToDisplay = ['category', 'sageIntacct'];
 
   constructor(
@@ -26,7 +28,7 @@ export class CategoryMappingsComponent implements OnInit {
     private storageService: StorageService,
     private settingsService: SettingsService) { }
 
-  open(selectedItem: any = null) {
+  open(selectedItem: MappingRow = null) {
     const that = this;
     const dialogRef = that.dialog.open(CategoryMappingsDialogComponent, {
       width: '450px',
@@ -54,9 +56,9 @@ export class CategoryMappingsComponent implements OnInit {
     categoryMappings.forEach(categoryMapping => {
       mappings.push({
         fyle_value: categoryMapping.source.value,
-        sage_intacct_value: categoryMapping.destination.value,
+        si_value: categoryMapping.destination.value,
         auto_mapped: categoryMapping.source.auto_mapped,
-        ccc_account: that.getCCCAccount(that.categoryMappings, categoryMapping)
+        ccc_value: that.getCCCAccount(that.categoryMappings, categoryMapping)
       });
     });
 
@@ -71,34 +73,27 @@ export class CategoryMappingsComponent implements OnInit {
 
   reset() {
     const that = this;
+    that.isLoading = true;
 
-    const getCategoryMappings = that.mappingsService.getAllMappings('CATEGORY').toPromise().then(categoryMappings => {
-      that.categoryMappings = categoryMappings;
+    forkJoin([
+      that.mappingsService.getAllMappings('CATEGORY'),
+      that.settingsService.getGeneralSettings(that.workspaceId)
+    ]).subscribe(response => {
+      that.isLoading = false;
+
+      that.categoryMappings = response[0];
       that.createCategoryMappingsRows();
-    });
-
-    const showOrHideCCCField = that.settingsService.getCombinedSettings(that.workspaceId).toPromise().then(settings => {
-      if (settings.corporate_credit_card_expenses_object && settings.reimbursable_expenses_object === 'EXPENSE_REPORT') {
+      if (response[1].corporate_credit_card_expenses_object && response[1].reimbursable_expenses_object === 'EXPENSE_REPORT') {
         that.columnsToDisplay = ['category', 'sageIntacct', 'ccc'];
       }
-    });
-
-    that.isLoading = true;
-    forkJoin([
-      from(getCategoryMappings),
-      from(showOrHideCCCField),
-    ]).subscribe(() => {
-      that.isLoading = false;
     }, (err) => {
       that.isLoading = false;
     });
   }
-
 
   ngOnInit() {
     const that = this;
     that.workspaceId = that.route.parent.snapshot.params.workspace_id;
     that.reset();
   }
-
 }
