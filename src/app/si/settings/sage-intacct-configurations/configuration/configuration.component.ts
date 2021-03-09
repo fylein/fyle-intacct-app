@@ -172,7 +172,7 @@ export class ConfigurationComponent implements OnInit {
       const importCategories = that.generalSettingsForm.value.importCategories;
       const autoMapEmployees = that.generalSettingsForm.value.autoMapEmployees ? that.generalSettingsForm.value.autoMapEmployees : null;
       const autoCreateDestinationEntity = that.generalSettingsForm.value.autoCreateDestinationEntity;
-
+      
       let fyleToSageIntacct = false;
       let sageIntacctToFyle = false;
 
@@ -240,7 +240,7 @@ export class ConfigurationComponent implements OnInit {
 
   showAutoCreateOption(autoMapEmployees) {
     const that = this;
-    if (autoMapEmployees) {
+    if (autoMapEmployees && autoMapEmployees != 'EMPLOYEE_CODE') {
       that.showAutoCreate = true;
     } else {
       that.showAutoCreate = false;
