@@ -16,13 +16,22 @@
     </button>
   </div>
 
+  <div class="page-info" *ngIf="!isLoading && count" fxLayoutAlign="end center">
+    <mat-form-field class="simple-search" appearance="outline">
+      <mat-label>Search</mat-label>
+      <input matInput (keyup)="applyFilter($event)">
+      <span matPrefix>
+        <mat-icon class="simple-search--icon" aria-hidden="false" aria-label="Search">search </mat-icon>
+      </span>
+    </mat-form-field>
+  </div>
 
-  <div class="mat-h2" *ngIf="!employeeMappings.length && !isLoading">
+  <div class="mat-h2" *ngIf="!count && !isLoading">
     <zero-state message="You have no employee mappings yet"></zero-state>
   </div>
 
-  <div *ngIf="employeeMappings.length" [hidden]="isLoading">
-    <table mat-table [dataSource]="employeeMappings" class="page-table" matSort matSortActive="created_at"
+  <div *ngIf="count" [hidden]="isLoading">
+    <table mat-table [dataSource]="employeeMappingRows" class="page-table" matSort matSortActive="created_at"
       matSortDisableClear matSortDirection="desc">
       <ng-container matColumnDef="employee_email">
         <th mat-header-cell *matHeaderCellDef> Employee Email </th>
@@ -56,6 +65,7 @@
   </div>
 </div>
 
+<app-paginator *ngIf="count" [coloumnArray]="columnsToDisplay" (getMappings)="reset($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
 <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
   <app-loader></app-loader>
 </div>

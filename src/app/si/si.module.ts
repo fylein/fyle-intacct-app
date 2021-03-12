@@ -56,6 +56,7 @@ import { RxReactiveFormsModule } from '@rxweb/reactive-form-validators';
 import { GenericMappingsDialogComponent } from './settings/generic-mappings/generic-mappings-dialog/generic-mappings-dialog.component';
 import { ExpenseGroupSettingsDialogComponent } from './sync-export/sync/expense-group-settings-dialog/expense-group-settings-dialog.component';
 import { MatTooltipModule } from '@angular/material';
+import { PaginatorComponent } from './settings/paginator/paginator.component';
 
 @NgModule({
   declarations: [
@@ -83,7 +84,8 @@ import { MatTooltipModule } from '@angular/material';
     ExpenseFieldConfigurationComponent,
     ExpenseGroupSettingsDialogComponent,
     GenericMappingsComponent,
-    GenericMappingsDialogComponent
+    GenericMappingsDialogComponent,
+    PaginatorComponent
   ],
   entryComponents: [
     EmployeeMappingsDialogComponent,

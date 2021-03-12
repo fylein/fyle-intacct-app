@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { EmployeeMappingsDialogComponent } from './employee-mappings-dialog/employee-mappings-dialog.component';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { StorageService } from 'src/app/core/services/storage.service';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatTableDataSource} from '@angular/material';
 import { Mapping } from 'src/app/core/models/mappings.model';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { MappingRow } from 'src/app/core/models/mapping-row.model';
@@ -21,6 +21,7 @@ export class EmployeeMappingsComponent implements OnInit {
   closeResult: string;
   form: FormGroup;
   employeeMappings: Mapping[];
+  employeeMappingRows: MatTableDataSource<MappingRow> = new MatTableDataSource([]);
   workspaceId: number;
   isLoading = true;
   generalSettings: GeneralSetting;
@@ -61,6 +62,12 @@ export class EmployeeMappingsComponent implements OnInit {
     });
   }
 
+  applyFilter(event: Event) {
+    const that = this;
+    const filterValue = (event.target as HTMLInputElement).value;
+    that.employeeMappingRows.filter = filterValue.trim().toLowerCase();
+  }
+
   createEmployeeMappingsRows() {
     const that = this;
     const employeeEVMappings = that.employeeMappings.filter(mapping => mapping.destination_type !== 'CHARGE_CARD_NUMBER');
@@ -74,7 +81,8 @@ export class EmployeeMappingsComponent implements OnInit {
         auto_mapped: employeeEVMapping.source.auto_mapped
       });
     });
-    that.employeeMappings = mappings;
+    that.employeeMappingRows = new MatTableDataSource(mappings);
+    that.employeeMappingRows.filterPredicate = that.searchByText;
   }
 
   getCCCAccount(employeeMappings, employeeEVMapping) {
@@ -91,10 +99,12 @@ export class EmployeeMappingsComponent implements OnInit {
       that.createEmployeeMappingsRows();
       that.isLoading = false;
     });
+  }
 
-    if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
-      that.columnsToDisplay.push('ccc');
-    }
+  searchByText(data: MappingRow, filterText: string) {
+    return data.fyle_value.toLowerCase().includes(filterText) ||
+    data.si_value.toLowerCase().includes(filterText) ||
+    (data.ccc_value ? data.ccc_value.toLowerCase().includes(filterText) : false);
   }
 
   triggerAutoMapEmployees() {
