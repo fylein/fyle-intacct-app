@@ -11,6 +11,7 @@ import { Mapping } from 'src/app/core/models/mappings.model';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { MappingRow } from 'src/app/core/models/mapping-row.model';
 
+
 @Component({
   selector: 'app-employee-mappings',
   templateUrl: './employee-mappings.component.html',
@@ -25,6 +26,7 @@ export class EmployeeMappingsComponent implements OnInit {
   workspaceId: number;
   isLoading = true;
   generalSettings: GeneralSetting;
+  count: number;
   columnsToDisplay = ['employee_email', 'si'];
 
   constructor(public dialog: MatDialog,
@@ -48,12 +50,15 @@ export class EmployeeMappingsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       that.isLoading = true;
-      that.mappingsService.getAllMappings('EMPLOYEE').subscribe((employees) => {
-        that.employeeMappings = employees;
+      const tableDimension = that.columnsToDisplay.includes('ccc') ? 3 : 2;
+      const pageSize = (that.storageService.get('mappings.pageSize') || 50) * (that.columnsToDisplay.includes('ccc') ? 2 : 1);
+      that.mappingsService.getMappings('EMPLOYEE', null, pageSize, 0, tableDimension).subscribe((employees) => {
+        that.count = that.columnsToDisplay.includes('ccc') ? employees.count / 2 : employees.count;
+        that.employeeMappings = employees.results;
         that.isLoading = false;
         const onboarded = that.storageService.get('onboarded');
 
-        if (onboarded === true) {
+        if (onboarded) {
           that.createEmployeeMappingsRows();
         } else {
           that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
@@ -91,14 +96,16 @@ export class EmployeeMappingsComponent implements OnInit {
     return empMapping.length ? empMapping[0].destination.value : null;
   }
 
-  reset() {
+  reset(data) {
     const that = this;
     that.isLoading = true;
-    that.mappingsService.getAllMappings('EMPLOYEE').subscribe((employees) => {
-      that.employeeMappings = employees;
+    that.mappingsService.getMappings('EMPLOYEE', null, data.pageSize, data.pageNumber * data.pageSize, data.tableDimension).subscribe((employees) => {
+      that.employeeMappings = employees.results;
+      that.count = that.columnsToDisplay.includes('ccc') ? employees.count / 2 : employees.count;
       that.createEmployeeMappingsRows();
       that.isLoading = false;
     });
+    console.log(that.count)
   }
 
   searchByText(data: MappingRow, filterText: string) {
@@ -126,7 +133,15 @@ export class EmployeeMappingsComponent implements OnInit {
     that.settingsService.getGeneralSettings(that.workspaceId).subscribe(settings => {
       that.generalSettings = settings;
       that.isLoading = false;
-      that.reset();
+      if (that.generalSettings.corporate_credit_card_expenses_object !== 'BILL' && that.generalSettings.corporate_credit_card_expenses_object) {
+        that.columnsToDisplay.push('ccc');
+      }
+      const data = {
+        pageSize: (that.columnsToDisplay.includes('ccc') ? 2 : 1) * (that.storageService.get('mappings.pageSize') || 50),
+        pageNumber: 0,
+        tableDimension: that.columnsToDisplay.includes('ccc') ? 3 : 2
+      };
+      that.reset(data);
     });
   }
 }

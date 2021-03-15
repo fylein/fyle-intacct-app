@@ -14,12 +14,22 @@
     </button>
   </div>
 
-  <div *ngIf="!categoryMappings.length && !isLoading">
+  <div class="page-info" *ngIf="!isLoading && count" fxLayoutAlign="end center">
+    <mat-form-field class="simple-search" appearance="outline">
+      <mat-label>Search</mat-label>
+      <input matInput (keyup)="applyFilter($event)">
+      <span matPrefix>
+        <mat-icon class="simple-search--icon" aria-hidden="false" aria-label="Search">search </mat-icon>
+      </span>
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="!count && !isLoading">
     <zero-state message="You have no category mappings yet"></zero-state>
   </div>
 
-  <div *ngIf="categoryMappings.length" [hidden]="isLoading">
-    <table mat-table [dataSource]="categoryMappings" class="page-table" matSort matSortActive="created_at"
+  <div *ngIf="count" [hidden]="isLoading">
+    <table mat-table [dataSource]="categoryMappingRows" class="page-table" matSort matSortActive="created_at"
       matSortDisableClear matSortDirection="desc">
       <ng-container matColumnDef="category">
         <th mat-header-cell *matHeaderCellDef> Category </th>
@@ -50,6 +60,7 @@
     </table>
   </div>
 </div>
+<app-paginator *ngIf="count" [coloumnArray]="columnsToDisplay" (getMappings)="reset($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
 
 <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
   <app-loader></app-loader>

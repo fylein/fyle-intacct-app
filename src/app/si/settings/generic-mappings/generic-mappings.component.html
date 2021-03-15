@@ -14,17 +14,28 @@
       </button>
     </div>
 
-    <div *ngIf="!mappings.length">
+    <div class="page-info" *ngIf="!isLoading && count" fxLayoutAlign="end center">
+      <mat-form-field class="simple-search" appearance="outline">
+        <mat-label>Search</mat-label>
+        <input matInput (keyup)="applyFilter($event)">
+        <span matPrefix>
+          <mat-icon class="simple-search--icon" aria-hidden="false" aria-label="Search">search </mat-icon>
+        </span>
+      </mat-form-field>
+    </div>
+
+    <div *ngIf="!count">
       <zero-state message="You have no {{ getTitle(sourceField).toLowerCase() }} mappings yet"></zero-state>
     </div>
 
-    <div *ngIf="mappings.length" [hidden]="isLoading">
+    <div *ngIf="count" [hidden]="isLoading">
       <table mat-table [dataSource]="mappings" class="page-table" matSort matSortActive="created_at"
         matSortDisableClear matSortDirection="desc">
         <ng-container matColumnDef="sourceField">
           <th mat-header-cell *matHeaderCellDef> {{ getTitle(sourceField) | titlecase }} </th>
           <td mat-cell *matCellDef="let element">
             {{element.source.value}}
+            <mat-icon class="auto-map" [inline]="true" matTooltip="Auto mapped row from Fyle and NetSuite" matTooltipPosition="after" *ngIf="element.source.auto_mapped">bolt</mat-icon>
           </td>
         </ng-container>
 
@@ -43,6 +54,7 @@
     </div>
   </div>
 </div>
+<app-paginator *ngIf="count" [coloumnArray]="[]" (getMappings)="getMappings($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
 
 <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
   <app-loader></app-loader>
