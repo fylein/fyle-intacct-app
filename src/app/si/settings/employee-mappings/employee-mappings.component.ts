@@ -105,7 +105,6 @@ export class EmployeeMappingsComponent implements OnInit {
       that.createEmployeeMappingsRows();
       that.isLoading = false;
     });
-    console.log(that.count)
   }
 
   searchByText(data: MappingRow, filterText: string) {
