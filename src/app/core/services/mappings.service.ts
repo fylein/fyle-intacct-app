@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { empty, Observable, from } from 'rxjs';
+import { Cacheable, CacheBuster } from 'ngx-cacheable';
+import { empty, Observable, from, Subject } from 'rxjs';
 import { concatMap, expand, map, publishReplay, refCount, reduce } from 'rxjs/operators';
 import { ApiService } from 'src/app/core/services/api.service';
 import { ExpenseField } from '../models/expense-field.model';
@@ -9,6 +10,8 @@ import { MappingSource } from '../models/mapping-source.model';
 import { MappingsResponse } from '../models/mappings-response.model';
 import { Mapping } from '../models/mappings.model';
 import { WorkspaceService } from './workspace.service';
+
+const generalMappingsCache = new Subject<void>();
 
 @Injectable({
   providedIn: 'root',
@@ -361,6 +364,9 @@ export class MappingsService {
     return this.apiService.post(`/workspaces/${workspaceId}/mappings/auto_map_employees/trigger/`, {});
   }
 
+  @Cacheable({
+    cacheBusterObserver: generalMappingsCache
+  })
   getGeneralMappings(): Observable<GeneralMapping> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
@@ -369,6 +375,9 @@ export class MappingsService {
     );
   }
 
+  @CacheBuster({
+    cacheBusterNotifier: generalMappingsCache
+  })
   postGeneralMappings(mapping: GeneralMapping): Observable<GeneralMapping> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 

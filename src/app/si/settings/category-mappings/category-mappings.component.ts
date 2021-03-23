@@ -67,7 +67,6 @@ export class CategoryMappingsComponent implements OnInit {
     const that = this;
     const categoryMappings = that.categoryMappings.filter(mapping => mapping.destination_type !== 'CCC_ACCOUNT');
     const mappings = [];
-
     categoryMappings.forEach(categoryMapping => {
       mappings.push({
         fyle_value: categoryMapping.source.value,
@@ -102,13 +101,13 @@ export class CategoryMappingsComponent implements OnInit {
       that.settingsService.getGeneralSettings(that.workspaceId)
     ]).subscribe(response => {
       that.isLoading = false;
-
+      if (response[1].corporate_credit_card_expenses_object && response[1].reimbursable_expenses_object) {
+        that.columnsToDisplay = ['category', 'sageIntacct', 'ccc'];
+      }
       that.categoryMappings = response[0].results;
       that.count = that.columnsToDisplay.includes('ccc') ?  response[0].count / 2 : response[0].count;
       that.createCategoryMappingsRows();
-      if (response[1].corporate_credit_card_expenses_object && response[1].reimbursable_expenses_object === 'EXPENSE_REPORT') {
-        that.columnsToDisplay = ['category', 'sageIntacct', 'ccc'];
-      }
+
     }, (err) => {
       that.isLoading = false;
     });
