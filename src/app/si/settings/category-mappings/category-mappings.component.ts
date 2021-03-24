@@ -6,6 +6,7 @@ import { CategoryMappingsDialogComponent } from './category-mappings-dialog/cate
 import { StorageService } from 'src/app/core/services/storage.service';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { forkJoin, from } from 'rxjs';
+import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { Mapping } from 'src/app/core/models/mappings.model';
 import { MappingRow } from 'src/app/core/models/mapping-row.model';
 import { MatTableDataSource } from '@angular/material';
@@ -21,6 +22,7 @@ export class CategoryMappingsComponent implements OnInit {
   categoryMappings: Mapping[];
   categoryMappingRows: MatTableDataSource<MappingRow> = new MatTableDataSource([]);
   count: number;
+  generalSettings: GeneralSetting;
   columnsToDisplay = ['category', 'sageIntacct'];
 
   constructor(
@@ -101,11 +103,11 @@ export class CategoryMappingsComponent implements OnInit {
       that.settingsService.getGeneralSettings(that.workspaceId)
     ]).subscribe(response => {
       that.isLoading = false;
-      if (response[1].corporate_credit_card_expenses_object && response[1].reimbursable_expenses_object) {
+      if (response[1].corporate_credit_card_expenses_object && response[1].reimbursable_expenses_object === 'EXPENSE_REPORT') {
         that.columnsToDisplay = ['category', 'sageIntacct', 'ccc'];
       }
       that.categoryMappings = response[0].results;
-      that.count = that.columnsToDisplay.includes('ccc') ?  response[0].count / 2 : response[0].count;
+      that.count = response[1].corporate_credit_card_expenses_object ?  response[0].count / 2 : response[0].count;
       that.createCategoryMappingsRows();
 
     }, (err) => {
@@ -115,12 +117,18 @@ export class CategoryMappingsComponent implements OnInit {
 
   ngOnInit() {
     const that = this;
+    that.isLoading = true;
     that.workspaceId = that.route.parent.snapshot.params.workspace_id;
-    const data = {
-      pageSize: (that.columnsToDisplay.includes('ccc') ? 2 : 1) * (that.storageService.get('mappings.pageSize') || 50),
-      pageNumber: 0,
-      tableDimension: that.columnsToDisplay.includes('ccc') ? 3 : 2
-    };
-    that.reset(data);
+    that.settingsService.getGeneralSettings(this.workspaceId).subscribe(settings => {
+      that.generalSettings = settings;
+      this.isLoading = false;
+
+      const data = {
+        pageSize: (that.generalSettings.corporate_credit_card_expenses_object ? 2 : 1) * (that.storageService.get('mappings.pageSize') || 50),
+        pageNumber: 0,
+        tableDimension: that.generalSettings.corporate_credit_card_expenses_object ? 3 : 2
+      };
+      that.reset(data);
+    });
   }
 }

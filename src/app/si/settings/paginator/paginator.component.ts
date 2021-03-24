@@ -15,7 +15,7 @@ export class PaginatorComponent implements OnInit {
     tableDimension: number;
     @Input() isLoading: boolean;
     @Input() count: number;
-    @Input() coloumnArray: string[];
+    @Input() is3D: boolean;
     @Output() getMappings = new EventEmitter<object>();
 
     constructor(private storageService: StorageService, private route: ActivatedRoute) {}
@@ -46,8 +46,8 @@ export class PaginatorComponent implements OnInit {
         that.route.params.subscribe(val => {
             that.pageSize = that.storageService.get('mappings.pageSize') || 50;
             that.pageNumber = 0;
-            that.multiplier = that.coloumnArray.includes('ccc') ? 2 : 1;
-            that.tableDimension = that.coloumnArray.includes('ccc') ? 3 : 2;
+            that.multiplier = that.is3D ? 2 : 1;
+            that.tableDimension = that.is3D ? 3 : 2;
         });
     }
 }

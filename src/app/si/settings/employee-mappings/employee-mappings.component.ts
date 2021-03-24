@@ -6,11 +6,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { EmployeeMappingsDialogComponent } from './employee-mappings-dialog/employee-mappings-dialog.component';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { StorageService } from 'src/app/core/services/storage.service';
-import { MatSnackBar, MatTableDataSource} from '@angular/material';
+import { MatSnackBar, MatTableDataSource } from '@angular/material';
 import { Mapping } from 'src/app/core/models/mappings.model';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { MappingRow } from 'src/app/core/models/mapping-row.model';
-
 
 @Component({
   selector: 'app-employee-mappings',
@@ -132,7 +131,7 @@ export class EmployeeMappingsComponent implements OnInit {
     that.settingsService.getGeneralSettings(that.workspaceId).subscribe(settings => {
       that.generalSettings = settings;
       that.isLoading = false;
-      if (that.generalSettings.corporate_credit_card_expenses_object !== 'BILL' && that.generalSettings.corporate_credit_card_expenses_object) {
+      if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'BILL') {
         that.columnsToDisplay.push('ccc');
       }
       const data = {
