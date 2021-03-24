@@ -49,7 +49,7 @@ export class CategoryMappingsComponent implements OnInit {
         const data = {
           pageSize: (that.storageService.get('mappings.pageSize') || 50) * (that.columnsToDisplay.includes('ccc') ? 2 : 1),
           pageNumber: 0,
-          tableDimension: that.columnsToDisplay.includes('ccc') ? 3 : 2
+          tableDimension: that.generalSettings.corporate_credit_card_expenses_object ? 3 : 2
         };
         that.reset(data);
       } else {
@@ -97,7 +97,6 @@ export class CategoryMappingsComponent implements OnInit {
   reset(data) {
     const that = this;
     that.isLoading = true;
-
     forkJoin([
       that.mappingsService.getMappings('CATEGORY', null, data.pageSize, data.pageSize * data.pageNumber, data.tableDimension),
       that.settingsService.getGeneralSettings(that.workspaceId)
