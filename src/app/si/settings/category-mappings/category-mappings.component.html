@@ -62,7 +62,7 @@
     </table>
   </div>
 </div>
-<app-paginator *ngIf="count" [hidden]="!categoryMappingRows.filteredData.length" [is3D]="generalSettings.corporate_credit_card_expenses_object" (getMappings)="reset($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
+<app-paginator *ngIf="count" [hidden]="!categoryMappingRows.filteredData.length" [is3D]="generalSettings.corporate_credit_card_expenses_object" [pageNumber]="pageNumber" (getMappings)="reset($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
 
 <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
   <app-loader></app-loader>

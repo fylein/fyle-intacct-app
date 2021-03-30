@@ -26,6 +26,7 @@ export class EmployeeMappingsComponent implements OnInit {
   isLoading = true;
   generalSettings: GeneralSetting;
   count: number;
+  pageNumber: number;
   columnsToDisplay = ['employee_email', 'si'];
 
   constructor(public dialog: MatDialog,
@@ -102,8 +103,10 @@ export class EmployeeMappingsComponent implements OnInit {
       that.employeeMappings = employees.results;
       that.count = that.columnsToDisplay.includes('ccc') ? employees.count / 2 : employees.count;
       that.createEmployeeMappingsRows();
+      that.pageNumber = data.pageNumber;
       that.isLoading = false;
     });
+
   }
 
   searchByText(data: MappingRow, filterText: string) {

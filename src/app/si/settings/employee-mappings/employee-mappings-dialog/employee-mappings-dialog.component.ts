@@ -173,7 +173,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
   getDefaultCCCObj() {
     const that = this;
     if (that.generalSettings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
-      that.defaultCCCObj = that.creditCardValue.filter(cccObj => cccObj.value === that.generalMappings.default_charge_card_name)[0];
+      that.defaultCCCObj =  that.editMapping ? that.creditCardValue.filter(cccObj => cccObj.value === that.data.rowElement.ccc_value)[0] : that.creditCardValue.filter(cccObj => cccObj.value === that.generalMappings.default_charge_card_name)[0];
     }
   }
 

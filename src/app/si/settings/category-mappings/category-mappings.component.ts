@@ -22,6 +22,7 @@ export class CategoryMappingsComponent implements OnInit {
   categoryMappings: Mapping[];
   categoryMappingRows: MatTableDataSource<MappingRow> = new MatTableDataSource([]);
   count: number;
+  pageNumber: number;
   generalSettings: GeneralSetting;
   columnsToDisplay = ['category', 'sageIntacct'];
 
@@ -47,7 +48,7 @@ export class CategoryMappingsComponent implements OnInit {
       const onboarded = that.storageService.get('onboarded');
       if (onboarded === true) {
         const data = {
-          pageSize: (that.storageService.get('mappings.pageSize') || 50) * (that.columnsToDisplay.includes('ccc') ? 2 : 1),
+          pageSize: (that.storageService.get('mappings.pageSize') || 50) * (that.generalSettings.corporate_credit_card_expenses_object ? 2 : 1),
           pageNumber: 0,
           tableDimension: that.generalSettings.corporate_credit_card_expenses_object ? 3 : 2
         };
@@ -107,6 +108,7 @@ export class CategoryMappingsComponent implements OnInit {
       }
       that.categoryMappings = response[0].results;
       that.count = response[1].corporate_credit_card_expenses_object ?  response[0].count / 2 : response[0].count;
+      that.pageNumber = data.pageNumber;
       that.createCategoryMappingsRows();
 
     }, (err) => {

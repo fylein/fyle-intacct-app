@@ -66,7 +66,7 @@
   </div>
 </div>
 
-<app-paginator *ngIf="count" [hidden]="!employeeMappingRows.filteredData.length" [is3D]="columnsToDisplay.includes('ccc')" (getMappings)="reset($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
+<app-paginator *ngIf="count" [hidden]="!employeeMappingRows.filteredData.length" [pageNumber]="pageNumber" [is3D]="columnsToDisplay.includes('ccc')" (getMappings)="reset($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
 <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
   <app-loader></app-loader>
 </div>

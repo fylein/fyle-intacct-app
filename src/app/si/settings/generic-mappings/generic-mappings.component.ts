@@ -24,6 +24,7 @@ export class GenericMappingsComponent implements OnInit {
   generalSettings: GeneralSetting;
   setting: MappingSetting;
   count: number;
+  pageNumber: number;
   rowElement: Mapping;
   columnsToDisplay = ['sourceField', 'destinationField'];
 
@@ -71,6 +72,7 @@ export class GenericMappingsComponent implements OnInit {
       that.count = mappings.count;
       that.mappings.filterPredicate = that.searchByText;
       that.isLoading = false;
+      that.pageNumber = data.pageNumber;
     });
   }
 

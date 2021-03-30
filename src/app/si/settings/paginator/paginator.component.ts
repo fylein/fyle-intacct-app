@@ -9,12 +9,12 @@ import { StorageService } from 'src/app/core/services/storage.service';
 })
 
 export class PaginatorComponent implements OnInit {
-    pageNumber: number;
     pageSize: number;
     multiplier: number;
     tableDimension: number;
     @Input() isLoading: boolean;
     @Input() count: number;
+    @Input() pageNumber: number;
     @Input() is3D: boolean;
     @Output() getMappings = new EventEmitter<object>();
 
