@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { empty, Observable, from } from 'rxjs';
+import { Cacheable, CacheBuster } from 'ngx-cacheable';
+import { empty, Observable, from, Subject } from 'rxjs';
 import { concatMap, expand, map, publishReplay, refCount, reduce } from 'rxjs/operators';
 import { ApiService } from 'src/app/core/services/api.service';
 import { ExpenseField } from '../models/expense-field.model';
@@ -9,6 +10,8 @@ import { MappingSource } from '../models/mapping-source.model';
 import { MappingsResponse } from '../models/mappings-response.model';
 import { Mapping } from '../models/mappings.model';
 import { WorkspaceService } from './workspace.service';
+
+const generalMappingsCache = new Subject<void>();
 
 @Injectable({
   providedIn: 'root',
@@ -333,9 +336,9 @@ export class MappingsService {
     });
   }
 
-  getMappings(sourceType: string, limit: number = 500, uri: string = null): Observable<MappingsResponse> {
+  getMappings(sourceType: string, uri: string = null, limit: number = 500, offset: number = 0, tableDimension: number = 2): Observable<MappingsResponse> {
     const workspaceId = this.workspaceService.getWorkspaceId();
-    const url = uri ? uri.split('/api')[1] : `/workspaces/${workspaceId}/mappings/?limit=${limit}&offset=0&source_type=${sourceType}`;
+    const url = uri ? uri.split('/api')[1] : `/workspaces/${workspaceId}/mappings/?limit=${limit}&offset=${offset}&source_type=${sourceType}&table_dimension=${tableDimension}`;
     return this.apiService.get(url, {});
   }
 
@@ -343,7 +346,7 @@ export class MappingsService {
     const that = this;
     return this.getMappings(sourceType).pipe(expand((res: MappingsResponse) => {
       // tslint:disable-next-line
-      return res.next ? that.getMappings(sourceType, 500, res.next) : empty();
+      return res.next ? that.getMappings(sourceType, res.next) : empty();
     }), concatMap((res: MappingsResponse) => res.results),
       reduce((arr: Mapping[], val: Mapping) => {
         arr.push(val);
@@ -361,6 +364,9 @@ export class MappingsService {
     return this.apiService.post(`/workspaces/${workspaceId}/mappings/auto_map_employees/trigger/`, {});
   }
 
+  @Cacheable({
+    cacheBusterObserver: generalMappingsCache
+  })
   getGeneralMappings(): Observable<GeneralMapping> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
@@ -369,6 +375,9 @@ export class MappingsService {
     );
   }
 
+  @CacheBuster({
+    cacheBusterNotifier: generalMappingsCache
+  })
   postGeneralMappings(mapping: GeneralMapping): Observable<GeneralMapping> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 

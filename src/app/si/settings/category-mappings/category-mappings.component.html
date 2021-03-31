@@ -12,14 +12,26 @@
     <button class="page-info--primary-action" mat-flat-button color="primary" type="button" (click)="open()">
       Create Category Mapping
     </button>
+    <mat-form-field  class="simple-search" appearance="outline" *ngIf="count">
+      <mat-label>Search</mat-label>
+      <input matInput (keyup)="applyFilter($event)">
+      <span matPrefix>
+        <mat-icon class="simple-search--icon" aria-hidden="false" aria-label="Search">search </mat-icon>
+      </span>
+    </mat-form-field>
   </div>
 
-  <div *ngIf="!categoryMappings.length && !isLoading">
+
+  <div *ngIf="!count && !isLoading">
     <zero-state message="You have no category mappings yet"></zero-state>
   </div>
 
-  <div *ngIf="categoryMappings.length" [hidden]="isLoading">
-    <table mat-table [dataSource]="categoryMappings" class="page-table" matSort matSortActive="created_at"
+  <div *ngIf="count && !categoryMappingRows.filteredData.length">
+    <zero-state message="Looks like your search term doesn't match any of Category mappings"></zero-state>
+  </div>
+
+  <div *ngIf="count && categoryMappingRows.filteredData.length" [hidden]="isLoading">
+    <table mat-table [dataSource]="categoryMappingRows" class="page-table" matSort matSortActive="created_at"
       matSortDisableClear matSortDirection="desc">
       <ng-container matColumnDef="category">
         <th mat-header-cell *matHeaderCellDef> Category </th>
@@ -50,6 +62,7 @@
     </table>
   </div>
 </div>
+<app-paginator *ngIf="count" [hidden]="!categoryMappingRows.filteredData.length" [is3D]="generalSettings.corporate_credit_card_expenses_object" [pageNumber]="pageNumber" (getMappings)="reset($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
 
 <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
   <app-loader></app-loader>

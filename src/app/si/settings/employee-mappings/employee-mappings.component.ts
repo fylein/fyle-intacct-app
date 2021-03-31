@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { EmployeeMappingsDialogComponent } from './employee-mappings-dialog/employee-mappings-dialog.component';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { StorageService } from 'src/app/core/services/storage.service';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatTableDataSource } from '@angular/material';
 import { Mapping } from 'src/app/core/models/mappings.model';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { MappingRow } from 'src/app/core/models/mapping-row.model';
@@ -21,9 +21,12 @@ export class EmployeeMappingsComponent implements OnInit {
   closeResult: string;
   form: FormGroup;
   employeeMappings: Mapping[];
+  employeeMappingRows: MatTableDataSource<MappingRow> = new MatTableDataSource([]);
   workspaceId: number;
   isLoading = true;
   generalSettings: GeneralSetting;
+  count: number;
+  pageNumber: number;
   columnsToDisplay = ['employee_email', 'si'];
 
   constructor(public dialog: MatDialog,
@@ -47,18 +50,27 @@ export class EmployeeMappingsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       that.isLoading = true;
-      that.mappingsService.getAllMappings('EMPLOYEE').subscribe((employees) => {
-        that.employeeMappings = employees;
+      const tableDimension = that.columnsToDisplay.includes('ccc') ? 3 : 2;
+      const pageSize = (that.storageService.get('mappings.pageSize') || 50) * (that.columnsToDisplay.includes('ccc') ? 2 : 1);
+      that.mappingsService.getMappings('EMPLOYEE', null, pageSize, 0, tableDimension).subscribe((employees) => {
+        that.count = that.columnsToDisplay.includes('ccc') ? employees.count / 2 : employees.count;
+        that.employeeMappings = employees.results;
         that.isLoading = false;
         const onboarded = that.storageService.get('onboarded');
 
-        if (onboarded === true) {
+        if (onboarded) {
           that.createEmployeeMappingsRows();
         } else {
           that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
         }
       });
     });
+  }
+
+  applyFilter(event: Event) {
+    const that = this;
+    const filterValue = (event.target as HTMLInputElement).value;
+    that.employeeMappingRows.filter = filterValue.trim().toLowerCase();
   }
 
   createEmployeeMappingsRows() {
@@ -74,7 +86,8 @@ export class EmployeeMappingsComponent implements OnInit {
         auto_mapped: employeeEVMapping.source.auto_mapped
       });
     });
-    that.employeeMappings = mappings;
+    that.employeeMappingRows = new MatTableDataSource(mappings);
+    that.employeeMappingRows.filterPredicate = that.searchByText;
   }
 
   getCCCAccount(employeeMappings, employeeEVMapping) {
@@ -83,18 +96,23 @@ export class EmployeeMappingsComponent implements OnInit {
     return empMapping.length ? empMapping[0].destination.value : null;
   }
 
-  reset() {
+  reset(data) {
     const that = this;
     that.isLoading = true;
-    that.mappingsService.getAllMappings('EMPLOYEE').subscribe((employees) => {
-      that.employeeMappings = employees;
+    that.mappingsService.getMappings('EMPLOYEE', null, data.pageSize, data.pageNumber * data.pageSize, data.tableDimension).subscribe((employees) => {
+      that.employeeMappings = employees.results;
+      that.count = that.columnsToDisplay.includes('ccc') ? employees.count / 2 : employees.count;
       that.createEmployeeMappingsRows();
+      that.pageNumber = data.pageNumber;
       that.isLoading = false;
     });
 
-    if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
-      that.columnsToDisplay.push('ccc');
-    }
+  }
+
+  searchByText(data: MappingRow, filterText: string) {
+    return data.fyle_value.toLowerCase().includes(filterText) ||
+    data.si_value.toLowerCase().includes(filterText) ||
+    (data.ccc_value ? data.ccc_value.toLowerCase().includes(filterText) : false);
   }
 
   triggerAutoMapEmployees() {
@@ -116,7 +134,15 @@ export class EmployeeMappingsComponent implements OnInit {
     that.settingsService.getGeneralSettings(that.workspaceId).subscribe(settings => {
       that.generalSettings = settings;
       that.isLoading = false;
-      that.reset();
+      if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'BILL') {
+        that.columnsToDisplay.push('ccc');
+      }
+      const data = {
+        pageSize: (that.columnsToDisplay.includes('ccc') ? 2 : 1) * (that.storageService.get('mappings.pageSize') || 50),
+        pageNumber: 0,
+        tableDimension: that.columnsToDisplay.includes('ccc') ? 3 : 2
+      };
+      that.reset(data);
     });
   }
 }

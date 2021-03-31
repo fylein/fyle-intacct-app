@@ -51,9 +51,8 @@ export class SettingsService {
     return this.apiService.post('/workspaces/' + workspaceId + '/credentials/sage_intacct/', data);
   }
 
-  postScheduleSettings(workspaceId: number, nextRun: string, hours: number, scheduleEnabled: boolean): Observable<ScheduleSettings> {
+  postScheduleSettings(workspaceId: number, hours: number, scheduleEnabled: boolean): Observable<ScheduleSettings> {
     return this.apiService.post(`/workspaces/${workspaceId}/schedule/`, {
-      next_run: nextRun,
       hours,
       schedule_enabled: scheduleEnabled
     });
