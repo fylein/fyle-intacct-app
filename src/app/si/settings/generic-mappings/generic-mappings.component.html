@@ -12,19 +12,32 @@
       <button class="page-info--primary-action" mat-flat-button color="primary" type="button" (click)="open()">
         New {{ getTitle(sourceField) | titlecase }} Mapping
       </button>
+
+      <mat-form-field class="simple-search" appearance="outline" *ngIf="count">
+        <mat-label>Search</mat-label>
+        <input matInput (keyup)="applyFilter($event)">
+        <span matPrefix>
+          <mat-icon class="simple-search--icon" aria-hidden="false" aria-label="Search">search </mat-icon>
+        </span>
+      </mat-form-field>
     </div>
 
-    <div *ngIf="!mappings.length">
+    <div *ngIf="!count">
       <zero-state message="You have no {{ getTitle(sourceField).toLowerCase() }} mappings yet"></zero-state>
     </div>
 
-    <div *ngIf="mappings.length" [hidden]="isLoading">
+    <div *ngIf="count && !mappings.filteredData.length">
+      <zero-state message="Looks like your search term doesn't match any of {{ getTitle(sourceField).charAt(0).toUpperCase() + getTitle(sourceField).slice(1) }} mappings"></zero-state>
+    </div>
+
+    <div *ngIf="count && mappings.filteredData.length" [hidden]="isLoading">
       <table mat-table [dataSource]="mappings" class="page-table" matSort matSortActive="created_at"
         matSortDisableClear matSortDirection="desc">
         <ng-container matColumnDef="sourceField">
           <th mat-header-cell *matHeaderCellDef> {{ getTitle(sourceField) | titlecase }} </th>
           <td mat-cell *matCellDef="let element">
             {{element.source.value}}
+            <mat-icon class="auto-map" [inline]="true" matTooltip="Auto mapped row from Fyle and Sage Intacct" matTooltipPosition="after" *ngIf="element.source.auto_mapped">bolt</mat-icon>
           </td>
         </ng-container>
 
@@ -43,6 +56,7 @@
     </div>
   </div>
 </div>
+<app-paginator *ngIf="count" [hidden]="!mappings.filteredData.length" [pageNumber]="pageNumber" [is3D]="false" (getMappings)="getMappings($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
 
 <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
   <app-loader></app-loader>

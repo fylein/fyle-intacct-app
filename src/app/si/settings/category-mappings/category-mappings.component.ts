@@ -6,8 +6,10 @@ import { CategoryMappingsDialogComponent } from './category-mappings-dialog/cate
 import { StorageService } from 'src/app/core/services/storage.service';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { forkJoin, from } from 'rxjs';
+import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { Mapping } from 'src/app/core/models/mappings.model';
 import { MappingRow } from 'src/app/core/models/mapping-row.model';
+import { MatTableDataSource } from '@angular/material';
 
 @Component({
   selector: 'app-category-mappings',
@@ -18,6 +20,10 @@ export class CategoryMappingsComponent implements OnInit {
   isLoading = false;
   workspaceId: number;
   categoryMappings: Mapping[];
+  categoryMappingRows: MatTableDataSource<MappingRow> = new MatTableDataSource([]);
+  count: number;
+  pageNumber: number;
+  generalSettings: GeneralSetting;
   columnsToDisplay = ['category', 'sageIntacct'];
 
   constructor(
@@ -41,18 +47,29 @@ export class CategoryMappingsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       const onboarded = that.storageService.get('onboarded');
       if (onboarded === true) {
-        that.reset();
+        const data = {
+          pageSize: (that.storageService.get('mappings.pageSize') || 50) * (that.generalSettings.corporate_credit_card_expenses_object ? 2 : 1),
+          pageNumber: 0,
+          tableDimension: that.generalSettings.corporate_credit_card_expenses_object ? 3 : 2
+        };
+        that.reset(data);
       } else {
         that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
       }
     });
   }
 
+  applyFilter(event: Event) {
+    const that = this;
+    const filterValue = (event.target as HTMLInputElement).value;
+    that.categoryMappingRows.filter = filterValue.trim().toLowerCase();
+  }
+
+
   createCategoryMappingsRows() {
     const that = this;
     const categoryMappings = that.categoryMappings.filter(mapping => mapping.destination_type !== 'CCC_ACCOUNT');
     const mappings = [];
-
     categoryMappings.forEach(categoryMapping => {
       mappings.push({
         fyle_value: categoryMapping.source.value,
@@ -62,7 +79,8 @@ export class CategoryMappingsComponent implements OnInit {
       });
     });
 
-    that.categoryMappings = mappings;
+    that.categoryMappingRows = new MatTableDataSource(mappings);
+    that.categoryMappingRows.filterPredicate = that.searchByText;
   }
 
   getCCCAccount(categoryMappings, categoryMapping) {
@@ -71,21 +89,28 @@ export class CategoryMappingsComponent implements OnInit {
     return categMapping.length ? categMapping[0].destination.value : null;
   }
 
-  reset() {
+  searchByText(data: MappingRow, filterText: string) {
+    return data.fyle_value.toLowerCase().includes(filterText) ||
+    data.si_value.toLowerCase().includes(filterText) ||
+    (data.ccc_value ? data.ccc_value.toLowerCase().includes(filterText) : false);
+  }
+
+  reset(data) {
     const that = this;
     that.isLoading = true;
-
     forkJoin([
-      that.mappingsService.getAllMappings('CATEGORY'),
+      that.mappingsService.getMappings('CATEGORY', null, data.pageSize, data.pageSize * data.pageNumber, data.tableDimension),
       that.settingsService.getGeneralSettings(that.workspaceId)
     ]).subscribe(response => {
       that.isLoading = false;
-
-      that.categoryMappings = response[0];
-      that.createCategoryMappingsRows();
       if (response[1].corporate_credit_card_expenses_object && response[1].reimbursable_expenses_object === 'EXPENSE_REPORT') {
         that.columnsToDisplay = ['category', 'sageIntacct', 'ccc'];
       }
+      that.categoryMappings = response[0].results;
+      that.count = response[1].corporate_credit_card_expenses_object ?  response[0].count / 2 : response[0].count;
+      that.pageNumber = data.pageNumber;
+      that.createCategoryMappingsRows();
+
     }, (err) => {
       that.isLoading = false;
     });
@@ -93,7 +118,18 @@ export class CategoryMappingsComponent implements OnInit {
 
   ngOnInit() {
     const that = this;
+    that.isLoading = true;
     that.workspaceId = that.route.parent.snapshot.params.workspace_id;
-    that.reset();
+    that.settingsService.getGeneralSettings(this.workspaceId).subscribe(settings => {
+      that.generalSettings = settings;
+      this.isLoading = false;
+
+      const data = {
+        pageSize: (that.generalSettings.corporate_credit_card_expenses_object ? 2 : 1) * (that.storageService.get('mappings.pageSize') || 50),
+        pageNumber: 0,
+        tableDimension: that.generalSettings.corporate_credit_card_expenses_object ? 3 : 2
+      };
+      that.reset(data);
+    });
   }
 }
