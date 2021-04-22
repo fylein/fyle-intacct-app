@@ -4,10 +4,14 @@ import { ActivatedRoute } from '@angular/router';
 import { forkJoin, onErrorResumeNext } from 'rxjs';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { environment } from 'src/environments/environment';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ExpenseGroupsService } from 'src/app/core/services/expense-groups.service';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { WorkspaceService } from 'src/app/core/services/workspace.service';
+import { Workspace } from 'src/app/core/models/workspace.model';
+
 
 const FYLE_URL = environment.fyle_url;
 const FYLE_CLIENT_ID = environment.fyle_client_id;
@@ -52,7 +56,8 @@ export class DashboardComponent implements OnInit {
     private route: ActivatedRoute,
     private mappingsService: MappingsService,
     private storageService: StorageService,
-    private windowReferenceService: WindowReferenceService) {
+    private windowReferenceService: WindowReferenceService,
+    private snackBar: MatSnackBar) {
       this.windowReference = this.windowReferenceService.nativeWindow;
     }
 
@@ -165,31 +170,21 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  syncDimension() {
+    const that = this;
+
+    that.mappingsService.refreshFyleDimensions().subscribe(() => {});
+    that.mappingsService.refreshSageIntacctDimensions().subscribe(() => {});
+
+    that.snackBar.open('Refreshing Fyle and SageIntacct Data');
+  }
+
   // to be callled in background whenever dashboard is opened for syncing fyle data for org
   updateDimensionTables() {
     const that = this;
-    onErrorResumeNext(
-      that.mappingsService.postFyleEmployees(),
-      that.mappingsService.postFyleCategories(),
-      that.mappingsService.postFyleProjects(),
-      that.mappingsService.postFyleCostCenters(),
-      this.mappingsService.postExpenseCustomFields()
-    ).subscribe(() => {});
 
-    onErrorResumeNext(
-      that.mappingsService.postSageIntacctLocations(),
-      that.mappingsService.postSageIntacctDepartments(),
-      that.mappingsService.postSageIntacctProjects(),
-      that.mappingsService.postSageIntacctChargeCardAccounts(),
-      that.mappingsService.postSageIntacctPaymentAccounts(),
-      that.mappingsService.postSageIntacctVendors(),
-      that.mappingsService.postSageIntacctEmployees(),
-      that.mappingsService.postSageIntacctAccounts(),
-      that.mappingsService.postSageIntacctExpensetypes(),
-      that.mappingsService.postSageIntacctItems()
-      ).subscribe(() => {
-
-    });
+    that.mappingsService.syncFyleDimensions().subscribe(() => {});
+    that.mappingsService.syncSageIntacctDimensions().subscribe(() => {});
   }
 
   openSchedule(event) {
