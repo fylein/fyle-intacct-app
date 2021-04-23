@@ -176,7 +176,7 @@ export class DashboardComponent implements OnInit {
     that.mappingsService.refreshFyleDimensions().subscribe(() => {});
     that.mappingsService.refreshSageIntacctDimensions().subscribe(() => {});
 
-    that.snackBar.open('Refreshing Fyle and SageIntacct Data');
+    that.snackBar.open('Refreshing Fyle and Sage Intacct Data');
   }
 
   // to be callled in background whenever dashboard is opened for syncing fyle data for org
