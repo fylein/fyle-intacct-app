@@ -226,10 +226,7 @@ export class ConfigurationComponent implements OnInit {
             that.snackBar.open('Auto mapping of employees may take up to 10 minutes');
           }, 1500);
         }
-
-        that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`).then(() => {
-          that.windowReference.location.reload();
-        });
+        
         that.isLoading = false;
       });
     } else {
