@@ -21,6 +21,7 @@ export class MappingsService {
   fyleEmployees: Observable<MappingSource[]>;
   fyleProjects: Observable<MappingSource[]>;
   fyleExpenseCustomFields: Observable<MappingSource[]>;
+  destinationWorkspace: Observable<{}>;
   fyleCostCenters: Observable<MappingSource[]>;
   sageIntacctAccounts: Observable<MappingDestination[]>;
   sageIntacctChargeCardAccounts: Observable<MappingDestination[]>;
@@ -36,10 +37,50 @@ export class MappingsService {
   creditCardAccounts: Observable<MappingDestination[]>;
   paymentAccounts: Observable<MappingDestination[]>;
   expenseFields: Observable<ExpenseField[]>;
+  sourceWorkspace: Observable<{}>;
 
   constructor(
     private apiService: ApiService,
     private workspaceService: WorkspaceService) { }
+
+
+    syncSageIntacctDimensions() {
+      const workspaceId = this.workspaceService.getWorkspaceId();
+
+      if (!this.destinationWorkspace) {
+        this.destinationWorkspace = this.apiService.post(`/workspaces/${workspaceId}/sage_intacct/sync_dimensions/`, {}).pipe(
+          map(data => data),
+          publishReplay(1),
+          refCount()
+        );
+      }
+      return this.destinationWorkspace;
+    }
+
+    syncFyleDimensions() {
+      const workspaceId = this.workspaceService.getWorkspaceId();
+
+      if (!this.sourceWorkspace) {
+        this.sourceWorkspace = this.apiService.post(`/workspaces/${workspaceId}/fyle/sync_dimensions/`, {}).pipe(
+          map(data => data),
+          publishReplay(1),
+          refCount()
+        );
+      }
+      return this.sourceWorkspace;
+    }
+
+    refreshSageIntacctDimensions() {
+      const workspaceId = this.workspaceService.getWorkspaceId();
+
+      return this.apiService.post(`/workspaces/${workspaceId}/sage_intacct/refresh_dimensions/`, {});
+    }
+
+    refreshFyleDimensions() {
+      const workspaceId = this.workspaceService.getWorkspaceId();
+
+      return this.apiService.post(`/workspaces/${workspaceId}/fyle/refresh_dimensions/`, {});
+    }
 
   postFyleEmployees(): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();

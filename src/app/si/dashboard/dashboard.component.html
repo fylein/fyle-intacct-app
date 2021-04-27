@@ -121,6 +121,12 @@
 <div class="dashboard" *ngIf="currentState === allOnboardingStates.isOnboarded && !isLoading">
   <h1 class="dashboard--header">
     Dashboard
+    <mat-icon class="dashboard--stats-card-sync"
+        mat-list-icon
+        matTooltip="Sync Fyle and Sage Intacct Dimensions"
+        matTooltipPosition="right" (click)="syncDimension()">
+          sync
+      </mat-icon>
   </h1>
   <div fxLayout="row">
     <div class="dashboard--actions" fxLayout="column" fxLayoutAlign="start center">

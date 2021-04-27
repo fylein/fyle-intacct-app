@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { SiComponent } from 'src/app/si/si.component';
 import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
 
 @Component({
@@ -31,6 +32,7 @@ export class ConfigurationComponent implements OnInit {
               private route: ActivatedRoute,
               private router: Router,
               private snackBar: MatSnackBar,
+              private si: SiComponent,
               private windowReferenceService: WindowReferenceService) {
                 this.windowReference = this.windowReferenceService.nativeWindow;
               }
@@ -221,15 +223,16 @@ export class ConfigurationComponent implements OnInit {
         that.isLoading = true;
         that.snackBar.open('Configuration saved successfully');
 
+        that.si.getGeneralSettings();
+
         if (autoMapEmployees) {
           setTimeout(() => {
             that.snackBar.open('Auto mapping of employees may take up to 10 minutes');
           }, 1500);
         }
 
-        that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`).then(() => {
-          that.windowReference.location.reload();
-        });
+        that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
+
         that.isLoading = false;
       });
     } else {
