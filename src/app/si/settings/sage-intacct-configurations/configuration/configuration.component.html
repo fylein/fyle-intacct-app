@@ -91,7 +91,16 @@
       </mat-slide-toggle>
 
       <mat-slide-toggle color="primary" class="schedule" formControlName="importProjects">
-        <div class="schedule--toggle-text">Import Sage Intacct Projects into Fyle</div>
+        <div class="schedule--toggle-text">
+          Import Sage Intacct Projects into Fyle
+          <mat-icon
+            [inline]="true"
+            class="info-icon"
+            matTooltip="Projects will not be imported if count is more than 5000"
+            matTooltipPosition="after">
+              info
+          </mat-icon>
+        </div>
       </mat-slide-toggle>
 
       <button [disabled]="isSaveDisabled || !generalSettingsForm.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="save()" type="submit">
