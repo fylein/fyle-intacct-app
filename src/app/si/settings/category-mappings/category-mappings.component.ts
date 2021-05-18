@@ -45,12 +45,13 @@ export class CategoryMappingsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      // TODO: add this as a function (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT')
       const onboarded = that.storageService.get('onboarded');
       if (onboarded === true) {
         const data = {
-          pageSize: (that.storageService.get('mappings.pageSize') || 50) * (that.generalSettings.corporate_credit_card_expenses_object ? 2 : 1),
+          pageSize: (that.storageService.get('mappings.pageSize') || 50) * ((that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT') ? 2 : 1),
           pageNumber: 0,
-          tableDimension: that.generalSettings.corporate_credit_card_expenses_object ? 3 : 2
+          tableDimension: (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT') ? 3 : 2
         };
         that.reset(data);
       } else {
@@ -103,7 +104,7 @@ export class CategoryMappingsComponent implements OnInit {
       that.settingsService.getGeneralSettings(that.workspaceId)
     ]).subscribe(response => {
       that.isLoading = false;
-      if (response[1].corporate_credit_card_expenses_object && response[1].reimbursable_expenses_object === 'EXPENSE_REPORT') {
+      if (response[1].corporate_credit_card_expenses_object && response[1].reimbursable_expenses_object === 'EXPENSE_REPORT' && response[1].reimbursable_expenses_object !== 'EXPENSE_REPORT') {
         that.columnsToDisplay = ['category', 'sageIntacct', 'ccc'];
       }
       that.categoryMappings = response[0].results;
@@ -125,9 +126,9 @@ export class CategoryMappingsComponent implements OnInit {
       this.isLoading = false;
 
       const data = {
-        pageSize: (that.generalSettings.corporate_credit_card_expenses_object ? 2 : 1) * (that.storageService.get('mappings.pageSize') || 50),
+        pageSize: ((that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT') ? 2 : 1) * (that.storageService.get('mappings.pageSize') || 50),
         pageNumber: 0,
-        tableDimension: that.generalSettings.corporate_credit_card_expenses_object ? 3 : 2
+        tableDimension: (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT') ? 3 : 2
       };
       that.reset(data);
     });
