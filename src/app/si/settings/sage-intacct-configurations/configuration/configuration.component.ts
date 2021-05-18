@@ -81,7 +81,7 @@ export class ConfigurationComponent implements OnInit {
       cccExpenseOptions.push({
         label: 'Expense Report',
         value: 'EXPENSE_REPORT'
-      })
+      });
     }
 
     return cccExpenseOptions;
