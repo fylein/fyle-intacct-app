@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MappingsService } from '../../../core/services/mappings.service';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
@@ -46,62 +46,57 @@ export class GeneralMappingsComponent implements OnInit {
   submit() {
     const that = this;
 
-    // TODO: handle this in forms validation
-    if (that.generalSettings.corporate_credit_card_expenses_object === 'EXPENSE_REPORT' && !that.form.value.defaultCCCExpensePaymentType) {
-      return that.snackBar.open('Default CCC Expense Payment Type is mandatory');
-    }
+    if (that.form.valid) {
+      that.isLoading = true;
 
-    that.isLoading = true;
+      const defaultLocationName: MappingDestination[] = that.sageIntacctLocations.filter((element) => element.destination_id === that.form.value.location);
+      const defaultDepartmentName: MappingDestination[] = that.sageIntacctDepartments.filter((element) => element.destination_id === that.form.value.department);
+      const defaultProjectName: MappingDestination[] = that.sageIntacctProjects.filter((element) => element.destination_id === that.form.value.project);
+      const defaultVendor: MappingDestination[] = that.sageIntacctDefaultVendor.filter((element) => element.destination_id === that.form.value.defaultVendor);
+      const defaultChargeCard: MappingDestination[] = that.sageIntacctDefaultChargeCard.filter((element) => element.destination_id === that.form.value.chargeCard);
+      const defaultItem: MappingDestination[] = that.sageIntacctDefaultItem.filter((element) => element.destination_id === that.form.value.defaultItem);
+      const paymentAccount: MappingDestination[] = that.sageIntacctPaymentAccounts.filter((element) => element.destination_id === that.form.value.paymentAccount);
+      const defaultReimbursableExpensePaymentType: MappingDestination[] = that.sageIntacctReimbursableExpensePaymentType.filter((element) => element.destination_id === that.form.value.defaultReimbursableExpensePaymentType);
+      const defaultCCCExpensePaymentType: MappingDestination[] = that.sageIntacctCCCExpensePaymentType.filter((element) => element.destination_id === that.form.value.defaultCCCExpensePaymentType);
 
-    const defaultLocationName: MappingDestination[] = that.sageIntacctLocations.filter((element) => element.destination_id === that.form.value.location);
-    const defaultDepartmentName: MappingDestination[] = that.sageIntacctDepartments.filter((element) => element.destination_id === that.form.value.department);
-    const defaultProjectName: MappingDestination[] = that.sageIntacctProjects.filter((element) => element.destination_id === that.form.value.project);
-    const defaultVendor: MappingDestination[] = that.sageIntacctDefaultVendor.filter((element) => element.destination_id === that.form.value.defaultVendor);
-    const defaultChargeCard: MappingDestination[] = that.sageIntacctDefaultChargeCard.filter((element) => element.destination_id === that.form.value.chargeCard);
-    const defaultItem: MappingDestination[] = that.sageIntacctDefaultItem.filter((element) => element.destination_id === that.form.value.defaultItem);
-    const paymentAccount: MappingDestination[] = that.sageIntacctPaymentAccounts.filter((element) => element.destination_id === that.form.value.paymentAccount);
-    const defaultReimbursableExpensePaymentType: MappingDestination[] = that.sageIntacctReimbursableExpensePaymentType.filter((element) => element.destination_id === that.form.value.defaultReimbursableExpensePaymentType);
-    const defaultCCCExpensePaymentType: MappingDestination[] = that.sageIntacctCCCExpensePaymentType.filter((element) => element.destination_id === that.form.value.defaultCCCExpensePaymentType);
+      const mapping: GeneralMapping = {
+        default_location_name: defaultLocationName[0] ? defaultLocationName[0].value : '',
+        default_location_id: that.form.value.location ? that.form.value.location : '',
+        default_department_name: defaultDepartmentName[0] ? defaultDepartmentName[0].value : '',
+        default_department_id: that.form.value.department ? that.form.value.department : '',
+        default_project_name: defaultProjectName[0] ? defaultProjectName[0].value : '',
+        default_project_id: that.form.value.project ? that.form.value.project : '',
+        default_ccc_vendor_name: defaultVendor[0] ? defaultVendor[0].value : '',
+        default_ccc_vendor_id: that.form.value.defaultVendor ? that.form.value.defaultVendor : '',
+        default_charge_card_name: defaultChargeCard[0] ? defaultChargeCard[0].value : '',
+        default_charge_card_id: that.form.value.chargeCard ? that.form.value.chargeCard : '',
+        default_item_id: that.form.value.defaultItem ? that.form.value.defaultItem : '',
+        default_item_name: defaultItem[0] ? defaultItem[0].value : '',
+        payment_account_name: paymentAccount[0] ? paymentAccount[0].value : '',
+        payment_account_id: that.form.value.paymentAccount ? that.form.value.paymentAccount : '',
+        default_reimbursable_expense_payment_type_id: that.form.value.defaultReimbursableExpensePaymentType ? that.form.value.defaultReimbursableExpensePaymentType : '',
+        default_reimbursable_expense_payment_type_name: defaultReimbursableExpensePaymentType[0] ? defaultReimbursableExpensePaymentType[0].value : '',
+        default_ccc_expense_payment_type_id: that.form.value.defaultCCCExpensePaymentType ? that.form.value.defaultCCCExpensePaymentType : '',
+        default_ccc_expense_payment_type_name: defaultCCCExpensePaymentType[0] ? defaultCCCExpensePaymentType[0].value : null
+      };
 
-    const mapping: GeneralMapping = {
-      default_location_name: defaultLocationName[0] ? defaultLocationName[0].value : '',
-      default_location_id: that.form.value.location ? that.form.value.location : '',
-      default_department_name: defaultDepartmentName[0] ? defaultDepartmentName[0].value : '',
-      default_department_id: that.form.value.department ? that.form.value.department : '',
-      default_project_name: defaultProjectName[0] ? defaultProjectName[0].value : '',
-      default_project_id: that.form.value.project ? that.form.value.project : '',
-      default_ccc_vendor_name: defaultVendor[0] ? defaultVendor[0].value : '',
-      default_ccc_vendor_id: that.form.value.defaultVendor ? that.form.value.defaultVendor : '',
-      default_charge_card_name: defaultChargeCard[0] ? defaultChargeCard[0].value : '',
-      default_charge_card_id: that.form.value.chargeCard ? that.form.value.chargeCard : '',
-      default_item_id: that.form.value.defaultItem ? that.form.value.defaultItem : '',
-      default_item_name: defaultItem[0] ? defaultItem[0].value : '',
-      payment_account_name: paymentAccount[0] ? paymentAccount[0].value : '',
-      payment_account_id: that.form.value.paymentAccount ? that.form.value.paymentAccount : '',
-      default_reimbursable_expense_payment_type_id: that.form.value.defaultReimbursableExpensePaymentType ? that.form.value.defaultReimbursableExpensePaymentType : '',
-      default_reimbursable_expense_payment_type_name: defaultReimbursableExpensePaymentType[0] ? defaultReimbursableExpensePaymentType[0].value : '',
-      default_ccc_expense_payment_type_id: that.form.value.defaultCCCExpensePaymentType ? that.form.value.defaultCCCExpensePaymentType : '',
-      default_ccc_expense_payment_type_name: defaultCCCExpensePaymentType[0] ? defaultCCCExpensePaymentType[0].value : null
-    };
-
-    that.mappingsService.postGeneralMappings(mapping).subscribe(() => {
-      that.isLoading = false;
-      that.snackBar.open('General mappings saved successfully');
-      that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
-    }, (error) => {
-      that.isLoading = false;
+      that.mappingsService.postGeneralMappings(mapping).subscribe(() => {
+        that.isLoading = false;
+        that.snackBar.open('General mappings saved successfully');
+        that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
+      }, () => {
+        that.isLoading = false;
+        that.snackBar.open('Please fill all required fields');
+      });
+    } else {
       that.snackBar.open('Please fill all required fields');
-    });
+    }
   }
 
 
   reset() {
     const that = this;
     that.isLoading = true;
-
-    that.settingsService.getGeneralSettings(that.workspaceId).subscribe((setting: GeneralSetting) => {
-      that.generalSettings = setting;
-    });
 
     forkJoin(
       [
@@ -136,7 +131,8 @@ export class GeneralMappingsComponent implements OnInit {
         project: [that.generalMappings ? that.generalMappings.default_project_id : null],
         paymentAccount: [that.generalMappings ? that.generalMappings.payment_account_id : null],
         defaultReimbursableExpensePaymentType: [that.generalMappings ? that.generalMappings.default_reimbursable_expense_payment_type_id : null],
-        defaultCCCExpensePaymentType: [that.generalMappings ? that.generalMappings.default_ccc_expense_payment_type_id : null]
+        // defaultCCCExpensePaymentType should be a mandatory field for Expense Reports to mark it as non reimbursable for ccc expenses
+        defaultCCCExpensePaymentType: [that.generalMappings ? that.generalMappings.default_ccc_expense_payment_type_id : null, that.generalSettings.corporate_credit_card_expenses_object === 'EXPENSE_REPORT' ? Validators.required : null]
       });
     });
   }
@@ -145,11 +141,14 @@ export class GeneralMappingsComponent implements OnInit {
     const that = this;
     that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
     that.isLoading = true;
-    that.mappingsService.getGeneralMappings().subscribe(res => {
-      that.generalMappings = res;
-      that.reset();
-    }, (error) => {
-      that.reset();
+    that.settingsService.getGeneralSettings(that.workspaceId).subscribe((setting: GeneralSetting) => {
+      that.generalSettings = setting;
+      that.mappingsService.getGeneralMappings().subscribe(res => {
+        that.generalMappings = res;
+        that.reset();
+      }, () => {
+        that.reset();
+      });
     });
   }
 }

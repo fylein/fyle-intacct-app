@@ -43,7 +43,7 @@
 
       <ng-container matColumnDef="sageIntacct">
         <th mat-header-cell *matHeaderCellDef>
-          Expense Type / Account
+          {{ generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' ? 'Expense Type' : 'Account' }}
         </th>
         <td mat-cell *matCellDef="let element">
           {{element.si_value}}
