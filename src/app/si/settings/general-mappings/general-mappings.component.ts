@@ -97,7 +97,7 @@ export class GeneralMappingsComponent implements OnInit {
         that.mappingsService.getSageIntacctVendors(),
         that.mappingsService.getSageIntacctChargeCard(),
         that.mappingsService.getSageIntacctItems(),
-        that.mappingsService.getSageIntacctPaymentAccounts(),
+        that.mappingsService.getSageIntacctPaymentAccounts()
       ]
     ).subscribe(response => {
       that.isLoading = false;

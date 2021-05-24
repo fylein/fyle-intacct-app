@@ -377,7 +377,7 @@ export class MappingsService {
     });
   }
 
-  getSageIntacctCustomFields(attributeType: string): Observable<MappingSource[]> {
+  getSageIntacctUserDefinedDimensions(attributeType: string): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/user_defined_dimensions/`, {
