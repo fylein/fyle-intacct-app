@@ -377,6 +377,14 @@ export class MappingsService {
     });
   }
 
+  getSageIntacctCustomFields(attributeType: string): Observable<MappingSource[]> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/user_defined_dimensions/`, {
+      attribute_type: attributeType
+    });
+  }
+
   getMappings(sourceType: string, uri: string = null, limit: number = 500, offset: number = 0, tableDimension: number = 2): Observable<MappingsResponse> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     const url = uri ? uri.split('/api')[1] : `/workspaces/${workspaceId}/mappings/?limit=${limit}&offset=${offset}&source_type=${sourceType}&table_dimension=${tableDimension}`;
