@@ -29,6 +29,8 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
+    private taskService: TasksService,
+
     private storageService: StorageService,
     private expenseGroupService: ExpenseGroupsService,
     private router: Router,
@@ -97,7 +99,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     that.state = that.route.snapshot.queryParams.state || 'FAILED';
     that.settingsService.getGeneralSettings(that.workspaceId).subscribe((settings) => {
       if (that.state === 'COMPLETE') {
-        that.columnsToDisplay = ['export-date', 'employee', 'export', 'expense-type'];
+        that.columnsToDisplay = ['export-date', 'employee', 'export', 'expense-type', 'openSageIntacct'];
       } else {
         that.columnsToDisplay = ['employee', 'expense-type'];
       }
@@ -119,7 +121,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
 
         if (that.pageNumber !== pageNumber || that.pageSize !== pageSize || that.state !== state) {
           if (state === 'COMPLETE') {
-            that.columnsToDisplay = ['export-date', 'employee', 'export', 'expense-type'];
+            that.columnsToDisplay = ['export-date', 'employee', 'export', 'expense-type', 'openSageIntacct'];
           } else {
             that.columnsToDisplay = ['employee', 'expense-type'];
           }
@@ -131,6 +133,29 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  openInSageIntacct(id) {
+      this.windowReference.open(`https://www-p02.intacct.com/ia/acct/ur.phtml?.r=${id}`, '_blank');
+  }
+
+  openInSiHandler(clickedExpenseGroup: ExpenseGroup) {
+      // tslint:disable-next-line: deprecation
+      event.preventDefault();
+      // tslint:disable-next-line: deprecation
+      event.stopPropagation();
+      const that = this;
+      that.isLoading = true;
+      that.taskService.getTasksByExpenseGroupId(clickedExpenseGroup.id).subscribe(tasks => {
+        that.isLoading = false;
+        const completedTask = tasks.filter(task => task.status === 'COMPLETE')[0];
+        console.log(completedTask)
+
+        if (completedTask) {
+          const id = completedTask.detail['redirected_url_id'];
+          that.openInSageIntacct(id);
+        }
+      })
   }
 
   searchByText(data: ExpenseGroup, filterText: string) {
