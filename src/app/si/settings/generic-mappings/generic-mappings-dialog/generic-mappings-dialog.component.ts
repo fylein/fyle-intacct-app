@@ -127,7 +127,7 @@ export class GenericMappingsDialogComponent implements OnInit {
     } else if (that.setting.destination_field === 'ITEM') {
       sageIntacctPromise = that.mappingsService.getSageIntacctItems();
     } else {
-      sageIntacctPromise = that.mappingsService.getSageIntacctUserDefinedDimensions(that.setting.destination_field);
+      sageIntacctPromise = that.mappingsService.getSageIntacctExpenseCustomFields(that.setting.destination_field);
     }
 
     that.isLoading = true;
