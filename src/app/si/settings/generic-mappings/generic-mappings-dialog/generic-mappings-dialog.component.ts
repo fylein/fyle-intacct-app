@@ -117,23 +117,10 @@ export class GenericMappingsDialogComponent implements OnInit {
   reset() {
     const that = this;
 
-    let sageIntacctPromise;
-    if (that.setting.destination_field === 'PROJECT') {
-      sageIntacctPromise = that.mappingsService.getSageIntacctProjects();
-    } else if (that.setting.destination_field === 'DEPARTMENT') {
-      sageIntacctPromise = that.mappingsService.getSageIntacctDepartments();
-    } else if (that.setting.destination_field === 'LOCATION') {
-      sageIntacctPromise = that.mappingsService.getSageIntacctLocations();
-    } else if (that.setting.destination_field === 'ITEM') {
-      sageIntacctPromise = that.mappingsService.getSageIntacctItems();
-    } else {
-      sageIntacctPromise = that.mappingsService.getSageIntacctExpenseCustomFields(that.setting.destination_field);
-    }
-
     that.isLoading = true;
     forkJoin([
       that.mappingsService.getFyleExpenseCustomFields(that.setting.source_field),
-      sageIntacctPromise
+      that.mappingsService.getSageIntacctExpenseCustomFields(that.setting.destination_field)
     ]).subscribe(response => {
       that.isLoading = false;
 
