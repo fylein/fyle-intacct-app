@@ -100,13 +100,13 @@ export class GeneralMappingsComponent implements OnInit {
 
     forkJoin(
       [
-        that.mappingsService.getSageIntacctLocations(),
-        that.mappingsService.getSageIntacctDepartments(),
-        that.mappingsService.getSageIntacctProjects(),
-        that.mappingsService.getSageIntacctVendors(),
-        that.mappingsService.getSageIntacctChargeCard(),
-        that.mappingsService.getSageIntacctItems(),
-        that.mappingsService.getSageIntacctPaymentAccounts(),
+        that.mappingsService.getSageIntacctExpenseCustomFields('LOCATION'),
+        that.mappingsService.getSageIntacctExpenseCustomFields('DEPARTMENT'),
+        that.mappingsService.getSageIntacctExpenseCustomFields('PROJECT'),
+        that.mappingsService.getSageIntacctExpenseCustomFields('VENDOR'),
+        that.mappingsService.getSageIntacctExpenseCustomFields('CHARGE_CARD_NUMBER'),
+        that.mappingsService.getSageIntacctExpenseCustomFields('ITEM'),
+        that.mappingsService.getSageIntacctExpenseCustomFields('PAYMENT_ACCOUNT'),
         that.mappingsService.getSageIntacctExpenseCustomFields('EXPENSE_PAYMENT_TYPE')
       ]
     ).subscribe(response => {
