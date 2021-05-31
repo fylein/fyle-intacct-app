@@ -182,10 +182,10 @@ export class EmployeeMappingsDialogComponent implements OnInit {
     that.isLoading = true;
 
     forkJoin([
-      that.mappingsService.getFyleEmployees(),
-      that.mappingsService.getSageIntacctEmployees(),
-      that.mappingsService.getSageIntacctVendors(),
-      that.mappingsService.getSageIntacctChargeCard(),
+      that.mappingsService.getFyleExpenseCustomFields('EMPLOYEE'),
+      that.mappingsService.getSageIntacctExpenseCustomFields('EMPLOYEE'),
+      that.mappingsService.getSageIntacctExpenseCustomFields('VENDOR'),
+      that.mappingsService.getSageIntacctExpenseCustomFields('CHARGE_CARD_NUMBER'),
       that.mappingsService.getGeneralMappings()
     ]).subscribe(response => {
       that.isLoading = false;
