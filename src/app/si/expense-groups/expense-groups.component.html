@@ -51,10 +51,10 @@
     <ng-container matColumnDef="export">
       <th mat-header-cell *matHeaderCellDef> Exported to Sage Intacct as </th>
       <td mat-cell *matCellDef="let element">
-        <div *ngIf="settings.reimbursable_expenses_object === 'EXPENSE_REPORT' || settings.corporate_credit_card_expenses_object === 'EXPENSE_REPORT'">
+        <div *ngIf="settings.reimbursable_expenses_object === 'EXPENSE_REPORT'">
           Expense Report
         </div>
-        <div *ngIf="settings.reimbursable_expenses_object === 'BILL' || settings.corporate_credit_card_expenses_object === 'BILL'">
+        <div *ngIf="settings.reimbursable_expenses_object === 'BILL'">
           Bill
         </div>
         <div *ngIf="settings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION'">
