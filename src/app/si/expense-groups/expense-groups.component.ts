@@ -8,6 +8,7 @@ import { TasksService } from 'src/app/core/services/tasks.service';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { Subscription } from 'rxjs';
+import { Task } from 'src/app/core/models/task.model';
 
 @Component({
   selector: 'app-expense-groups',
@@ -146,16 +147,16 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
       event.stopPropagation();
       const that = this;
       that.isLoading = true;
-      that.taskService.getTasksByExpenseGroupId(clickedExpenseGroup.id).subscribe(tasks => {
+      that.taskService.getTasksByExpenseGroupId(clickedExpenseGroup.id).subscribe((tasks: Task[]) => {
+
         that.isLoading = false;
         const completedTask = tasks.filter(task => task.status === 'COMPLETE')[0];
-        console.log(completedTask)
 
         if (completedTask) {
-          const id = completedTask.detail['redirected_url_id'];
-          that.openInSageIntacct(id);
+          const redirectedId = completedTask.detail.redirected_url_id;
+          that.openInSageIntacct(redirectedId);
         }
-      })
+      });
   }
 
   searchByText(data: ExpenseGroup, filterText: string) {
