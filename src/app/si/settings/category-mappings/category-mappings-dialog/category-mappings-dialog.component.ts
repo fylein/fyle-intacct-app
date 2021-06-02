@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { debounceTime } from 'rxjs/internal/operators/debounceTime';
-import { forkJoin, from } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MappingSource } from 'src/app/core/models/mapping-source.model';
@@ -209,7 +209,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
   showSeparateCCCField() {
     const that = this;
     const settings = that.generalSettings;
-    if (settings.corporate_credit_card_expenses_object && settings.reimbursable_expenses_object === 'EXPENSE_REPORT') {
+    if (settings.corporate_credit_card_expenses_object && settings.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT' && settings.reimbursable_expenses_object === 'EXPENSE_REPORT') {
       return true;
     }
 

@@ -6,4 +6,5 @@ export type DestinationAttributeDetail = {
   customer_name: string;
   gl_account_no: string;
   gl_account_title: string;
+  is_reimbursable: boolean;
 };
