@@ -20,6 +20,8 @@ export type GeneralMapping = {
   default_reimbursable_expense_payment_type_name: string;
   default_ccc_expense_payment_type_id: string;
   default_ccc_expense_payment_type_name: string;
+  use_intacct_employee_departments: boolean;
+  use_intacct_employee_locations: boolean;
   created_at?: Date;
   updated_at?: Date;
   workspace?: number;

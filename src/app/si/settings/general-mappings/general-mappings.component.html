@@ -151,6 +151,14 @@
         </mat-select>
       </mat-form-field>
 
+      <mat-slide-toggle color="primary" class="schedule" formControlName="useDefaultEmployeeLocation">
+        <div class="schedule--toggle-text">Use Employee Location</div>
+      </mat-slide-toggle>
+
+      <mat-slide-toggle color="primary" class="schedule" formControlName="useDefaultEmployeeDepartment">
+        <div class="schedule--toggle-text">Use Employee Department</div>
+      </mat-slide-toggle>
+
     </div>
 
     <button class="configurations--save-btn" mat-flat-button color="primary" (click)="submit()" type="submit">
