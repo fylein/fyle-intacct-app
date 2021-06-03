@@ -151,11 +151,11 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-slide-toggle color="primary" class="schedule" formControlName="useDefaultEmployeeLocation">
+      <mat-slide-toggle color="primary" class="schedule" formControlName="useDefaultEmployeeLocation" *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' && generalSettings.corporate_credit_card_expenses_object !== 'BILL'">
         <div class="schedule--toggle-text">Use Employee Location</div>
       </mat-slide-toggle>
 
-      <mat-slide-toggle color="primary" class="schedule" formControlName="useDefaultEmployeeDepartment">
+      <mat-slide-toggle color="primary" class="schedule" formControlName="useDefaultEmployeeDepartment" *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' && generalSettings.corporate_credit_card_expenses_object !== 'BILL'">
         <div class="schedule--toggle-text">Use Employee Department</div>
       </mat-slide-toggle>
 
