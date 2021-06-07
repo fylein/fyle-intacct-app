@@ -6,7 +6,7 @@ export type Task = {
   bill: number;
   created_at: Date;
   detail: any;  // TODO Replace with a suitable model
-  sage_intacct_errors: SageIntacctError[];
+  sage_intacct_errors: any; // Todo Replace with a Suitable Model
   expense_group: number;
   charge_card_transaction: number;
   ap_payment: number;

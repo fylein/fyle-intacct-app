@@ -66,10 +66,10 @@ export class ViewExpenseGroupComponent implements OnInit {
       that.isLoading = false;
 
       that.expenseGroup = response[0];
-      if (response[1].length > 0) {
-        that.task = response[1][0];
+      if (response[1]) {
+        that.task = response[1];
         that.showMappingErrors = that.task.detail ? true : false;
-        that.showSageIntacctErrors = that.task.sage_intacct_errors ? true : false;
+        that.showSageIntacctErrors = true;
         that.status = that.task.status;
       }
     });

@@ -147,13 +147,11 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
       event.stopPropagation();
       const that = this;
       that.isLoading = true;
-      that.taskService.getTasksByExpenseGroupId(clickedExpenseGroup.id).subscribe((tasks: Task[]) => {
-
+      that.taskService.getTasksByExpenseGroupId(clickedExpenseGroup.id).subscribe((task: Task) => {
         that.isLoading = false;
-        const completedTask = tasks.filter(task => task.status === 'COMPLETE')[0];
 
-        if (completedTask) {
-          const redirectedId = completedTask.detail.url_id;
+        if (task.status === 'COMPLETE') {
+          const redirectedId = task.detail.url_id;
           that.openInSageIntacct(redirectedId);
         }
       });
