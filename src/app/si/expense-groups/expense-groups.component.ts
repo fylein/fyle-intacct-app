@@ -136,7 +136,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     });
   }
 
-  openInSageIntacct(id) {
+  openInSageIntacct(id: string) {
       this.windowReference.open(`https://www-p02.intacct.com/ia/acct/ur.phtml?.r=${id}`, '_blank');
   }
 
@@ -153,7 +153,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
         const completedTask = tasks.filter(task => task.status === 'COMPLETE')[0];
 
         if (completedTask) {
-          const redirectedId = completedTask.detail.redirected_url_id;
+          const redirectedId = completedTask.detail.url_id;
           that.openInSageIntacct(redirectedId);
         }
       });
