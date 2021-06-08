@@ -28,7 +28,7 @@ export class GroupSageIntacctErrorComponent implements OnInit {
     that.expenseGroupId = +that.route.snapshot.parent.params.expense_group_id;
     that.isLoading = true;
     that.taskService.getTasksByExpenseGroupId(that.expenseGroupId).subscribe((res: Task) => {
-      that.sageIntacctErrors = new MatTableDataSource(res.sage_intacct_errors.reduce((arr1, arr2) => arr1.concat(arr2)));
+      that.sageIntacctErrors = new MatTableDataSource(res.sage_intacct_errors);
       that.count = res.sage_intacct_errors && res.sage_intacct_errors.length;
       that.isLoading = false;
     });
