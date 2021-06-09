@@ -210,7 +210,9 @@ export class ConfigurationComponent implements OnInit {
           source_field: 'EMPLOYEE',
           destination_field: 'CHARGE_CARD_NUMBER'
         });
+      }
 
+      if (cccExpensesObject === 'BILL' || cccExpensesObject === 'CHARGE_CARD_TRANSACTION') {
         mappingsSettingsPayload.push({
           source_field: 'CATEGORY',
           destination_field: 'CCC_ACCOUNT'
