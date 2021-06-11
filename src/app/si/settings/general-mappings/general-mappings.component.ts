@@ -137,8 +137,8 @@ export class GeneralMappingsComponent implements OnInit {
         defaultReimbursableExpensePaymentType: [that.generalMappings ? that.generalMappings.default_reimbursable_expense_payment_type_id : null],
         // defaultCCCExpensePaymentType should be a mandatory field for Expense Reports to mark it as non reimbursable for ccc expenses
         defaultCCCExpensePaymentType: [that.generalMappings ? that.generalMappings.default_ccc_expense_payment_type_id : null, that.generalSettings.corporate_credit_card_expenses_object === 'EXPENSE_REPORT' ? Validators.required : null],
-        useDefaultEmployeeLocation: [that.generalMappings ? that.generalMappings.use_intacct_employee_locations : null],
-        useDefaultEmployeeDepartment: [that.generalMappings ? that.generalMappings.use_intacct_employee_departments : null]
+        useDefaultEmployeeLocation: [that.generalMappings ? that.generalMappings.use_intacct_employee_locations : false],
+        useDefaultEmployeeDepartment: [that.generalMappings ? that.generalMappings.use_intacct_employee_departments : false]
       });
     });
   }
