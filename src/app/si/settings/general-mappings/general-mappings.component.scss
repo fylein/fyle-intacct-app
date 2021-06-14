@@ -5,6 +5,28 @@
     border-bottom: 1px solid $fy-layout-background;
   }
 
+  .schedule {
+    margin-bottom: 32px;
+    &--header {
+      border-bottom: 1px solid $fy-layout-background;
+    }
+
+    &--toggle-text {
+      font-size: 14px;
+    }
+  }
+
+  .info-icon {
+    text-align: center;
+    cursor: pointer;
+    padding-left: 5px;
+    padding-bottom: 5px;
+    max-width: 24px;
+    max-height: 24px;
+    font-size: 20px;
+    vertical-align: middle;
+  }
+
   &--form {
     font-size: 14px;
     margin: 24px;

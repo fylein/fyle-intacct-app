@@ -58,6 +58,8 @@ export class GeneralMappingsComponent implements OnInit {
       const paymentAccount: MappingDestination[] = that.sageIntacctPaymentAccounts.filter((element) => element.destination_id === that.form.value.paymentAccount);
       const defaultReimbursableExpensePaymentType: MappingDestination[] = that.sageIntacctReimbursableExpensePaymentType.filter((element) => element.destination_id === that.form.value.defaultReimbursableExpensePaymentType);
       const defaultCCCExpensePaymentType: MappingDestination[] = that.sageIntacctCCCExpensePaymentType.filter((element) => element.destination_id === that.form.value.defaultCCCExpensePaymentType);
+      const defaultEmployeeLocation = that.form.value.useDefaultEmployeeLocation;
+      const defaultEmployeeDepartment = that.form.value.useDefaultEmployeeDepartment;
 
       const mapping: GeneralMapping = {
         default_location_name: defaultLocationName[0] ? defaultLocationName[0].value : '',
@@ -77,7 +79,9 @@ export class GeneralMappingsComponent implements OnInit {
         default_reimbursable_expense_payment_type_id: that.form.value.defaultReimbursableExpensePaymentType ? that.form.value.defaultReimbursableExpensePaymentType : '',
         default_reimbursable_expense_payment_type_name: defaultReimbursableExpensePaymentType[0] ? defaultReimbursableExpensePaymentType[0].value : '',
         default_ccc_expense_payment_type_id: that.form.value.defaultCCCExpensePaymentType ? that.form.value.defaultCCCExpensePaymentType : '',
-        default_ccc_expense_payment_type_name: defaultCCCExpensePaymentType[0] ? defaultCCCExpensePaymentType[0].value : null
+        default_ccc_expense_payment_type_name: defaultCCCExpensePaymentType[0] ? defaultCCCExpensePaymentType[0].value : null,
+        use_intacct_employee_departments: defaultEmployeeDepartment,
+        use_intacct_employee_locations: defaultEmployeeLocation
       };
 
       that.mappingsService.postGeneralMappings(mapping).subscribe(() => {
@@ -132,7 +136,9 @@ export class GeneralMappingsComponent implements OnInit {
         paymentAccount: [that.generalMappings ? that.generalMappings.payment_account_id : null],
         defaultReimbursableExpensePaymentType: [that.generalMappings ? that.generalMappings.default_reimbursable_expense_payment_type_id : null],
         // defaultCCCExpensePaymentType should be a mandatory field for Expense Reports to mark it as non reimbursable for ccc expenses
-        defaultCCCExpensePaymentType: [that.generalMappings ? that.generalMappings.default_ccc_expense_payment_type_id : null, that.generalSettings.corporate_credit_card_expenses_object === 'EXPENSE_REPORT' ? Validators.required : null]
+        defaultCCCExpensePaymentType: [that.generalMappings ? that.generalMappings.default_ccc_expense_payment_type_id : null, that.generalSettings.corporate_credit_card_expenses_object === 'EXPENSE_REPORT' ? Validators.required : null],
+        useDefaultEmployeeLocation: [that.generalMappings ? that.generalMappings.use_intacct_employee_locations : false],
+        useDefaultEmployeeDepartment: [that.generalMappings ? that.generalMappings.use_intacct_employee_departments : false]
       });
     });
   }
