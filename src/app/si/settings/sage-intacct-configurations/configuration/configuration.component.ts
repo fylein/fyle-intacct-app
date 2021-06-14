@@ -8,6 +8,8 @@ import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { SiComponent } from 'src/app/si/si.component';
 import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
+import { MappingsService } from 'src/app/core/services/mappings.service';
+import { AttributeCount } from 'src/app/core/models/attribute-count.model';
 
 @Component({
   selector: 'app-configuration',
@@ -29,6 +31,7 @@ export class ConfigurationComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               private settingsService: SettingsService,
+              private mappingsService: MappingsService,
               private route: ActivatedRoute,
               private router: Router,
               private snackBar: MatSnackBar,
@@ -87,13 +90,13 @@ export class ConfigurationComponent implements OnInit {
     return cccExpenseOptions;
   }
 
-  getAllSettings() {
+  getAllSettings(projectCount: number) {
     const that = this;
-    that.isLoading = true;
+
     forkJoin(
       [
         that.settingsService.getGeneralSettings(that.workspaceId),
-        that.settingsService.getMappingSettings(that.workspaceId)
+        that.settingsService.getMappingSettings(that.workspaceId),
       ]
     ).subscribe(responses => {
       that.generalSettings = responses[0];
@@ -131,6 +134,24 @@ export class ConfigurationComponent implements OnInit {
 
       that.generalSettingsForm.controls.reimburExpense.disable();
 
+      if (projectCount === 0) {
+        that.generalSettingsForm.controls.importProjects.disable();
+      }
+
+      const fyleProjectMapping = that.mappingSettings.filter(
+        setting => setting.source_field === 'PROJECT' && setting.destination_field !== 'PROJECT'
+      );
+
+      const sageIntacctProjectMapping = that.mappingSettings.filter(
+        setting => setting.destination_field === 'PROJECT' && setting.source_field !== 'PROJECT'
+      );
+
+      //disable project sync toggle if either of Fyle / Sage Intacct Projects are already mapped to different fields
+
+      if (fyleProjectMapping.length || sageIntacctProjectMapping.length) {
+        that.generalSettingsForm.controls.importProjects.disable();
+      }
+
       that.generalSettingsForm.controls.autoMapEmployees.valueChanges.subscribe((employeeMappingPreference) => {
         that.showAutoCreateOption(employeeMappingPreference);
       });
@@ -151,6 +172,10 @@ export class ConfigurationComponent implements OnInit {
         autoMapEmployees: [null],
         autoCreateDestinationEntity: [false]
       });
+
+      if (projectCount === 0) {
+        that.generalSettingsForm.controls.importProjects.disable();
+      }
 
       that.generalSettingsForm.controls.autoMapEmployees.valueChanges.subscribe((employeeMappingPreference) => {
         that.showAutoCreateOption(employeeMappingPreference);
@@ -180,7 +205,7 @@ export class ConfigurationComponent implements OnInit {
       const cccExpensesObject = that.generalSettingsForm.value.cccExpense || (that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : null);
       const categoryMappingObject = that.getCategory(reimbursableExpensesObject)[0].value;
       const employeeMappingsObject = that.getEmployee(reimbursableExpensesObject)[0].value;
-      const importProjects = that.generalSettingsForm.value.importProjects;
+      const importProjects = that.generalSettingsForm.value.importProjects ? that.generalSettingsForm.value.importProjects : false;
       const importCategories = that.generalSettingsForm.value.importCategories;
       const autoMapEmployees = that.generalSettingsForm.value.autoMapEmployees ? that.generalSettingsForm.value.autoMapEmployees : null;
       const autoCreateDestinationEntity = that.generalSettingsForm.value.autoCreateDestinationEntity;
@@ -188,7 +213,7 @@ export class ConfigurationComponent implements OnInit {
       let fyleToSageIntacct = false;
       let sageIntacctToFyle = false;
 
-      const mappingsSettingsPayload = [{
+      const mappingsSettingsPayload: MappingSetting[] = [{
         source_field: 'EMPLOYEE',
         destination_field: employeeMappingsObject
       }];
@@ -201,7 +226,8 @@ export class ConfigurationComponent implements OnInit {
       if (importProjects) {
         mappingsSettingsPayload.push({
           source_field: 'PROJECT',
-          destination_field: 'PROJECT'
+          destination_field: 'PROJECT',
+          import_to_fyle: true,
         });
       }
 
@@ -267,7 +293,12 @@ export class ConfigurationComponent implements OnInit {
     const that = this;
     that.isSaveDisabled = false;
     that.workspaceId = that.route.snapshot.parent.parent.params.workspace_id;
-    that.getAllSettings();
+
+    that.isLoading = true;
+
+    that.mappingsService.getSageIntacctAttributeCount('PROJECT').subscribe((projectCount: AttributeCount) => {
+      that.getAllSettings(projectCount.count);
+    })
   }
 
 }

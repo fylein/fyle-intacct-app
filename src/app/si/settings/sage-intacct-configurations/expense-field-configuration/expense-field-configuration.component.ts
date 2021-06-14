@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SettingsService } from 'src/app/core/services/settings.service';
-import { forkJoin } from 'rxjs';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { SiComponent } from 'src/app/si/si.component';
 import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
 import { ExpenseField } from 'src/app/core/models/expense-field.model';
+import { MatSnackBar } from '@angular/material';
+import { MappingSettingResponse } from 'src/app/core/models/mapping-setting-response.model';
 
 @Component({
   selector: 'app-expense-field-configuration',
@@ -18,6 +19,7 @@ import { ExpenseField } from 'src/app/core/models/expense-field.model';
 export class ExpenseFieldConfigurationComponent implements OnInit {
   expenseFieldsForm: FormGroup;
   expenseFields: FormArray;
+  customFieldForm: FormGroup;
   workspaceId: number;
   isLoading: boolean;
   mappingSettings: MappingSetting[];
@@ -26,28 +28,39 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
   fyleFormFieldList: ExpenseField[];
   sageIntacctFormFieldList: ExpenseField[];
   windowReference: Window;
+  showCustomFieldName: boolean;
+  customFieldName  = 'Add custom field';
+  isSystemField: boolean;
 
-  constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private settingsService: SettingsService, private mappingsService: MappingsService, private si: SiComponent, private windowReferenceService: WindowReferenceService) {
+  constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private settingsService: SettingsService, private mappingsService: MappingsService, private snackBar: MatSnackBar, private si: SiComponent, private windowReferenceService: WindowReferenceService) {
     this.windowReference = this.windowReferenceService.nativeWindow;
-   }
+  }
 
-  createExpenseField(sourceField: string = '', destinationField: string = '') {
+  createExpenseField(sourceField: string = '', destinationField: string = '', importToFyle: boolean = false) {
     const that = this;
 
     const group = that.formBuilder.group({
       source_field: [sourceField ? sourceField : '', [Validators.required, RxwebValidators.unique()]],
       destination_field: [destinationField ? destinationField : '', [Validators.required, RxwebValidators.unique()]],
+      import_to_fyle: [importToFyle]
     });
 
     if (sourceField && destinationField) {
-      group.disable();
+      group.controls.source_field.disable();
+      group.controls.destination_field.disable();
     }
+
+    // save mapping setting on toggle change
+    group.controls.import_to_fyle.valueChanges.subscribe(()=> {
+      that.saveExpenseFields();
+    })
+
     return group;
   }
 
   showAddButton() {
     const that = this;
-    if (that.expenseFieldsForm.controls.expenseFields.value.length === Math.min(that.fyleExpenseFields.length, that.sageIntacctFields.length)) {
+    if (that.expenseFieldsForm.controls.expenseFields.value.length === Math.min(that.fyleExpenseFields.length, that.sageIntacctFields.length) || that.showCustomFieldName) {
       return false;
     }
     return true;
@@ -55,6 +68,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
 
   addExpenseField() {
     const that = this;
+    that.hideCustomField();
 
     that.expenseFields = that.expenseFieldsForm.get('expenseFields') as FormArray;
     that.expenseFields.push(that.createExpenseField());
@@ -63,14 +77,39 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
   saveExpenseFields() {
     const that = this;
 
-    that.isLoading = true;
-    const expenseFields = that.expenseFieldsForm.value.expenseFields;
+    if (that.expenseFieldsForm.valid) {
+      that.isLoading = true;
+      let isCustomField = false;
+      // getRawValue() would have values even if they are disabled
 
-    that.settingsService.postMappingSettings(that.workspaceId, expenseFields).subscribe(response => {
-      this.si.getGeneralSettings();
-      that.router.navigateByUrl(`/workspaces/${that.workspaceId}/dashboard`);
-      that.isLoading = false;
-    });
+      
+      const expenseFields: MappingSetting[] = that.expenseFieldsForm.getRawValue().expenseFields;
+      expenseFields.forEach(element => {
+        if (element.source_field === 'custom'){
+          element.source_field = this.customFieldForm.value.customFieldName;
+          element.is_custom = true;
+          element.import_to_fyle = true;
+          isCustomField = true;
+        } else {
+          element.is_custom = false;
+        }
+      })
+
+      that.settingsService.postMappingSettings(that.workspaceId, expenseFields).subscribe((mappingSetting: MappingSetting[]) => {
+        that.si.refreshDashboardMappingSettings(mappingSetting);
+        that.createFormFields(mappingSetting);
+        if (isCustomField) {
+          that.getFyleFields().then(() => {
+            that.isLoading = false;
+          });
+        } else {
+          that.isLoading = false;
+        }
+      }, () => that.snackBar.open('Something went wrong while saving expense fields mapping'));
+
+    } else {
+      that.snackBar.open('Please fill all mandatory fields');
+    }
   }
 
   removeExpenseField(index: number) {
@@ -80,41 +119,107 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     expenseFields.removeAt(index);
   }
 
+  showCustomField() {
+    const that = this;
+
+    that.showCustomFieldName = true;
+    that.customFieldForm.markAllAsTouched();
+  }
+
+  updateCustomFieldName(name: string) {
+    const that = this;
+    let existingFields: string[] = that.fyleExpenseFields.map(fields => fields.display_name.toLowerCase());
+    const systemFields = ['employee id', 'organisation name', 'employee name', 'employee email', 'expense date', 'expense date', 'expense id', 'report id', 'employee id', 'department', 'state', 'reporter', 'report', 'purpose', 'vendor', 'category', 'category code', 'mileage distance', 'mileage unit', 'flight from city', 'flight to city', 'flight from date', 'flight to date', 'flight from class', 'flight to class', 'hotel checkin', 'hotel checkout', 'hotel location', 'hotel breakfast', 'currency', 'amount', 'foreign currency', 'foreign amount', 'tax', 'approver', 'project', 'billable', 'cost center', 'cost center code', 'approved on', 'reimbursable', 'receipts', 'paid date', 'expense created date'];
+    existingFields = existingFields.concat(systemFields);
+
+    if (existingFields.indexOf(name.toLowerCase()) !== -1) {
+      that.isSystemField = true;
+    } else {
+      that.isSystemField = false;
+    }
+    that.customFieldName = name;
+  }
+
+  hideCustomField() {
+    this.showCustomFieldName = false;
+  }
+
+  saveCustomField() {
+    const that = this;
+
+    that.showCustomFieldName = false;
+    that.saveExpenseFields();
+  }
+
+  createFormFields(mappingSetting: MappingSetting[]) {
+    const that = this;
+
+    that.mappingSettings = mappingSetting.filter(
+      setting => setting.source_field !== 'EMPLOYEE' && setting.source_field !== 'CATEGORY'
+    );
+
+    let expenseFieldFormArray;
+    if (that.mappingSettings.length) {
+      expenseFieldFormArray = that.mappingSettings.map(
+        setting => that.createExpenseField(setting.source_field, setting.destination_field, setting.import_to_fyle)
+      );
+    } else {
+      expenseFieldFormArray = [that.createExpenseField()];
+    }
+
+    that.expenseFieldsForm = that.formBuilder.group({
+      expenseFields: that.formBuilder.array(expenseFieldFormArray)
+    });
+  }
+
+
+  getMappingSettings() {
+    const that = this;
+
+    return that.settingsService.getMappingSettings(that.workspaceId).toPromise().then((mappingSetting: MappingSettingResponse) => {
+      that.createFormFields(mappingSetting.results);
+
+      return mappingSetting;
+    });
+  }
+
+  getFyleFields() {
+    const that = this;
+
+    return that.mappingsService.getFyleExpenseFields().toPromise().then((fyleFields: ExpenseField[]) => {
+      that.fyleExpenseFields = fyleFields;
+      that.fyleFormFieldList = fyleFields;
+
+      return fyleFields;
+    });
+  }
+
+  getSageIntacctFields() {
+    const that = this;
+
+    return that.mappingsService.getSageIntacctFields().toPromise().then((sageIntacctFields: ExpenseField[]) => {
+      that.sageIntacctFields = sageIntacctFields;
+      that.sageIntacctFormFieldList = sageIntacctFields;
+
+      return sageIntacctFields;
+    })
+  }
+
   getSettings() {
     const that = this;
-    forkJoin(
-      [
-        that.settingsService.getMappingSettings(that.workspaceId),
-        that.mappingsService.getFyleExpenseFields(),
-        that.mappingsService.getSageIntacctFields()
-      ]
-    ).subscribe(response => {
-      that.mappingSettings = response[0].results.filter(
-        setting => setting.source_field !== 'EMPLOYEE' && setting.source_field !== 'CATEGORY'
-      );
 
-      let expenseFieldFormArray;
-
-      that.fyleExpenseFields = response[1];
-      that.sageIntacctFields = response[2];
-
-      that.fyleFormFieldList = response[1];
-      that.sageIntacctFormFieldList = response[2];
-
-      if (that.mappingSettings.length) {
-        expenseFieldFormArray = that.mappingSettings.map(
-          setting => that.createExpenseField(setting.source_field, setting.destination_field)
-        );
-      } else {
-        expenseFieldFormArray = [that.createExpenseField()];
-      }
-
-      that.expenseFieldsForm = that.formBuilder.group({
-        expenseFields: that.formBuilder.array(expenseFieldFormArray)
-      });
-
-      that.isLoading = false;
+    that.customFieldForm = that.formBuilder.group({
+      customFieldName: ['', Validators.required]
     });
+
+    that.getMappingSettings()
+      .then(() => {
+        return that.getFyleFields();
+      }).then(() => {
+        return that.getSageIntacctFields();
+      }).finally(() => {
+        that.isLoading = false;
+      })
   }
 
   ngOnInit() {

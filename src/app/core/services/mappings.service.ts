@@ -3,6 +3,7 @@ import { Cacheable, CacheBuster } from 'ngx-cacheable';
 import { empty, Observable, Subject } from 'rxjs';
 import { concatMap, expand, map, publishReplay, refCount, reduce } from 'rxjs/operators';
 import { ApiService } from 'src/app/core/services/api.service';
+import { AttributeCount } from '../models/attribute-count.model'
 import { ExpenseField } from '../models/expense-field.model';
 import { GeneralMapping } from '../models/general-mapping.model';
 import { MappingDestination } from '../models/mapping-destination.model';
@@ -87,6 +88,14 @@ export class MappingsService {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/expense_custom_fields/`, {
+      attribute_type: attributeType
+    });
+  }
+
+  getSageIntacctAttributeCount(attributeType: string): Observable<AttributeCount> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/attributes/count/`, {
       attribute_type: attributeType
     });
   }
