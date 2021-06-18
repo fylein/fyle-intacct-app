@@ -53,9 +53,9 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     }
 
     // save mapping setting on toggle change
-    group.controls.import_to_fyle.valueChanges.subscribe(()=> {
+    group.controls.import_to_fyle.valueChanges.subscribe(() => {
       that.saveExpenseFields();
-    })
+    });
 
     return group;
   }
@@ -70,7 +70,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
 
   addExpenseField() {
     const that = this;
-    
+
     that.expenseFields = that.expenseFieldsForm.get('expenseFields') as FormArray;
     that.expenseFields.push(that.createExpenseField());
     that.showAddButton = that.showOrHideAddButton();
@@ -85,25 +85,21 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
       // getRawValue() would have values even if they are disabled
 
       const expenseFields: MappingSetting[] = that.expenseFieldsForm.getRawValue().expenseFields;
-      console.log(expenseFields)
       expenseFields.forEach(element => {
-        if (element.source_field === 'custom'){
+        if (element.source_field === 'custom') {
           element.source_field = this.customFieldForm.value.customFieldName;
           element.is_custom = true;
           element.import_to_fyle = true;
           isCustomField = true;
-        } 
+        }
         element.source_field = element.source_field.replace(/ /g, '_').toUpperCase();
       });
 
       that.settingsService.postMappingSettings(that.workspaceId, expenseFields).subscribe((mappingSetting: MappingSetting[]) => {
         that.si.refreshDashboardMappingSettings(mappingSetting);
-        console.log('nilesh', mappingSetting)
         that.createFormFields(mappingSetting);
-        console.log('isCustomField', isCustomField)
         if (isCustomField) {
           that.getFyleFields().then((res) => {
-            console.log("res", res)
             that.isLoading = false;
           });
         } else {
@@ -216,7 +212,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
       that.sageIntacctFormFieldList = sageIntacctFields;
 
       return sageIntacctFields;
-    })
+    });
   }
 
   getSettings() {
@@ -234,7 +230,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
       }).finally(() => {
         that.showAddButton = that.showOrHideAddButton();
         that.isLoading = false;
-      })
+      });
   }
 
   ngOnInit() {

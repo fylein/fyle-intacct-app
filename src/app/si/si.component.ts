@@ -10,7 +10,7 @@ import { UserProfile } from '../core/models/user-profile.model';
 import { Workspace } from '../core/models/workspace.model';
 import { GeneralSetting } from '../core/models/general-setting.model';
 import { MappingSetting } from '../core/models/mapping-setting.model';
-import { MappingSettingResponse } from '../core/models/mapping-setting-response.model'
+import { MappingSettingResponse } from '../core/models/mapping-setting-response.model';
 
 @Component({
   selector: 'app-si',
@@ -53,14 +53,14 @@ export class SiComponent implements OnInit {
     );
 
     that.isLoading = false;
-  }   
+  }
 
   getGeneralSettings() {
     const that = this;
 
     that.getMappingSettings().then((mappingSettings: MappingSetting[]) => {
       that.refreshDashboardMappingSettings(mappingSettings);
-    }); 
+    });
   }
 
   getMappingSettings() {

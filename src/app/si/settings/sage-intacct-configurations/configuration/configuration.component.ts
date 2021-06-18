@@ -143,7 +143,7 @@ export class ConfigurationComponent implements OnInit {
         setting => setting.destination_field === 'PROJECT' && setting.source_field !== 'PROJECT'
       );
 
-      //disable project sync toggle if either of Fyle / Sage Intacct Projects are already mapped to different fields
+      // disable project sync toggle if either of Fyle / Sage Intacct Projects are already mapped to different fields
 
       if (fyleProjectMapping.length || sageIntacctProjectMapping.length) {
         that.generalSettingsForm.controls.importProjects.disable();
@@ -289,7 +289,7 @@ export class ConfigurationComponent implements OnInit {
     that.workspaceId = that.route.snapshot.parent.parent.params.workspace_id;
 
     that.isLoading = true;
-    
+
     that.getAllSettings();
   }
 
