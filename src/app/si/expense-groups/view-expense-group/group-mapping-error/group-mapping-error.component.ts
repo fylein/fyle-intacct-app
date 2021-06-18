@@ -27,7 +27,7 @@ export class GroupMappingErrorComponent implements OnInit {
     that.workspaceId = +that.route.snapshot.parent.params.workspace_id;
     that.expenseGroupId = +that.route.snapshot.parent.params.expense_group_id;
     that.isLoading = true;
-    that.taskService.getTasksByExpenseGroupId(that.expenseGroupId).subscribe((res: Task) => {
+    that.taskService.getTaskByExpenseGroupId(that.expenseGroupId).subscribe((res: Task) => {
       that.mappingErrors = new MatTableDataSource(res.detail);
       that.count = res.detail && res.detail.length;
       that.isLoading = false;

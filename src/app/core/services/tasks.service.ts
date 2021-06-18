@@ -54,7 +54,7 @@ export class TasksService {
     });
   }
 
-  getTasksByExpenseGroupId(expenseGroupId: number): Observable<Task> {
+  getTaskByExpenseGroupId(expenseGroupId: number): Observable<Task> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.get(

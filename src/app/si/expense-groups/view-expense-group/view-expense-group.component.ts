@@ -60,7 +60,7 @@ export class ViewExpenseGroupComponent implements OnInit {
     forkJoin(
       [
         that.expenseGroupsService.getExpensesGroupById(that.expenseGroupId),
-        that.tasksService.getTasksByExpenseGroupId(that.expenseGroupId)
+        that.tasksService.getTaskByExpenseGroupId(that.expenseGroupId)
       ]
     ).subscribe(response => {
       that.isLoading = false;
