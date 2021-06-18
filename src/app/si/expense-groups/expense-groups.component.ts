@@ -137,11 +137,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
   }
 
   openInSageIntacct(id: string) {
-    if(id){
       this.windowReference.open(`https://www-p02.intacct.com/ia/acct/ur.phtml?.r=${id}`, '_blank');
-    } else {
-      this.windowReference.open(`https://www.intacct.com/ia/acct/login.phtml`, '_blank');
-    }
   }
 
   openInSiHandler(clickedExpenseGroup: ExpenseGroup) {
