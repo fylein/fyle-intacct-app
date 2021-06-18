@@ -107,12 +107,12 @@
             <div class="custom-field-grp" fxLayoutAlign="start stretch">
               <div fxFlex="10"></div>
               <button fxLayout="row" fxLayoutAlign="start center" class="custom-field-btn" mat-raised-button
-                color="basic" (click)="hideCustomField()">
+                color="basic" (click)="hideCustomField($event.target.innerText)">
                 <span>Cancel</span>
               </button>
               <div fxFlex="10"></div>
               <button fxLayout="row" fxLayoutAlign="start center" class="custom-field-btn" mat-flat-button
-                color="primary" (click)="saveCustomField()" [disabled]="isSystemField">
+                color="primary" (click)="hideCustomField($event.target.innerText)" [disabled]="isSystemField">
                 <span>Done</span>
               </button>
             </div>
@@ -121,9 +121,9 @@
       </div>
     </div>
 
-    <div fxLayoutAlign="start stretch" *ngIf="showAddButton()" (click)="addExpenseField()">
+    <div fxLayoutAlign="start stretch" *ngIf="showAddButton">
       <img class="expense-fields--add-icon" src="assets/images/pngs/add.png">
-      <a class="add-row-text">
+      <a class="add-row-text" (click)="addExpenseField()">
         Add another field
       </a>
     </div>

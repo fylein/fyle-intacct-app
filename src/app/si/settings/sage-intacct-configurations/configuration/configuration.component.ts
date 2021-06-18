@@ -90,7 +90,7 @@ export class ConfigurationComponent implements OnInit {
     return cccExpenseOptions;
   }
 
-  getAllSettings(projectCount: number) {
+  getAllSettings() {
     const that = this;
 
     forkJoin(
@@ -134,9 +134,6 @@ export class ConfigurationComponent implements OnInit {
 
       that.generalSettingsForm.controls.reimburExpense.disable();
 
-      if (projectCount === 0) {
-        that.generalSettingsForm.controls.importProjects.disable();
-      }
 
       const fyleProjectMapping = that.mappingSettings.filter(
         setting => setting.source_field === 'PROJECT' && setting.destination_field !== 'PROJECT'
@@ -173,9 +170,6 @@ export class ConfigurationComponent implements OnInit {
         autoCreateDestinationEntity: [false]
       });
 
-      if (projectCount === 0) {
-        that.generalSettingsForm.controls.importProjects.disable();
-      }
 
       that.generalSettingsForm.controls.autoMapEmployees.valueChanges.subscribe((employeeMappingPreference) => {
         that.showAutoCreateOption(employeeMappingPreference);
@@ -295,10 +289,8 @@ export class ConfigurationComponent implements OnInit {
     that.workspaceId = that.route.snapshot.parent.parent.params.workspace_id;
 
     that.isLoading = true;
-
-    that.mappingsService.getSageIntacctAttributeCount('PROJECT').subscribe((projectCount: AttributeCount) => {
-      that.getAllSettings(projectCount.count);
-    })
+    
+    that.getAllSettings();
   }
 
 }

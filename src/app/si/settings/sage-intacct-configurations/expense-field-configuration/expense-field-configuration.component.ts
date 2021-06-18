@@ -31,18 +31,20 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
   showCustomFieldName: boolean;
   customFieldName  = 'Add custom field';
   isSystemField: boolean;
+  showAddButton: boolean;
 
   constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private settingsService: SettingsService, private mappingsService: MappingsService, private snackBar: MatSnackBar, private si: SiComponent, private windowReferenceService: WindowReferenceService) {
     this.windowReference = this.windowReferenceService.nativeWindow;
   }
 
-  createExpenseField(sourceField: string = '', destinationField: string = '', importToFyle: boolean = false) {
+  createExpenseField(sourceField: string = '', destinationField: string = '', isCustom = false, importToFyle: boolean = false) {
     const that = this;
 
     const group = that.formBuilder.group({
       source_field: [sourceField ? sourceField : '', [Validators.required, RxwebValidators.unique()]],
       destination_field: [destinationField ? destinationField : '', [Validators.required, RxwebValidators.unique()]],
-      import_to_fyle: [importToFyle]
+      import_to_fyle: [importToFyle],
+      is_custom: [isCustom]
     });
 
     if (sourceField && destinationField) {
@@ -58,9 +60,9 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     return group;
   }
 
-  showAddButton() {
+  showOrHideAddButton() {
     const that = this;
-    if (that.expenseFieldsForm.controls.expenseFields.value.length === Math.min(that.fyleExpenseFields.length, that.sageIntacctFields.length) || that.showCustomFieldName) {
+    if (that.expenseFieldsForm.controls.expenseFields.value.length === that.sageIntacctFields.length || that.showCustomFieldName) {
       return false;
     }
     return true;
@@ -68,10 +70,10 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
 
   addExpenseField() {
     const that = this;
-    that.hideCustomField();
-
+    
     that.expenseFields = that.expenseFieldsForm.get('expenseFields') as FormArray;
     that.expenseFields.push(that.createExpenseField());
+    that.showAddButton = that.showOrHideAddButton();
   }
 
   saveExpenseFields() {
@@ -79,27 +81,29 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
 
     if (that.expenseFieldsForm.valid) {
       that.isLoading = true;
-      let isCustomField = false;
+      let isCustomField = true;
       // getRawValue() would have values even if they are disabled
 
-      
       const expenseFields: MappingSetting[] = that.expenseFieldsForm.getRawValue().expenseFields;
+      console.log(expenseFields)
       expenseFields.forEach(element => {
         if (element.source_field === 'custom'){
           element.source_field = this.customFieldForm.value.customFieldName;
           element.is_custom = true;
           element.import_to_fyle = true;
           isCustomField = true;
-        } else {
-          element.is_custom = false;
-        }
-      })
+        } 
+        element.source_field = element.source_field.replace(/ /g, '_').toUpperCase();
+      });
 
       that.settingsService.postMappingSettings(that.workspaceId, expenseFields).subscribe((mappingSetting: MappingSetting[]) => {
         that.si.refreshDashboardMappingSettings(mappingSetting);
+        console.log('nilesh', mappingSetting)
         that.createFormFields(mappingSetting);
+        console.log('isCustomField', isCustomField)
         if (isCustomField) {
-          that.getFyleFields().then(() => {
+          that.getFyleFields().then((res) => {
+            console.log("res", res)
             that.isLoading = false;
           });
         } else {
@@ -140,8 +144,18 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     that.customFieldName = name;
   }
 
-  hideCustomField() {
-    this.showCustomFieldName = false;
+  hideCustomField(event: string) {
+    const that = this;
+
+    that.showCustomFieldName = false;
+    if (event === 'Cancel') {
+      that.removeExpenseField(that.expenseFieldsForm.getRawValue().expenseFields.length - 1);
+      that.showAddButton = that.showOrHideAddButton();
+      that.customFieldName = 'Add custom field';
+      that.customFieldForm.controls.customFieldName.reset();
+    } else {
+      that.showAddButton = false;
+    }
   }
 
   saveCustomField() {
@@ -218,6 +232,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
       }).then(() => {
         return that.getSageIntacctFields();
       }).finally(() => {
+        that.showAddButton = that.showOrHideAddButton();
         that.isLoading = false;
       })
   }
