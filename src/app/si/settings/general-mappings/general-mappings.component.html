@@ -121,6 +121,61 @@
         </mat-select>
       </mat-form-field>
 
+      <div class="mat-body-strong"
+      *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT'">
+        <strong class="mappings-dialog--label">
+          Default Reimbursable Expense Payment Type
+        </strong>
+      </div>
+      <mat-form-field class="mappings-dialog--form-element" appearance="outline" required 
+      *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT'">
+        <mat-select placeholder="Default Reimbursable Expense Payment Type" formControlName="defaultReimbursableExpensePaymentType">
+          <mat-option *ngFor="let option of sageIntacctReimbursableExpensePaymentType" [value]="option.destination_id">
+            {{option.value}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="mat-body-strong"
+      *ngIf="generalSettings.corporate_credit_card_expenses_object === 'EXPENSE_REPORT'">
+        <strong class="mappings-dialog--label">
+          Default CCC Expense Payment Type
+        </strong>
+      </div>
+      <mat-form-field class="mappings-dialog--form-element" appearance="outline" required 
+      *ngIf="generalSettings.corporate_credit_card_expenses_object === 'EXPENSE_REPORT'">
+        <mat-select placeholder="Default CCC Expense Payment Type" formControlName="defaultCCCExpensePaymentType">
+          <mat-option *ngFor="let option of sageIntacctCCCExpensePaymentType" [value]="option.destination_id">
+            {{option.value}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-slide-toggle color="primary" class="schedule" formControlName="useDefaultEmployeeLocation" *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' && generalSettings.corporate_credit_card_expenses_object !== 'BILL'">
+        <div class="schedule--toggle-text">
+          Use Employee's Sage Intacct Location
+          <mat-icon
+            [inline]="true"
+            class="info-icon"
+            matTooltip="Expenses on Sage Intacct will be coded to the Location assigned to the employee on Sage Intacct"
+            matTooltipPosition="after">
+              info
+          </mat-icon>
+        </div>
+      </mat-slide-toggle>
+
+      <mat-slide-toggle color="primary" class="schedule" formControlName="useDefaultEmployeeDepartment" *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' && generalSettings.corporate_credit_card_expenses_object !== 'BILL'">
+        <div class="schedule--toggle-text">Use Employee's Sage Intacct Department
+          <mat-icon
+            [inline]="true"
+            class="info-icon"
+            matTooltip="Expenses on Sage Intacct will be coded to the Department assigned to the employee on Sage Intacct"
+            matTooltipPosition="after">
+              info
+          </mat-icon>
+        </div>
+      </mat-slide-toggle>
+
     </div>
 
     <button class="configurations--save-btn" mat-flat-button color="primary" (click)="submit()" type="submit">

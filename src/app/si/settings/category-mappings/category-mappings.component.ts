@@ -48,15 +48,21 @@ export class CategoryMappingsComponent implements OnInit {
       const onboarded = that.storageService.get('onboarded');
       if (onboarded === true) {
         const data = {
-          pageSize: (that.storageService.get('mappings.pageSize') || 50) * (that.generalSettings.corporate_credit_card_expenses_object ? 2 : 1),
+          pageSize: (that.storageService.get('mappings.pageSize') || 50) * (that.showCCCOption() ? 2 : 1),
           pageNumber: 0,
-          tableDimension: that.generalSettings.corporate_credit_card_expenses_object ? 3 : 2
+          tableDimension: that.showCCCOption() ? 3 : 2
         };
         that.reset(data);
       } else {
         that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
       }
     });
+  }
+
+  showCCCOption() {
+    const that = this;
+
+    return that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT';
   }
 
   applyFilter(event: Event) {
@@ -98,16 +104,13 @@ export class CategoryMappingsComponent implements OnInit {
   reset(data) {
     const that = this;
     that.isLoading = true;
-    forkJoin([
-      that.mappingsService.getMappings('CATEGORY', null, data.pageSize, data.pageSize * data.pageNumber, data.tableDimension),
-      that.settingsService.getGeneralSettings(that.workspaceId)
-    ]).subscribe(response => {
+    that.mappingsService.getMappings('CATEGORY', null, data.pageSize, data.pageSize * data.pageNumber, data.tableDimension).subscribe(response => {
       that.isLoading = false;
-      if (response[1].corporate_credit_card_expenses_object && response[1].reimbursable_expenses_object === 'EXPENSE_REPORT') {
+      if (that.showCCCOption()) {
         that.columnsToDisplay = ['category', 'sageIntacct', 'ccc'];
       }
-      that.categoryMappings = response[0].results;
-      that.count = response[1].corporate_credit_card_expenses_object ?  response[0].count / 2 : response[0].count;
+      that.categoryMappings = response.results;
+      that.count = that.generalSettings.corporate_credit_card_expenses_object ?  response.count / 2 : response.count;
       that.pageNumber = data.pageNumber;
       that.createCategoryMappingsRows();
 
@@ -125,9 +128,9 @@ export class CategoryMappingsComponent implements OnInit {
       this.isLoading = false;
 
       const data = {
-        pageSize: (that.generalSettings.corporate_credit_card_expenses_object ? 2 : 1) * (that.storageService.get('mappings.pageSize') || 50),
+        pageSize: (that.showCCCOption() ? 2 : 1) * (that.storageService.get('mappings.pageSize') || 50),
         pageNumber: 0,
-        tableDimension: that.generalSettings.corporate_credit_card_expenses_object ? 3 : 2
+        tableDimension: that.showCCCOption() ? 3 : 2
       };
       that.reset(data);
     });

@@ -69,6 +69,9 @@ export class ExportComponent implements OnInit {
       CHARGE_CARD_TRANSACTION: (filteredIds) => {
         return that.chargeCardTransactionsService.createChargeCardTransactions(filteredIds);
       },
+      EXPENSE_REPORT: (filteredIds) => {
+        return that.expenseReportsService.createExpenseReports(filteredIds);
+      }
     };
 
     return handlerMap[corporateCreditCardExpensesObject];

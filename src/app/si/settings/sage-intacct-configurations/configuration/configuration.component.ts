@@ -67,6 +67,26 @@ export class ConfigurationComponent implements OnInit {
     }[reimburExpenseMappedTo];
   }
 
+  getCCCExpenseOptions(reimburExpenseMappedTo = null) {
+    const cccExpenseOptions = [{
+      label: 'Charge Card Transaction',
+      value: 'CHARGE_CARD_TRANSACTION'
+    },
+    {
+      label: 'Bill',
+      value: 'BILL'
+    }];
+
+    if (reimburExpenseMappedTo === 'EXPENSE_REPORT') {
+      cccExpenseOptions.push({
+        label: 'Expense Report',
+        value: 'EXPENSE_REPORT'
+      });
+    }
+
+    return cccExpenseOptions;
+  }
+
   getAllSettings() {
     const that = this;
     that.isLoading = true;
@@ -88,14 +108,7 @@ export class ConfigurationComponent implements OnInit {
         value: 'BILL'
       }];
 
-      that.cccExpenseOptions = [{
-        label: 'Charge Card Transaction',
-        value: 'CHARGE_CARD_TRANSACTION'
-      },
-      {
-        label: 'Bill',
-        value: 'BILL'
-      }];
+      that.cccExpenseOptions = that.getCCCExpenseOptions(that.generalSettings.reimbursable_expenses_object);
 
       let paymentsSyncOption = '';
       if (that.generalSettings.sync_fyle_to_sage_intacct_payments) {
@@ -143,6 +156,10 @@ export class ConfigurationComponent implements OnInit {
         that.showAutoCreateOption(employeeMappingPreference);
       });
 
+      that.generalSettingsForm.controls.reimburExpense.valueChanges.subscribe((reimburseExpenseMappingPreference) => {
+        that.cccExpenseOptions = that.getCCCExpenseOptions(reimburseExpenseMappingPreference);
+      });
+
       that.expenseOptions = [{
         label: 'Expense Report',
         value: 'EXPENSE_REPORT'
@@ -152,14 +169,7 @@ export class ConfigurationComponent implements OnInit {
         value: 'BILL'
       }];
 
-      that.cccExpenseOptions = [{
-        label: 'Charge Card Transaction',
-        value: 'CHARGE_CARD_TRANSACTION'
-      },
-      {
-        label: 'Bill',
-        value: 'BILL'
-      }];
+      that.cccExpenseOptions = that.getCCCExpenseOptions();
     });
   }
 
@@ -195,12 +205,14 @@ export class ConfigurationComponent implements OnInit {
         });
       }
 
-      if (cccExpensesObject) {
+      if (cccExpensesObject === 'CHARGE_CARD_TRANSACTION') {
         mappingsSettingsPayload.push({
           source_field: 'EMPLOYEE',
           destination_field: 'CHARGE_CARD_NUMBER'
         });
+      }
 
+      if (cccExpensesObject === 'BILL' || cccExpensesObject === 'CHARGE_CARD_TRANSACTION') {
         mappingsSettingsPayload.push({
           source_field: 'CATEGORY',
           destination_field: 'CCC_ACCOUNT'
