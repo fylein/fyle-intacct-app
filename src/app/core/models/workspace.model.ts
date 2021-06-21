@@ -6,7 +6,6 @@ export type Workspace = {
   name: string;
   user: User[];
   fyle_org_id: string;
-  qbo_realm_id: string;
   last_synced_at?: Date;
   source_synced_at: Date;
   destination_synced_at: Date;
