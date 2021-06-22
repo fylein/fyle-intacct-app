@@ -1,12 +1,11 @@
 /* tslint:disable */
 // TODO: Use something for serialization / deserialization
-import { MappingError } from './mapping-error.model';
 import { SageIntacctError } from './sage-intacct-error.model';
 
 export type Task = {
   bill: number;
   created_at: Date;
-  detail: MappingError[];
+  detail: any;  // TODO Replace with a suitable model
   sage_intacct_errors: SageIntacctError[];
   expense_group: number;
   charge_card_transaction: number;

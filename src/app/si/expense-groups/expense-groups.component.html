@@ -67,6 +67,17 @@
       </td>
     </ng-container>
 
+    <ng-container matColumnDef="openSageIntacct">
+      <th mat-header-cell *matHeaderCellDef> Open in Sage Intacct</th>
+      <td mat-cell *matCellDef="let element">
+        <div class="page-table--redirect-column" fxLayout="row" fxLayoutAlign="center center">
+          <mat-icon class="page-table--icon cursor-pointer" (click)="openInSiHandler(element)">
+            open_in_new
+          </mat-icon>
+        </div>
+      </td>
+    </ng-container>
+
     <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
     <tr class="page-table--row page-table--row__pointer cursor-pointer" mat-row *matRowDef="let row; columns: columnsToDisplay;"
       (click)="goToExpenseGroup(row.id)"></tr>

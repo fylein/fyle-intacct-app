@@ -8,6 +8,7 @@ import { TasksService } from 'src/app/core/services/tasks.service';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { Subscription } from 'rxjs';
+import { Task } from 'src/app/core/models/task.model';
 
 @Component({
   selector: 'app-expense-groups',
@@ -29,6 +30,8 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
+    private taskService: TasksService,
+
     private storageService: StorageService,
     private expenseGroupService: ExpenseGroupsService,
     private router: Router,
@@ -101,7 +104,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     that.state = that.route.snapshot.queryParams.state || 'FAILED';
     that.settingsService.getGeneralSettings(that.workspaceId).subscribe((settings) => {
       if (that.state === 'COMPLETE') {
-        that.columnsToDisplay = ['export-date', 'employee', 'export', 'expense-type'];
+        that.columnsToDisplay = ['export-date', 'employee', 'export', 'expense-type', 'openSageIntacct'];
       } else {
         that.columnsToDisplay = ['employee', 'expense-type'];
       }
@@ -123,7 +126,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
 
         if (that.pageNumber !== pageNumber || that.pageSize !== pageSize || that.state !== state) {
           if (state === 'COMPLETE') {
-            that.columnsToDisplay = ['export-date', 'employee', 'export', 'expense-type'];
+            that.columnsToDisplay = ['export-date', 'employee', 'export', 'expense-type', 'openSageIntacct'];
           } else {
             that.columnsToDisplay = ['employee', 'expense-type'];
           }
@@ -135,6 +138,27 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  openInSageIntacct(id: string) {
+      this.windowReference.open(`https://www-p02.intacct.com/ia/acct/ur.phtml?.r=${id}`, '_blank');
+  }
+
+  openInSiHandler(clickedExpenseGroup: ExpenseGroup) {
+      // tslint:disable-next-line: deprecation
+      event.preventDefault();
+      // tslint:disable-next-line: deprecation
+      event.stopPropagation();
+      const that = this;
+      that.isLoading = true;
+      that.taskService.getTaskByExpenseGroupId(clickedExpenseGroup.id).subscribe((task: Task) => {
+        that.isLoading = false;
+
+        if (task.status === 'COMPLETE') {
+          const redirectedId = task.detail.url_id;
+          that.openInSageIntacct(redirectedId);
+        }
+      });
   }
 
   searchByText(data: ExpenseGroup, filterText: string) {
