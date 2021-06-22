@@ -55,12 +55,12 @@
             <div class="map">Map to</div>
           </div>
           <mat-form-field floatLabel="always" appearance="outline" fxFlex="38" required>
-            <mat-select placeholder="Choose Fyle Expense field" formControlName="source_field">
-              <mat-option *ngFor="let fyleExpenseField of fyleFormFieldList"
+            <mat-select [placeholder]="customFieldName || 'Choose Fyle Expense field'" formControlName="source_field">
+              <mat-option *ngFor="let fyleExpenseField of fyleExpenseFields"
                 [(value)]="fyleExpenseField.attribute_type">
                 {{ fyleExpenseField.display_name | titlecase }}
               </mat-option>
-              <mat-option (click)="showCustomField()" [value]="'custom'">
+              <mat-option (click)="showCustomField()" [value]="expenseField.source_field">
                 <div class="expense-fields--custom-option">
                   <img class="expense-fields--add-custom-icon" src="assets/images/pngs/add.png"
                     (click)="showCustomField()">
@@ -72,7 +72,7 @@
 
           <div fxFlex="5" *ngIf="i !== 0 && expenseField.controls.destination_field.status !== 'DISABLED'">
             <img class="expense-fields--delete-icon" src="assets/images/pngs/delete.png"
-              (click)="removeExpenseField(i)">
+            (click)="removeExpenseField(i, expenseField.controls.source_field.value)">
           </div>
           <div fxFlex="5" *ngIf="!(i !== 0 && expenseField.controls.destination_field.status !== 'DISABLED')">
           </div>

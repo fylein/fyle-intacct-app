@@ -51,17 +51,17 @@ export class SiComponent implements OnInit {
     that.mappingSettings = mappingSettings.filter(
       setting => (setting.source_field !== 'EMPLOYEE' && setting.source_field !== 'CATEGORY')
     );
-
     that.isLoading = false;
   }
 
+
   getGeneralSettings() {
     const that = this;
-
     that.getMappingSettings().then((mappingSettings: MappingSetting[]) => {
       that.refreshDashboardMappingSettings(mappingSettings);
     });
   }
+
 
   getMappingSettings() {
     const that = this;
