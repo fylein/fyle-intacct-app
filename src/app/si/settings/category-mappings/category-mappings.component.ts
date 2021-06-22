@@ -59,10 +59,30 @@ export class CategoryMappingsComponent implements OnInit {
     });
   }
 
+  /**
+   * 
+   * Possible combinations with category ccc mappings visibility
+   * 
+   * ER - ER - No
+   * 
+   * ER - BILL - Yes
+   *
+   * ER - CCT - Yes
+
+   * Bill - Bill - No
+   * 
+   * Bill - CCT - No
+   * 
+   * @returns a boolean flag to show / hide ccc category mappings column.
+   */
   showCCCOption() {
     const that = this;
 
-    return that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT';
+    if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' && that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT') {
+      return true;
+    }
+
+    return false;
   }
 
   applyFilter(event: Event) {
