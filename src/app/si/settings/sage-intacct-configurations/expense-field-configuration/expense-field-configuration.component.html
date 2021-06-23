@@ -60,10 +60,10 @@
                 [(value)]="fyleExpenseField.attribute_type">
                 {{ fyleExpenseField.display_name | titlecase }}
               </mat-option>
-              <mat-option (click)="showCustomField()" [value]="expenseField.source_field">
+              <mat-option (click)="showCustomField(expenseField)" [value]="expenseField.source_field">
                 <div class="expense-fields--custom-option">
                   <img class="expense-fields--add-custom-icon" src="assets/images/pngs/add.png"
-                    (click)="showCustomField()">
+                    (click)="showCustomField(expenseField)">
                   <div class="expense-fields--custom-option-text">{{customFieldName}}</div>
                 </div>
               </mat-option>

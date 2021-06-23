@@ -36,20 +36,21 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     this.windowReference = this.windowReferenceService.nativeWindow;
   }
 
-  createExpenseField(sourceField: string = '', destinationField: string = '', isCustom = false, importToFyle: boolean = false) {
+  createExpenseField(sourceField: string = '', destinationField: string = '', isCustom = false, importToFyle: boolean = false, expenseFieldId: string = null) {
     const that = this;
     const group = that.formBuilder.group({
       source_field: [sourceField ? sourceField : '', [Validators.required, RxwebValidators.unique()]],
       destination_field: [destinationField ? destinationField : '', [Validators.required, RxwebValidators.unique()]],
       import_to_fyle: [importToFyle],
-      is_custom: [isCustom]
+      is_custom: [isCustom],
+      expense_field_id: [expenseFieldId]
     });
 
     if (sourceField && destinationField) {
       group.controls.source_field.disable();
       group.controls.destination_field.disable();
     }
-    
+
     return group;
   }
 
@@ -76,12 +77,21 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
       that.isLoading = true;
       // getRawValue() would have values even if they are disabled
       const expenseFields = that.expenseFieldsForm.getRawValue().expenseFields;
-      const hasCustomField = expenseFields.filter(expenseField => expenseField.is_custom);
+
+      let hasCustomField = false;
+      expenseFields.forEach(element => {
+        if (element.source_field !== 'PROJECT' && element.source_field !== 'COST_CENTER' && !element.is_custom) {
+          element.is_custom = true;
+        }
+        if (element.is_custom) {
+          hasCustomField = true;
+        }
+      });
 
       that.settingsService.postMappingSettings(that.workspaceId, expenseFields).subscribe((mappingSetting: MappingSetting[]) => {
         that.si.refreshDashboardMappingSettings(mappingSetting);
         that.createFormFields(mappingSetting);
-        if (hasCustomField.length) {
+        if (hasCustomField) {
           that.getFyleFields().then(() => {
             that.isLoading = false;
           });
@@ -102,14 +112,17 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
 
     // remove custom field option from the Fyle fields drop down if the corresponding row is deleted
     if (sourceField && sourceField !== 'PROJECT' && sourceField !== 'COST_CENTER') {
-      that.fyleExpenseFields = that.fyleExpenseFields.filter(mappingRow => mappingRow.attribute_type !== sourceField)
+      that.fyleExpenseFields = that.fyleExpenseFields.filter(mappingRow => mappingRow.attribute_type !== sourceField);
     }
     that.showAddButton = that.showOrHideAddButton();
   }
 
 
-  showCustomField() {
+  showCustomField(expenseField) {
     const that = this;
+
+    expenseField.controls.import_to_fyle.setValue(true);
+    expenseField.controls.import_to_fyle.disable();
 
     that.showCustomFieldName = true;
     that.customFieldForm.markAllAsTouched();
@@ -144,7 +157,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
         display_name: that.customFieldForm.value.customFieldName
       });
 
-      const formValuesArray = <FormArray> that.expenseFieldsForm.get('expenseFields');
+      const formValuesArray = that.expenseFieldsForm.get('expenseFields') as FormArray;
       formValuesArray.controls[lastAddedMappingIndex].get('source_field').setValue(customFieldName);
       formValuesArray.controls[lastAddedMappingIndex].get('is_custom').setValue(true);
       formValuesArray.controls[lastAddedMappingIndex].get('import_to_fyle').setValue(true);
@@ -174,7 +187,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     let expenseFieldFormArray;
     if (that.mappingSettings.length) {
       expenseFieldFormArray = that.mappingSettings.map(
-        setting => that.createExpenseField(setting.source_field, setting.destination_field, setting.is_custom, setting.import_to_fyle)
+        setting => that.createExpenseField(setting.source_field, setting.destination_field, setting.is_custom, setting.import_to_fyle, setting.expense_field_id)
       );
     } else {
       expenseFieldFormArray = [that.createExpenseField()];
