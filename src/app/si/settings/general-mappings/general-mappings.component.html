@@ -151,7 +151,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-slide-toggle color="primary" class="schedule" formControlName="useDefaultEmployeeLocation" *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' && generalSettings.corporate_credit_card_expenses_object !== 'BILL'">
+      <mat-slide-toggle color="primary" class="schedule" formControlName="useDefaultEmployeeLocation" *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT'">
         <div class="schedule--toggle-text">
           Use Employee's Sage Intacct Location
           <mat-icon
@@ -164,7 +164,7 @@
         </div>
       </mat-slide-toggle>
 
-      <mat-slide-toggle color="primary" class="schedule" formControlName="useDefaultEmployeeDepartment" *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' && generalSettings.corporate_credit_card_expenses_object !== 'BILL'">
+      <mat-slide-toggle color="primary" class="schedule" formControlName="useDefaultEmployeeDepartment" *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT'">
         <div class="schedule--toggle-text">Use Employee's Sage Intacct Department
           <mat-icon
             [inline]="true"
