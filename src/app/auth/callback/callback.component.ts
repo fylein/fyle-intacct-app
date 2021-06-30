@@ -43,12 +43,10 @@ export class CallbackComponent implements OnInit {
             that.storageService.set('refresh_token', response.refresh_token);
             forkJoin([
               that.authService.getUserProfile(),
-              that.authService.getClusterDomain(),
               that.authService.getFyleOrgs()
             ]).subscribe(responses => {
               that.storageService.set('user', responses[0]);
-              that.storageService.set('clusterDomain', responses[1]);
-              that.storageService.set('orgsCount', responses[2].length);
+              that.storageService.set('orgsCount', responses[1].length);
               that.router.navigate(['/workspaces']);
             });
           },
