@@ -20,6 +20,7 @@ export class GeneralMappingsComponent implements OnInit {
   generalMappings: GeneralMapping;
   isLoading = true;
   sageIntacctLocations: MappingDestination[];
+  sageIntacctLocationEntities: MappingDestination[];
   sageIntacctDepartments: MappingDestination[];
   sageIntacctProjects: MappingDestination[];
   sageIntacctDefaultVendor: MappingDestination[];
@@ -49,6 +50,7 @@ export class GeneralMappingsComponent implements OnInit {
     if (that.form.valid) {
       that.isLoading = true;
 
+      const locationEntityName: MappingDestination[] = that.sageIntacctLocationEntities.filter((element) => element.destination_id === that.form.value.locationEntity);
       const defaultLocationName: MappingDestination[] = that.sageIntacctLocations.filter((element) => element.destination_id === that.form.value.location);
       const defaultDepartmentName: MappingDestination[] = that.sageIntacctDepartments.filter((element) => element.destination_id === that.form.value.department);
       const defaultProjectName: MappingDestination[] = that.sageIntacctProjects.filter((element) => element.destination_id === that.form.value.project);
@@ -62,6 +64,8 @@ export class GeneralMappingsComponent implements OnInit {
       const defaultEmployeeDepartment = that.form.value.useDefaultEmployeeDepartment;
 
       const mapping: GeneralMapping = {
+        location_entity_name: locationEntityName[0] ? locationEntityName[0].value : '',
+        location_entity_id: that.form.value.locationEntity ? that.form.value.locationEntity : '',
         default_location_name: defaultLocationName[0] ? defaultLocationName[0].value : '',
         default_location_id: that.form.value.location ? that.form.value.location : '',
         default_department_name: defaultDepartmentName[0] ? defaultDepartmentName[0].value : '',
@@ -111,7 +115,8 @@ export class GeneralMappingsComponent implements OnInit {
         that.mappingsService.getSageIntacctExpenseCustomFields('CHARGE_CARD_NUMBER'),
         that.mappingsService.getSageIntacctExpenseCustomFields('ITEM'),
         that.mappingsService.getSageIntacctExpenseCustomFields('PAYMENT_ACCOUNT'),
-        that.mappingsService.getSageIntacctExpenseCustomFields('EXPENSE_PAYMENT_TYPE')
+        that.mappingsService.getSageIntacctExpenseCustomFields('EXPENSE_PAYMENT_TYPE'),
+        that.mappingsService.getSageIntacctExpenseCustomFields('LOCATION_ENTITY')
       ]
     ).subscribe(response => {
       that.isLoading = false;
@@ -125,8 +130,10 @@ export class GeneralMappingsComponent implements OnInit {
       that.sageIntacctPaymentAccounts = response[6];
       that.sageIntacctReimbursableExpensePaymentType = response[7].filter(expensePaymentType => expensePaymentType.detail.is_reimbursable);
       that.sageIntacctCCCExpensePaymentType = response[7].filter(expensePaymentType => expensePaymentType.detail.is_reimbursable === false);
+      that.sageIntacctLocationEntities = response[8];
 
       that.form = that.formBuilder.group({
+        locationEntity: [that.generalMappings ? that.generalMappings.location_entity_id : null],
         location: [that.generalMappings ? that.generalMappings.default_location_id : null],
         chargeCard: [that.generalMappings ? that.generalMappings.default_charge_card_id : null],
         defaultVendor: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : null],

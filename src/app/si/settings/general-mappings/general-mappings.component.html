@@ -19,6 +19,29 @@
     <div fxLayout="column" fxLayoutAlign="start stretch">
       <div class="mat-body-strong">
         <strong class="mappings-dialog--label">
+          Location Entity
+          <mat-icon
+            [inline]="true"
+            class="info-icon"
+            matTooltip="Set location Entity to None to export expenses on Top Level"
+            matTooltipPosition="after">
+              info
+          </mat-icon>
+        </strong>
+      </div>
+      <mat-form-field class="mappings-dialog--form-element" appearance="outline">
+        <mat-select placeholder="Select Location Entity" formControlName="locationEntity">
+          <mat-option>
+            None
+          </mat-option>
+          <mat-option *ngFor="let option of sageIntacctLocationEntities" [value]="option.destination_id">
+            {{option.value}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="mat-body-strong">
+        <strong class="mappings-dialog--label">
           Default Location
         </strong>
       </div>
