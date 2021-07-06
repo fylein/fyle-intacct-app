@@ -36,14 +36,13 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     this.windowReference = this.windowReferenceService.nativeWindow;
   }
 
-  createExpenseField(sourceField: string = '', destinationField: string = '', isCustom = false, importToFyle: boolean = false, expenseFieldId: string = null) {
+  createExpenseField(sourceField: string = '', destinationField: string = '', isCustom = false, importToFyle: boolean = false) {
     const that = this;
     const group = that.formBuilder.group({
       source_field: [sourceField ? sourceField : '', [Validators.required, RxwebValidators.unique()]],
       destination_field: [destinationField ? destinationField : '', [Validators.required, RxwebValidators.unique()]],
       import_to_fyle: [importToFyle],
       is_custom: [isCustom],
-      expense_field_id: [expenseFieldId]
     });
 
     if (sourceField && destinationField) {
@@ -187,7 +186,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     let expenseFieldFormArray;
     if (that.mappingSettings.length) {
       expenseFieldFormArray = that.mappingSettings.map(
-        setting => that.createExpenseField(setting.source_field, setting.destination_field, setting.is_custom, setting.import_to_fyle, setting.expense_field_id)
+        setting => that.createExpenseField(setting.source_field, setting.destination_field, setting.is_custom, setting.import_to_fyle)
       );
     } else {
       expenseFieldFormArray = [that.createExpenseField()];

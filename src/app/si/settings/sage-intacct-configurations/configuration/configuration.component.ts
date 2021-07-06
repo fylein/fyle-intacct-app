@@ -113,6 +113,15 @@ export class ConfigurationComponent implements OnInit {
 
       that.cccExpenseOptions = that.getCCCExpenseOptions(that.generalSettings.reimbursable_expenses_object);
 
+      const projectFieldMapping = that.mappingSettings.filter(
+        setting => (setting.source_field === 'PROJECT' && setting.destination_field === 'PROJECT')
+      );
+
+      let importProjects = false;
+      if (projectFieldMapping.length) {
+        importProjects = projectFieldMapping[0].import_to_fyle;
+      }
+
       let paymentsSyncOption = '';
       if (that.generalSettings.sync_fyle_to_sage_intacct_payments) {
         paymentsSyncOption = 'sync_fyle_to_sage_intacct_payments';
@@ -123,7 +132,7 @@ export class ConfigurationComponent implements OnInit {
       that.generalSettingsForm = that.formBuilder.group({
         reimburExpense: [that.generalSettings ? that.generalSettings.reimbursable_expenses_object : ''],
         cccExpense: [that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : ''],
-        importProjects: [that.generalSettings.import_projects],
+        importProjects: [false],
         importCategories: [that.generalSettings.import_categories],
         paymentsSync: [paymentsSyncOption],
         autoMapEmployees: [that.generalSettings.auto_map_employees],
@@ -134,21 +143,6 @@ export class ConfigurationComponent implements OnInit {
 
       that.generalSettingsForm.controls.reimburExpense.disable();
 
-
-      const fyleProjectMapping = that.mappingSettings.filter(
-        setting => setting.source_field === 'PROJECT' && setting.destination_field !== 'PROJECT'
-      );
-
-      const sageIntacctProjectMapping = that.mappingSettings.filter(
-        setting => setting.destination_field === 'PROJECT' && setting.source_field !== 'PROJECT'
-      );
-
-      // disable project sync toggle if either of Fyle / Sage Intacct Projects are already mapped to different fields
-
-      if (fyleProjectMapping.length || sageIntacctProjectMapping.length) {
-        that.generalSettingsForm.controls.importProjects.disable();
-      }
-
       that.generalSettingsForm.controls.autoMapEmployees.valueChanges.subscribe((employeeMappingPreference) => {
         that.showAutoCreateOption(employeeMappingPreference);
       });
@@ -158,7 +152,7 @@ export class ConfigurationComponent implements OnInit {
       }
 
       that.isLoading = false;
-    }, error => {
+    }, () => {
       that.isLoading = false;
       that.generalSettingsForm = that.formBuilder.group({
         reimburExpense: ['', Validators.required],
@@ -178,6 +172,20 @@ export class ConfigurationComponent implements OnInit {
       that.generalSettingsForm.controls.reimburExpense.valueChanges.subscribe((reimburseExpenseMappingPreference) => {
         that.cccExpenseOptions = that.getCCCExpenseOptions(reimburseExpenseMappingPreference);
       });
+
+      const fyleProjectMapping = that.mappingSettings.filter(
+        setting => setting.source_field === 'PROJECT' && setting.destination_field !== 'PROJECT'
+      );
+
+      const sageintacctProjectMapping = that.mappingSettings.filter(
+        setting => setting.destination_field === 'PROJECT' && setting.source_field !== 'PROJECT'
+      );
+
+      // disable project sync toggle if either of Fyle / NetSuite Projects are already mapped to different fields
+      if (fyleProjectMapping.length || sageintacctProjectMapping.length) {
+        that.generalSettingsForm.controls.importProjects.disable();
+      }
+
 
       that.expenseOptions = [{
         label: 'Expense Report',
