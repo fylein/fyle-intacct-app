@@ -241,7 +241,7 @@ export class ConfigurationComponent implements OnInit {
             source_field: 'PROJECT',
             destination_field: 'PROJECT',
             import_to_fyle: false
-          })
+          });
         }
       }
 
