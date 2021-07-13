@@ -2,6 +2,8 @@
 
 export type GeneralMapping = {
   id?: number;
+  location_entity_name: string;
+  location_entity_id: string;
   default_location_name: string;
   default_location_id: string;
   default_department_name: string;

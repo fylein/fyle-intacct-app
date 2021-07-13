@@ -19,6 +19,29 @@
     <div fxLayout="column" fxLayoutAlign="start stretch">
       <div class="mat-body-strong">
         <strong class="mappings-dialog--label">
+          Entity
+          <mat-icon
+            [inline]="true"
+            class="info-icon"
+            matTooltip="Leave Entity empty to export expenses on the Top Level"
+            matTooltipPosition="after">
+              info
+          </mat-icon>
+        </strong>
+      </div>
+      <mat-form-field class="mappings-dialog--form-element" appearance="outline">
+        <mat-select placeholder="Select Location Entity" formControlName="locationEntity">
+          <mat-option>
+            None
+          </mat-option>
+          <mat-option *ngFor="let option of sageIntacctLocationEntities" [value]="option.destination_id">
+            {{option.value}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="mat-body-strong">
+        <strong class="mappings-dialog--label">
           Default Location
         </strong>
       </div>
@@ -151,7 +174,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-slide-toggle color="primary" class="schedule" formControlName="useDefaultEmployeeLocation" *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' && generalSettings.corporate_credit_card_expenses_object !== 'BILL'">
+      <mat-slide-toggle color="primary" class="schedule" formControlName="useDefaultEmployeeLocation" *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT'">
         <div class="schedule--toggle-text">
           Use Employee's Sage Intacct Location
           <mat-icon
@@ -164,7 +187,7 @@
         </div>
       </mat-slide-toggle>
 
-      <mat-slide-toggle color="primary" class="schedule" formControlName="useDefaultEmployeeDepartment" *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' && generalSettings.corporate_credit_card_expenses_object !== 'BILL'">
+      <mat-slide-toggle color="primary" class="schedule" formControlName="useDefaultEmployeeDepartment" *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT'">
         <div class="schedule--toggle-text">Use Employee's Sage Intacct Department
           <mat-icon
             [inline]="true"
