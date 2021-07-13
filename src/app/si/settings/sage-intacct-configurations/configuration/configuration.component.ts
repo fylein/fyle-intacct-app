@@ -139,6 +139,19 @@ export class ConfigurationComponent implements OnInit {
         autoCreateDestinationEntity: [that.generalSettings.auto_create_destination_entity]
       });
 
+      const fyleProjectMapping = that.mappingSettings.filter(
+        setting => setting.source_field === 'PROJECT' && setting.destination_field !== 'PROJECT'
+      );
+
+      const sageIntacctProjectMapping = that.mappingSettings.filter(
+        setting => setting.destination_field === 'PROJECT' && setting.source_field !== 'PROJECT'
+      );
+
+      // disable project sync toggle if either of Fyle / SageIntacct Projects are already mapped to different fields
+      if (fyleProjectMapping.length || sageIntacctProjectMapping.length) {
+        that.generalSettingsForm.controls.importProjects.disable();
+      }
+
       that.showAutoCreateOption(that.generalSettings.auto_map_employees);
 
       that.generalSettingsForm.controls.reimburExpense.disable();
@@ -164,7 +177,6 @@ export class ConfigurationComponent implements OnInit {
         autoCreateDestinationEntity: [false]
       });
 
-
       that.generalSettingsForm.controls.autoMapEmployees.valueChanges.subscribe((employeeMappingPreference) => {
         that.showAutoCreateOption(employeeMappingPreference);
       });
@@ -172,20 +184,6 @@ export class ConfigurationComponent implements OnInit {
       that.generalSettingsForm.controls.reimburExpense.valueChanges.subscribe((reimburseExpenseMappingPreference) => {
         that.cccExpenseOptions = that.getCCCExpenseOptions(reimburseExpenseMappingPreference);
       });
-
-      const fyleProjectMapping = that.mappingSettings.filter(
-        setting => setting.source_field === 'PROJECT' && setting.destination_field !== 'PROJECT'
-      );
-
-      const sageintacctProjectMapping = that.mappingSettings.filter(
-        setting => setting.destination_field === 'PROJECT' && setting.source_field !== 'PROJECT'
-      );
-
-      // disable project sync toggle if either of Fyle / NetSuite Projects are already mapped to different fields
-      if (fyleProjectMapping.length || sageintacctProjectMapping.length) {
-        that.generalSettingsForm.controls.importProjects.disable();
-      }
-
 
       that.expenseOptions = [{
         label: 'Expense Report',
@@ -271,7 +269,7 @@ export class ConfigurationComponent implements OnInit {
           that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
           that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, importProjects, importCategories, fyleToSageIntacct, sageIntacctToFyle, autoCreateDestinationEntity, autoMapEmployees)
         ]
-      ).subscribe(responses => {
+      ).subscribe(() => {
         that.isLoading = true;
         that.snackBar.open('Configuration saved successfully');
 

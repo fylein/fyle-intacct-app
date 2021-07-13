@@ -161,7 +161,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
       formValuesArray.controls[lastAddedMappingIndex].get('source_field').setValue(customFieldName);
       formValuesArray.controls[lastAddedMappingIndex].get('is_custom').setValue(true);
       formValuesArray.controls[lastAddedMappingIndex].get('import_to_fyle').setValue(true);
-    } else {
+    } else if (lastAddedMappingIndex) {
       that.removeExpenseField(lastAddedMappingIndex);
     }
 
