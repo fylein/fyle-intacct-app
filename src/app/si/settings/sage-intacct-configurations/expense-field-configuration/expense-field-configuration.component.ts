@@ -106,6 +106,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
   removeExpenseField(index: number, sourceField: string = null) {
     const that = this;
 
+    that.showCustomFieldName = false;
     const expenseFields = that.expenseFieldsForm.get('expenseFields') as FormArray;
     expenseFields.removeAt(index);
 
