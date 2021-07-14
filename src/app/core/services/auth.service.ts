@@ -95,6 +95,10 @@ export class AuthService {
     return this.apiService.get('/user/profile/', {});
   }
 
+  getClusterDomain(): Observable<string> {
+    return this.apiService.get(`/user/domain/`, {});
+  }
+
   getFyleOrgs(): Observable<Organization[]> {
     return this.apiService.get(`/user/orgs/`, {});
   }

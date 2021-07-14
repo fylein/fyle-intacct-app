@@ -64,7 +64,16 @@ export class SiComponent implements OnInit {
     const that = this;
     const pathName = that.windowReference.location.pathname;
     that.storageService.set('workspaceId', that.workspace.id);
-    that.storageService.set('cluster_domain', that.workspace.cluster_domain);
+    if (that.workspace.cluster_domain) {
+      that.storageService.set('cluster_domain', that.workspace.cluster_domain);
+    } else {
+      that.authService.getClusterDomain().subscribe(
+        response => {
+          that.storageService.set('cluster_domain', response);
+        }
+      );
+    }
+
     if (pathName === '/workspaces') {
       that.router.navigateByUrl(`/workspaces/${that.workspace.id}/dashboard`);
     }
