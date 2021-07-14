@@ -37,7 +37,7 @@
           Import to Fyle
           <mat-icon [inline]="true" class="info-icon import"
             matTooltip="Importing to Fyle will automatically sync all the fields from Sage Intacct to Fyle"
-            matTooltipPosition="after">
+            matTooltipPosition="above">
             info
           </mat-icon>
         </div>
@@ -113,7 +113,7 @@
                 <span>Cancel</span>
               </button>
               <div fxFlex="10"></div>
-              <button fxLayout="row" fxLayoutAlign="start center" class="custom-field-btn" mat-flat-button
+              <button fxLayout="row" fxLayoutAlign="start center" data-dismiss="modal" class="custom-field-btn" mat-flat-button
                 color="primary" (click)="hideCustomField($event.target.innerText)" [disabled]="isSystemField">
                 <span>Done</span>
               </button>

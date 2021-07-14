@@ -9,7 +9,6 @@ import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { SiComponent } from 'src/app/si/si.component';
 import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
 import { MappingsService } from 'src/app/core/services/mappings.service';
-import { AttributeCount } from 'src/app/core/models/attribute-count.model';
 
 @Component({
   selector: 'app-configuration',
@@ -31,7 +30,6 @@ export class ConfigurationComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               private settingsService: SettingsService,
-              private mappingsService: MappingsService,
               private route: ActivatedRoute,
               private router: Router,
               private snackBar: MatSnackBar,
@@ -102,6 +100,15 @@ export class ConfigurationComponent implements OnInit {
       that.generalSettings = responses[0];
       that.mappingSettings = responses[1].results;
 
+      const projectFieldMapping = that.mappingSettings.filter(
+        setting => (setting.source_field === 'PROJECT' && setting.destination_field === 'PROJECT')
+      );
+
+      let importProjects = false;
+      if (projectFieldMapping.length) {
+        importProjects = projectFieldMapping[0].import_to_fyle;
+      }
+
       that.expenseOptions = [{
         label: 'Expense Report',
         value: 'EXPENSE_REPORT'
@@ -113,15 +120,6 @@ export class ConfigurationComponent implements OnInit {
 
       that.cccExpenseOptions = that.getCCCExpenseOptions(that.generalSettings.reimbursable_expenses_object);
 
-      const projectFieldMapping = that.mappingSettings.filter(
-        setting => (setting.source_field === 'PROJECT' && setting.destination_field === 'PROJECT')
-      );
-
-      let importProjects = false;
-      if (projectFieldMapping.length) {
-        importProjects = projectFieldMapping[0].import_to_fyle;
-      }
-
       let paymentsSyncOption = '';
       if (that.generalSettings.sync_fyle_to_sage_intacct_payments) {
         paymentsSyncOption = 'sync_fyle_to_sage_intacct_payments';
@@ -132,7 +130,7 @@ export class ConfigurationComponent implements OnInit {
       that.generalSettingsForm = that.formBuilder.group({
         reimburExpense: [that.generalSettings ? that.generalSettings.reimbursable_expenses_object : ''],
         cccExpense: [that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : ''],
-        importProjects: [false],
+        importProjects: [importProjects],
         importCategories: [that.generalSettings.import_categories],
         paymentsSync: [paymentsSyncOption],
         autoMapEmployees: [that.generalSettings.auto_map_employees],
@@ -167,6 +165,7 @@ export class ConfigurationComponent implements OnInit {
       that.isLoading = false;
     }, () => {
       that.isLoading = false;
+      that.mappingSettings = [];
       that.generalSettingsForm = that.formBuilder.group({
         reimburExpense: ['', Validators.required],
         cccExpense: [null],
@@ -227,7 +226,7 @@ export class ConfigurationComponent implements OnInit {
         mappingsSettingsPayload.push({
           source_field: 'PROJECT',
           destination_field: 'PROJECT',
-          import_to_fyle: true,
+          import_to_fyle: true
         });
       } else {
         const projectFieldMapping = that.mappingSettings.filter(
