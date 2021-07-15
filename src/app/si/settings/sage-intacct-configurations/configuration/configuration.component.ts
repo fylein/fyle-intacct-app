@@ -94,7 +94,7 @@ export class ConfigurationComponent implements OnInit {
     forkJoin(
       [
         that.settingsService.getGeneralSettings(that.workspaceId),
-        that.settingsService.getMappingSettings(that.workspaceId),
+        that.settingsService.getMappingSettings(that.workspaceId)
       ]
     ).subscribe(responses => {
       that.generalSettings = responses[0];
