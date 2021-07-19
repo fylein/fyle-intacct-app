@@ -67,7 +67,7 @@ export class SiComponent implements OnInit {
     if (that.workspace.cluster_domain) {
       that.storageService.set('cluster_domain', that.workspace.cluster_domain);
     } else {
-      that.authService.getClusterDomain().subscribe(
+      that.workspaceService.getClusterDomain(that.workspace.id).subscribe(
         response => {
           that.storageService.set('cluster_domain', response);
         }
