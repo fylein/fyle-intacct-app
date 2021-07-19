@@ -108,15 +108,15 @@
 
             <div class="custom-field-grp" fxLayoutAlign="start stretch">
               <div fxFlex="10"></div>
-              <button fxLayout="row" fxLayoutAlign="start center" class="custom-field-btn" mat-raised-button
+              <a fxLayout="row" fxLayoutAlign="start center" class="custom-field-btn" mat-raised-button
                 color="basic" (click)="hideCustomField($event.target.innerText)">
                 <span>Cancel</span>
-              </button>
+              </a>
               <div fxFlex="10"></div>
-              <button fxLayout="row" fxLayoutAlign="start center" data-dismiss="modal" class="custom-field-btn" mat-flat-button
+              <a fxLayout="row" fxLayoutAlign="start center" data-dismiss="modal" class="custom-field-btn" mat-flat-button
                 color="primary" (click)="hideCustomField($event.target.innerText)" [disabled]="isSystemField">
                 <span>Done</span>
-              </button>
+              </a>
             </div>
           </mat-list>
         </mat-card>

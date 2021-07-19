@@ -123,6 +123,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
 
     expenseField.controls.import_to_fyle.setValue(true);
     expenseField.controls.import_to_fyle.disable();
+    expenseField.controls.source_field.disable();
 
     that.showCustomFieldName = true;
     that.customFieldForm.markAllAsTouched();
@@ -161,6 +162,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
       formValuesArray.controls[lastAddedMappingIndex].get('source_field').setValue(customFieldName);
       formValuesArray.controls[lastAddedMappingIndex].get('is_custom').setValue(true);
       formValuesArray.controls[lastAddedMappingIndex].get('import_to_fyle').setValue(true);
+
     } else if (lastAddedMappingIndex) {
       that.removeExpenseField(lastAddedMappingIndex);
     }
