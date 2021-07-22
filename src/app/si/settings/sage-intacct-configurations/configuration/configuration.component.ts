@@ -17,7 +17,6 @@ import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
 export class ConfigurationComponent implements OnInit {
 
   isLoading: boolean;
-  isSaveDisabled: boolean;
   generalSettingsForm: FormGroup;
   expenseOptions: { label: string, value: string }[];
   cccExpenseOptions: { label: string, value: string }[];
@@ -140,7 +139,7 @@ export class ConfigurationComponent implements OnInit {
       }
 
       that.isLoading = false;
-    }, error => {
+    }, () => {
       that.isLoading = false;
       that.generalSettingsForm = that.formBuilder.group({
         reimburExpense: ['', Validators.required],
@@ -175,82 +174,78 @@ export class ConfigurationComponent implements OnInit {
 
   save() {
     const that = this;
-    if (that.generalSettingsForm.valid) {
-      const reimbursableExpensesObject = that.generalSettingsForm.value.reimburExpense || (that.generalSettings ? that.generalSettings.reimbursable_expenses_object : null);
-      const cccExpensesObject = that.generalSettingsForm.value.cccExpense || (that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : null);
-      const categoryMappingObject = that.getCategory(reimbursableExpensesObject)[0].value;
-      const employeeMappingsObject = that.getEmployee(reimbursableExpensesObject)[0].value;
-      const importProjects = that.generalSettingsForm.value.importProjects;
-      const importCategories = that.generalSettingsForm.value.importCategories;
-      const autoMapEmployees = that.generalSettingsForm.value.autoMapEmployees ? that.generalSettingsForm.value.autoMapEmployees : null;
-      const autoCreateDestinationEntity = that.generalSettingsForm.value.autoCreateDestinationEntity;
 
-      let fyleToSageIntacct = false;
-      let sageIntacctToFyle = false;
+    const reimbursableExpensesObject = that.generalSettingsForm.value.reimburExpense || (that.generalSettings ? that.generalSettings.reimbursable_expenses_object : null);
+    const cccExpensesObject = that.generalSettingsForm.value.cccExpense || (that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : null);
+    const categoryMappingObject = that.getCategory(reimbursableExpensesObject)[0].value;
+    const employeeMappingsObject = that.getEmployee(reimbursableExpensesObject)[0].value;
+    const importProjects = that.generalSettingsForm.value.importProjects;
+    const importCategories = that.generalSettingsForm.value.importCategories;
+    const autoMapEmployees = that.generalSettingsForm.value.autoMapEmployees ? that.generalSettingsForm.value.autoMapEmployees : null;
+    const autoCreateDestinationEntity = that.generalSettingsForm.value.autoCreateDestinationEntity;
 
-      const mappingsSettingsPayload = [{
+    let fyleToSageIntacct = false;
+    let sageIntacctToFyle = false;
+
+    const mappingsSettingsPayload = [{
+      source_field: 'EMPLOYEE',
+      destination_field: employeeMappingsObject
+    }];
+
+    mappingsSettingsPayload.push({
+      source_field: 'CATEGORY',
+      destination_field: categoryMappingObject
+    });
+
+    if (importProjects) {
+      mappingsSettingsPayload.push({
+        source_field: 'PROJECT',
+        destination_field: 'PROJECT'
+      });
+    }
+
+    if (cccExpensesObject === 'CHARGE_CARD_TRANSACTION') {
+      mappingsSettingsPayload.push({
         source_field: 'EMPLOYEE',
-        destination_field: employeeMappingsObject
-      }];
+        destination_field: 'CHARGE_CARD_NUMBER'
+      });
+    }
 
+    if (cccExpensesObject === 'BILL' || cccExpensesObject === 'CHARGE_CARD_TRANSACTION') {
       mappingsSettingsPayload.push({
         source_field: 'CATEGORY',
-        destination_field: categoryMappingObject
+        destination_field: 'CCC_ACCOUNT'
       });
-
-      if (importProjects) {
-        mappingsSettingsPayload.push({
-          source_field: 'PROJECT',
-          destination_field: 'PROJECT'
-        });
-      }
-
-      if (cccExpensesObject === 'CHARGE_CARD_TRANSACTION') {
-        mappingsSettingsPayload.push({
-          source_field: 'EMPLOYEE',
-          destination_field: 'CHARGE_CARD_NUMBER'
-        });
-      }
-
-      if (cccExpensesObject === 'BILL' || cccExpensesObject === 'CHARGE_CARD_TRANSACTION') {
-        mappingsSettingsPayload.push({
-          source_field: 'CATEGORY',
-          destination_field: 'CCC_ACCOUNT'
-        });
-      }
-
-      if (that.generalSettingsForm.controls.paymentsSync.value) {
-        fyleToSageIntacct = that.generalSettingsForm.value.paymentsSync === 'sync_fyle_to_sage_intacct_payments' ? true : false;
-        sageIntacctToFyle = that.generalSettingsForm.value.paymentsSync === 'sync_sage_intacct_to_fyle_payments' ? true : false;
-      }
-
-      that.isLoading = true;
-
-      forkJoin(
-        [
-          that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-          that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, importProjects, importCategories, fyleToSageIntacct, sageIntacctToFyle, autoCreateDestinationEntity, autoMapEmployees)
-        ]
-      ).subscribe(responses => {
-        that.isLoading = true;
-        that.snackBar.open('Configuration saved successfully');
-
-        that.si.getGeneralSettings();
-
-        if (autoMapEmployees) {
-          setTimeout(() => {
-            that.snackBar.open('Auto mapping of employees may take up to 10 minutes');
-          }, 1500);
-        }
-
-        that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
-
-        that.isLoading = false;
-      });
-    } else {
-      that.snackBar.open('Form has invalid fields');
-      that.generalSettingsForm.markAllAsTouched();
     }
+
+    if (that.generalSettingsForm.controls.paymentsSync.value) {
+      fyleToSageIntacct = that.generalSettingsForm.value.paymentsSync === 'sync_fyle_to_sage_intacct_payments' ? true : false;
+      sageIntacctToFyle = that.generalSettingsForm.value.paymentsSync === 'sync_sage_intacct_to_fyle_payments' ? true : false;
+    }
+
+    that.isLoading = true;
+
+    forkJoin(
+      [
+        that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
+        that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, importProjects, importCategories, fyleToSageIntacct, sageIntacctToFyle, autoCreateDestinationEntity, autoMapEmployees)
+      ]
+    ).subscribe(() => {
+      that.isLoading = true;
+      that.snackBar.open('Configuration saved successfully');
+
+      that.si.getGeneralSettings();
+
+      if (autoMapEmployees) {
+        setTimeout(() => {
+          that.snackBar.open('Auto mapping of employees may take up to 10 minutes');
+        }, 1500);
+      }
+
+      that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
+
+      that.isLoading = false;
+    });
   }
 
   showAutoCreateOption(autoMapEmployees) {
@@ -265,7 +260,6 @@ export class ConfigurationComponent implements OnInit {
 
   ngOnInit() {
     const that = this;
-    that.isSaveDisabled = false;
     that.workspaceId = that.route.snapshot.parent.parent.params.workspace_id;
     that.getAllSettings();
   }
