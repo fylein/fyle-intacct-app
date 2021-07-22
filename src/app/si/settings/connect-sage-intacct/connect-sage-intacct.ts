@@ -34,16 +34,12 @@ export class ConnectSageIntacctComponent implements OnInit {
     const userPassword = this.connectSageIntacctForm.value.userPassword;
 
     that.isLoading = true;
-    const connectSageIntacct = [
-      that.settingsService.connectSageIntacct(that.workspaceId, {
-        si_user_id: userID,
-        si_company_id: companyID,
-        si_company_name: companyName,
-        si_user_password: userPassword
-      })
-    ];
-
-    forkJoin(connectSageIntacct).subscribe(responses => {
+    that.settingsService.connectSageIntacct(that.workspaceId, {
+      si_user_id: userID,
+      si_company_id: companyID,
+      si_company_name: companyName,
+      si_user_password: userPassword
+    }).subscribe(() => {
       that.snackBar.open('Sage Intacct account connected successfully');
       that.isLoading = false;
       that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
