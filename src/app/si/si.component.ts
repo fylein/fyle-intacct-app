@@ -63,11 +63,12 @@ export class SiComponent implements OnInit {
   getSettingsAndNavigate() {
     const that = this;
     const pathName = that.windowReference.location.pathname;
+
     that.storageService.set('workspaceId', that.workspace.id);
     if (that.workspace.cluster_domain) {
       that.storageService.set('cluster_domain', that.workspace.cluster_domain);
     } else {
-      that.authService.getClusterDomain().subscribe(
+      that.workspaceService.getClusterDomain().subscribe(
         response => {
           that.storageService.set('cluster_domain', response);
         }
