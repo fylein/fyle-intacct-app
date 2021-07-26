@@ -73,7 +73,7 @@ export class SettingsService {
     cacheBusterNotifier: generalSettingsCache
   })
   postGeneralSettings(workspaceId: number, reimbursableExpensesObject: string, corporateCreditCardExpensesObject: string, importProjects: boolean, importCategories: boolean, fyleToSageIntacct: boolean, sageIntacctToFyle: boolean, autoCreateDestinationEntity: boolean, autoMapEmployees: string = null): Observable<GeneralSetting> {
-    return this.apiService.post(`/workspaces/${workspaceId}/settings/general/`, {
+    return this.apiService.post(`/workspaces/${workspaceId}/configuration/`, {
       reimbursable_expenses_object: reimbursableExpensesObject,
       corporate_credit_card_expenses_object: corporateCreditCardExpensesObject,
       import_projects: importProjects,
@@ -81,7 +81,8 @@ export class SettingsService {
       sync_fyle_to_sage_intacct_payments: fyleToSageIntacct,
       sync_sage_intacct_to_fyle_payments: sageIntacctToFyle,
       auto_map_employees: autoMapEmployees,
-      auto_create_destination_entity: autoCreateDestinationEntity
+      auto_create_destination_entity: autoCreateDestinationEntity,
+      workspace: workspaceId,
     });
   }
 
@@ -96,6 +97,6 @@ export class SettingsService {
     cacheBusterObserver: generalSettingsCache
   })
   getGeneralSettings(workspaceId: number): Observable<GeneralSetting> {
-    return this.apiService.get(`/workspaces/${workspaceId}/settings/general/`, {});
+    return this.apiService.get(`/workspaces/${workspaceId}/configuration/`, {});
   }
 }
