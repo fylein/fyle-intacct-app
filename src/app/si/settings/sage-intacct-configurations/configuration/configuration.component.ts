@@ -8,6 +8,7 @@ import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { SiComponent } from 'src/app/si/si.component';
 import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
+import { MappingsService } from 'src/app/core/services/mappings.service';
 
 @Component({
   selector: 'app-configuration',
@@ -88,7 +89,7 @@ export class ConfigurationComponent implements OnInit {
 
   getAllSettings() {
     const that = this;
-    that.isLoading = true;
+
     forkJoin(
       [
         that.settingsService.getGeneralSettings(that.workspaceId),
@@ -97,6 +98,15 @@ export class ConfigurationComponent implements OnInit {
     ).subscribe(responses => {
       that.generalSettings = responses[0];
       that.mappingSettings = responses[1].results;
+
+      const projectFieldMapping = that.mappingSettings.filter(
+        setting => (setting.source_field === 'PROJECT' && setting.destination_field === 'PROJECT')
+      );
+
+      let importProjects = false;
+      if (projectFieldMapping.length) {
+        importProjects = projectFieldMapping[0].import_to_fyle;
+      }
 
       that.expenseOptions = [{
         label: 'Expense Report',
@@ -119,12 +129,25 @@ export class ConfigurationComponent implements OnInit {
       that.generalSettingsForm = that.formBuilder.group({
         reimburExpense: [that.generalSettings ? that.generalSettings.reimbursable_expenses_object : ''],
         cccExpense: [that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : ''],
-        importProjects: [that.generalSettings.import_projects],
+        importProjects: [importProjects],
         importCategories: [that.generalSettings.import_categories],
         paymentsSync: [paymentsSyncOption],
         autoMapEmployees: [that.generalSettings.auto_map_employees],
         autoCreateDestinationEntity: [that.generalSettings.auto_create_destination_entity]
       });
+
+      const fyleProjectMapping = that.mappingSettings.filter(
+        setting => setting.source_field === 'PROJECT' && setting.destination_field !== 'PROJECT'
+      );
+
+      const sageIntacctProjectMapping = that.mappingSettings.filter(
+        setting => setting.destination_field === 'PROJECT' && setting.source_field !== 'PROJECT'
+      );
+
+      // disable project sync toggle if either of Fyle / Sage Intacct Projects are already mapped to different fields
+      if (fyleProjectMapping.length || sageIntacctProjectMapping.length) {
+        that.generalSettingsForm.controls.importProjects.disable();
+      }
 
       that.showAutoCreateOption(that.generalSettings.auto_map_employees);
 
@@ -141,6 +164,7 @@ export class ConfigurationComponent implements OnInit {
       that.isLoading = false;
     }, () => {
       that.isLoading = false;
+      that.mappingSettings = [];
       that.generalSettingsForm = that.formBuilder.group({
         reimburExpense: ['', Validators.required],
         cccExpense: [null],
@@ -187,7 +211,7 @@ export class ConfigurationComponent implements OnInit {
     let fyleToSageIntacct = false;
     let sageIntacctToFyle = false;
 
-    const mappingsSettingsPayload = [{
+    const mappingsSettingsPayload: MappingSetting[] = [{
       source_field: 'EMPLOYEE',
       destination_field: employeeMappingsObject
     }];
@@ -200,8 +224,21 @@ export class ConfigurationComponent implements OnInit {
     if (importProjects) {
       mappingsSettingsPayload.push({
         source_field: 'PROJECT',
-        destination_field: 'PROJECT'
+        destination_field: 'PROJECT',
+        import_to_fyle: true
       });
+    } else {
+      const projectFieldMapping = that.mappingSettings.filter(
+        setting => (setting.source_field === 'PROJECT' && setting.destination_field === 'PROJECT')
+      );
+
+      if (projectFieldMapping.length) {
+        mappingsSettingsPayload.push({
+          source_field: 'PROJECT',
+          destination_field: 'PROJECT',
+          import_to_fyle: false
+        });
+      }
     }
 
     if (cccExpensesObject === 'CHARGE_CARD_TRANSACTION') {
@@ -238,7 +275,7 @@ export class ConfigurationComponent implements OnInit {
 
       if (autoMapEmployees) {
         setTimeout(() => {
-          that.snackBar.open('Auto mapping of employees may take up to 10 minutes');
+          that.snackBar.open('Auto mapping of employees may take few minutes');
         }, 1500);
       }
 
@@ -261,6 +298,9 @@ export class ConfigurationComponent implements OnInit {
   ngOnInit() {
     const that = this;
     that.workspaceId = that.route.snapshot.parent.parent.params.workspace_id;
+
+    that.isLoading = true;
+
     that.getAllSettings();
   }
 
