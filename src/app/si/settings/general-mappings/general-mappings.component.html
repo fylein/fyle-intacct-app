@@ -159,7 +159,7 @@
           <mandatory-field *ngIf="isFieldMandatory('defaultReimbursableExpensePaymentType')"></mandatory-field>
         </strong>
       </div>
-      <mat-form-field class="mappings-dialog--form-element" appearance="outline" required 
+      <mat-form-field class="mappings-dialog--form-element" appearance="outline"
       *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT'">
         <mat-select placeholder="Default Reimbursable Expense Payment Type" formControlName="defaultReimbursableExpensePaymentType">
           <mat-option *ngFor="let option of sageIntacctReimbursableExpensePaymentType" [value]="option.destination_id">

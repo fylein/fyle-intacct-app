@@ -118,10 +118,6 @@ export class GeneralMappingsComponent implements OnInit {
         that.form.controls.paymentAccount.setValidators(Validators.required);
       }
 
-      if (that.generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT') {
-        that.form.controls.defaultReimbursableExpensePaymentType.setValidators(Validators.required);
-      }
-
       if (that.generalSettings.corporate_credit_card_expenses_object === 'EXPENSE_REPORT') {
         that.form.controls.defaultCCCExpensePaymentType.setValidators(Validators.required);
       }
