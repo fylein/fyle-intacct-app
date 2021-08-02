@@ -32,29 +32,22 @@ export class ConnectSageIntacctComponent implements OnInit {
     const companyID = this.connectSageIntacctForm.value.companyID;
     const companyName = this.connectSageIntacctForm.value.companyName;
     const userPassword = this.connectSageIntacctForm.value.userPassword;
-    if (userID && companyID && companyName && userPassword) {
-      that.isLoading = true;
-      const connectSageIntacct = [
-        that.settingsService.connectSageIntacct(that.workspaceId, {
-          si_user_id: userID,
-          si_company_id: companyID,
-          si_company_name: companyName,
-          si_user_password: userPassword
-        })
-      ];
-      forkJoin(connectSageIntacct).subscribe(responses => {
-        that.snackBar.open('Sage Intacct account connected successfully');
-        that.isLoading = false;
-        that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
-        that.si.getSageIntacctCompanyName();
-      }, err => {
-        that.snackBar.open('Wrong credentials, please try again');
-        that.isLoading = false;
-      });
-    } else {
-      that.snackBar.open('Please fill all the fields');
-      that.connectSageIntacctForm.markAllAsTouched();
-    }
+
+    that.isLoading = true;
+    that.settingsService.connectSageIntacct(that.workspaceId, {
+      si_user_id: userID,
+      si_company_id: companyID,
+      si_company_name: companyName,
+      si_user_password: userPassword
+    }).subscribe(() => {
+      that.snackBar.open('Sage Intacct account connected successfully');
+      that.isLoading = false;
+      that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
+      that.si.getSageIntacctCompanyName();
+    }, () => {
+      that.snackBar.open('Wrong credentials, please try again');
+      that.isLoading = false;
+    });
   }
 
   ngOnInit() {
@@ -70,7 +63,7 @@ export class ConnectSageIntacctComponent implements OnInit {
         userPassword: ''
       });
       that.isLoading = false;
-    }, (error) => {
+    }, () => {
       that.isLoading = false;
       that.connectSageIntacctForm = that.formBuilder.group({
         userID: ['', Validators.required],

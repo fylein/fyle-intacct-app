@@ -21,40 +21,48 @@
       <div class="mat-body-strong">
         <strong class="mappings-dialog--label">
           User ID
+          <mandatory-field></mandatory-field>
         </strong>
       </div>
       <mat-form-field class="mappings-dialog--form-element" appearance="outline">
         <input required type="text" formControlName="userID" placeholder="Enter user ID" matInput>
       </mat-form-field>
+      <mandatory-error-message inputName="user ID" *ngIf="connectSageIntacctForm.controls.userID.touched && !connectSageIntacctForm.controls.userID.valid"></mandatory-error-message>
 
       <div class="mat-body-strong">
         <strong class="mappings-dialog--label">
           Company ID
+          <mandatory-field></mandatory-field>
         </strong>
       </div>
       <mat-form-field class="mappings-dialog--form-element" appearance="outline">
         <input required type="text" formControlName="companyID" placeholder="Enter company ID" matInput>
       </mat-form-field>
+      <mandatory-error-message inputName="company ID" *ngIf="connectSageIntacctForm.controls.companyID.touched && !connectSageIntacctForm.controls.companyID.valid"></mandatory-error-message>
 
       <div class="mat-body-strong">
         <strong class="mappings-dialog--label">
           Company Name
+          <mandatory-field></mandatory-field>
         </strong>
       </div>
       <mat-form-field class="mappings-dialog--form-element" appearance="outline">
         <input required type="text" formControlName="companyName" placeholder="Enter company name" matInput>
       </mat-form-field>
+      <mandatory-error-message inputName="company name" *ngIf="connectSageIntacctForm.controls.companyName.touched && !connectSageIntacctForm.controls.companyName.valid"></mandatory-error-message>
 
       <div class="mat-body-strong">
         <strong class="mappings-dialog--label">
           User Password
+          <mandatory-field></mandatory-field>
         </strong>
       </div>
       <mat-form-field class="mappings-dialog--form-element" appearance="outline">
         <input required type="password" formControlName="userPassword" placeholder="Enter user password" matInput>
       </mat-form-field>
+      <mandatory-error-message inputName="password" *ngIf="connectSageIntacctForm.controls.userPassword.touched && !connectSageIntacctForm.controls.userPassword.valid"></mandatory-error-message>
 
-      <button class="configurations--save-btn" mat-flat-button color="primary" (click)="save()" type="submit">
+      <button [disabled]="isSaveDisabled || !connectSageIntacctForm.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="save()" type="submit">
         Save
       </button>
     </div>
