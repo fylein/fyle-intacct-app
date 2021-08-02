@@ -62,7 +62,7 @@
       </mat-form-field>
       <mandatory-error-message inputName="password" *ngIf="connectSageIntacctForm.controls.userPassword.touched && !connectSageIntacctForm.controls.userPassword.valid"></mandatory-error-message>
 
-      <button class="configurations--save-btn" mat-flat-button color="primary" (click)="save()" type="submit">
+      <button [disabled]="isSaveDisabled || !connectSageIntacctForm.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="save()" type="submit">
         Save
       </button>
     </div>
