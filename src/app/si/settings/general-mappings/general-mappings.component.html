@@ -145,7 +145,9 @@
       <mat-form-field class="mappings-dialog--form-element" appearance="outline" required 
         *ngIf="generalSettings.sync_fyle_to_sage_intacct_payments">
         <mat-select placeholder="Select payment Account" formControlName="paymentAccount">
-          <mat-option *ngFor="let bankAccount of sageIntacctPaymentAccounts; let i = index" [value]="sageIntacctPaymentAccounts[i].destination_id">
+          <mat-option *ngFor="let bankAccount of sageIntacctPaymentAccounts; let i = index" [value]="sageIntacctPaymentAccounts[i].destination_id"
+          matTooltip="{{sageIntacctPaymentAccounts[i].value}}"  [matTooltipPosition] = "'right'"
+          >
             {{sageIntacctPaymentAccounts[i].value}}
           </mat-option>
         </mat-select>
