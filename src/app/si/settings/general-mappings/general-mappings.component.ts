@@ -46,9 +46,7 @@ export class GeneralMappingsComponent implements OnInit {
 
   submit() {
     const that = this;
-
     that.isLoading = true;
-
     const locationEntityName: MappingDestination[] = that.sageIntacctLocationEntities.filter((element) => element.destination_id === that.form.value.locationEntity);
     const defaultLocationName: MappingDestination[] = that.sageIntacctLocations.filter((element) => element.destination_id === that.form.value.location);
     const defaultDepartmentName: MappingDestination[] = that.sageIntacctDepartments.filter((element) => element.destination_id === that.form.value.department);
