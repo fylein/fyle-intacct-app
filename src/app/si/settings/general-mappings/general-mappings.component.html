@@ -152,7 +152,7 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <mandatory-error-message listName="default item" *ngIf="form.controls.paymentAccount.touched && !form.controls.paymentAccount.valid"></mandatory-error-message>
+      <mandatory-error-message listName="payment account" *ngIf="form.controls.paymentAccount.touched && !form.controls.paymentAccount.valid"></mandatory-error-message>
 
       <div class="mat-body-strong"
       *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT'">
