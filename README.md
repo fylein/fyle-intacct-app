@@ -50,3 +50,15 @@ Frontend Repository for Fyle &lt;> Sage Intacct Integration
     ```
     docker-compose stop app
     ```
+
+* To restart any containers -
+
+    ```
+    docker-compose restart app
+    ```
+
+* To run bash inside any container for purpose of debugging or for creating new components,services etc
+
+    ```
+    docker-compose exec app /bin/bash
+    ```

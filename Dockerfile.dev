@@ -3,8 +3,6 @@
 # base image
 FROM node:12.4.0-slim as build
 
-RUN apt-get update && apt-get install nginx vim -y --no-install-recommends git
-
 # set working directory
 WORKDIR /app
 
@@ -19,4 +17,5 @@ RUN npm install
 # add app
 COPY . /app
 
+# expose port 4200
 EXPOSE 4200 
