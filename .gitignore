@@ -27,6 +27,7 @@ speed-measure-plugin*.json
 *.sublime-workspace
 
 # Environment files
+environment.localhost.ts
 docker-compose.yml
 
 # IDE - VSCode
