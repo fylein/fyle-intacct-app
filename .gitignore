@@ -28,6 +28,7 @@ speed-measure-plugin*.json
 
 # Environment files
 environment.localhost.ts
+docker-compose.yml
 
 # IDE - VSCode
 .vscode/*

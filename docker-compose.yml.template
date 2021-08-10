@@ -1,0 +1,21 @@
+# This is used to run the app locally
+version: '3.7'
+
+services: 
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    entrypoint: ng serve --host 0.0.0.0
+    restart: unless-stopped
+    volumes: 
+    - ./:/app
+    ports:
+    - 4200:4200
+    environment: 
+      production: "False"
+      FYLE_URL: 
+      FYLE_CLIENT_ID: 
+      CALLBACK_URI: 
+      API_URL: 
+      APP_URL: 

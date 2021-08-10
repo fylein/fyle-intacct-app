@@ -1,0 +1,25 @@
+# NOTE - Dont rename this to 'Dockerfile'
+
+# base image
+FROM node:12.4.0-slim as build
+
+RUN apt-get update && apt-get install nginx vim -y --no-install-recommends git
+
+# set working directory
+WORKDIR /app
+
+# add `/app/node_modules/.bin` to $PATH
+ENV PATH /app/node_modules/.bin:$PATH
+
+# install and cache app dependencies
+COPY package.json /app/package.json
+RUN npm install -g @angular/cli
+RUN npm install 
+
+# add app
+COPY . /app
+
+EXPOSE 4200 
+
+# run nginx
+CMD bash start.sh
