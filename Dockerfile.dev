@@ -1,0 +1,20 @@
+# NOTE - Dont rename this to 'Dockerfile'
+
+# base image
+FROM node:12.4.0-slim as build
+
+# set working directory
+WORKDIR /app
+
+# add `/app/node_modules/.bin` to $PATH
+ENV PATH /app/node_modules/.bin:$PATH
+
+# install and cache app dependencies
+COPY package.json /app/package.json
+RUN npm install 
+
+# add app
+COPY . /app
+
+# expose port 4200
+EXPOSE 4200 
