@@ -20,6 +20,3 @@ RUN npm install
 COPY . /app
 
 EXPOSE 4200 
-
-# run nginx
-CMD bash start.sh
