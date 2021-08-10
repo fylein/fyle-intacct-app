@@ -12,7 +12,7 @@ Frontend Repository for Fyle &lt;> Sage Intacct Integration
 * Rename docker-compose.yml.template to docker-compose.yml
 
     ```
-    $ mv docker-compose.yml.template docker-compose.yml
+    $ cp docker-compose.yml.template docker-compose.yml
     ```
   
 * Setup environment variables in docker_compose.yml
