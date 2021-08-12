@@ -7,6 +7,6 @@ interface Env {
   CALLBACK_URI: string;
   API_URL: string;
   APP_URL: string;
-  HOTJAR_WHITELIST_URL: string,
-  HOTJAR_ID: string
+  HOTJAR_WHITELIST_URL: string;
+  HOTJAR_ID: string;
 }
