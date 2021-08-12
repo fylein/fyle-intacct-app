@@ -19,3 +19,5 @@ services:
       CALLBACK_URI: 
       API_URL: 
       APP_URL: 
+      HOTJAR_WHITELIST_URL:
+      HOTJAR_ID:
