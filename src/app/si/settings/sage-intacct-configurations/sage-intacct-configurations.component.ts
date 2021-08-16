@@ -55,7 +55,7 @@ export class SageIntacctConfigurationsComponent implements OnInit {
       that.sageIntacctConnectionDone = true;
       forkJoin(
         [
-          that.mappingsService.getFyleExpenseFields(),
+          that.mappingsService.getFyleFields(),
           that.settingsService.getGeneralSettings(that.workspaceId),
         ]
       ).subscribe(response => {

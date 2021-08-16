@@ -64,10 +64,12 @@ export class MappingsService {
     return this.apiService.post(`/workspaces/${workspaceId}/fyle/refresh_dimensions/`, {});
   }
 
-  getFyleExpenseFields(): Observable<ExpenseField[]> {
+  getFyleExpenseAttributes(attributeType: string): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_fields/`, {});
+    return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_attributes/`, {
+      attribute_type: attributeType
+    });
   }
 
   getSageIntacctFields(): Observable<ExpenseField[]> {
@@ -76,12 +78,11 @@ export class MappingsService {
     return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/sage_intacct_fields/`, {});
   }
 
-  getFyleExpenseCustomFields(attributeType: string): Observable<MappingSource[]> {
+  getFyleFields(): Observable<ExpenseField[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_custom_fields/`, {
-      attribute_type: attributeType
-    });
+    return this.apiService.get(`/workspaces/${workspaceId}/fyle/fyle_fields/`, {}
+    );
   }
 
   getSageIntacctExpenseCustomFields(attributeType: string): Observable<MappingDestination[]> {

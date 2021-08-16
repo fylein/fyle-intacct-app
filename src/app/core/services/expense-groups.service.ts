@@ -6,6 +6,7 @@ import { ExpenseGroup } from 'src/app/core/models/expense-group.model';
 import { Expense } from '../models/expense.model';
 import { WorkspaceService } from './workspace.service';
 import { ExpenseGroupSetting } from '../models/expense-group-setting.model';
+import { Count } from '../models/count.model';
 
 @Injectable({
   providedIn: 'root',
@@ -63,6 +64,11 @@ export class ExpenseGroupsService {
   getExpensesGroupById(expenseGroupId: number): Observable<ExpenseGroup> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_groups/${expenseGroupId}/`, {});
+  }
+
+  getExpenseGroupCountByState(state: string): Observable<Count> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+    return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_groups/count/`, {state});
   }
 
   syncExpenseGroups() {
