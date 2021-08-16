@@ -10,7 +10,6 @@ module.exports = {
         CALLBACK_URI: JSON.stringify(process.env.CALLBACK_URI),
         API_URL: JSON.stringify(process.env.API_URL),
         APP_URL: JSON.stringify(process.env.APP_URL),
-        HOTJAR_WHITELIST_URL: JSON.stringify(process.env.HOTJAR_WHITELIST_URL),
         HOTJAR_ID: JSON.stringify(process.env.HOTJAR_ID)
       }
     })

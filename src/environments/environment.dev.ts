@@ -5,6 +5,5 @@ export const environment = {
     callback_uri: $ENV.CALLBACK_URI,
     api_url: $ENV.API_URL,
     app_url: $ENV.APP_URL,
-    hotjar_whitelist_url: $ENV.HOTJAR_WHITELIST_URL,
     hotjar_id: $ENV.HOTJAR_ID
 };
