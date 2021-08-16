@@ -68,11 +68,11 @@
                 }
               ]
             },
-            "localhost": {
+            "dev": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "environment.localhost.ts"
+                  "with": "src/environments/environment.dev.ts"
                 }
               ]
             }
@@ -87,8 +87,8 @@
             "production": {
               "browserTarget": "fyle-intacct-app:build:production"
             },
-            "localhost": {
-              "browserTarget": "fyle-intacct-app:build:localhost"
+            "dev": {
+              "browserTarget": "fyle-intacct-app:build:dev"
             }
           }
         },

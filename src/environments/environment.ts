@@ -8,7 +8,8 @@ export const environment = {
   fyle_client_id: 'FYLE CLIENT ID',
   callback_uri: 'CALLBACK URL',
   api_url: 'SAGE INTACCT API URL',
-  app_url: 'ANGULAR APP URL'
+  app_url: 'ANGULAR APP URL',
+  hotjar_id: 'HOTJAR_ID'
 };
 
 /*

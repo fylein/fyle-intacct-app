@@ -41,20 +41,16 @@ export class ScheduleComponent implements OnInit {
 
   submit() {
     const that = this;
-    if (that.form.valid) {
-      const hours = this.form.value.hours;
-      const scheduleEnabled = this.form.value.scheduleEnabled;
 
-      that.isLoading = true;
-      that.settingsService.postScheduleSettings(that.workspaceId, hours, scheduleEnabled).subscribe(response => {
-        that.isLoading = false;
-        that.snackBar.open('Scheduling saved');
-        that.getSettings();
-      });
-    } else {
-      that.snackBar.open('Form has invalid fields');
-      that.form.markAllAsTouched();
-    }
+    const hours = this.form.value.hours;
+    const scheduleEnabled = this.form.value.scheduleEnabled;
+
+    that.isLoading = true;
+    that.settingsService.postScheduleSettings(that.workspaceId, hours, scheduleEnabled).subscribe(response => {
+      that.isLoading = false;
+      that.snackBar.open('Scheduling saved');
+      that.getSettings();
+    });
   }
 
   ngOnInit() {
@@ -72,14 +68,14 @@ export class ScheduleComponent implements OnInit {
       if (!newValue && oldValue !== newValue) {
         if (that.settings) {
           that.isLoading = true;
-          that.settingsService.postScheduleSettings(that.workspaceId, 0, false).subscribe(response => {
+          that.settingsService.postScheduleSettings(that.workspaceId, 0, false).subscribe(() => {
             that.isLoading = false;
             that.snackBar.open('Scheduling turned off');
             that.getSettings();
           });
         }
       }
-    }, err => {
+    }, () => {
       that.snackBar.open('Something went wrong');
     });
 
