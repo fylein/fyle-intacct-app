@@ -6,12 +6,12 @@ import { FyleCredentials } from '../models/fyle-credentials.model';
 import { SageIntacctCredentials } from '../models/si-credentials.model';
 import { ScheduleSettings } from '../models/schedule-setting.model';
 import { MappingSettingResponse } from '../models/mapping-setting-response.model';
-import { GeneralSetting } from '../models/general-setting.model';
+import { Configuration } from '../models/configuration.model';
 import { MappingSetting } from '../models/mapping-setting.model';
 
 const fyleCredentialsCache = new Subject<void>();
 const sageIntacctCredentialsCache = new Subject<void>();
-const generalSettingsCache = new Subject<void>();
+const configurationCache = new Subject<void>();
 const mappingsSettingsCache = new Subject<void>();
 
 @Injectable({
@@ -70,9 +70,9 @@ export class SettingsService {
   }
 
   @CacheBuster({
-    cacheBusterNotifier: generalSettingsCache
+    cacheBusterNotifier: configurationCache
   })
-  postGeneralSettings(workspaceId: number, reimbursableExpensesObject: string, corporateCreditCardExpensesObject: string, importProjects: boolean, importCategories: boolean, fyleToSageIntacct: boolean, sageIntacctToFyle: boolean, autoCreateDestinationEntity: boolean, autoMapEmployees: string = null): Observable<GeneralSetting> {
+  postConfiguration(workspaceId: number, reimbursableExpensesObject: string, corporateCreditCardExpensesObject: string, importProjects: boolean, importCategories: boolean, fyleToSageIntacct: boolean, sageIntacctToFyle: boolean, autoCreateDestinationEntity: boolean, autoMapEmployees: string = null): Observable<Configuration> {
     return this.apiService.post(`/workspaces/${workspaceId}/configuration/`, {
       reimbursable_expenses_object: reimbursableExpensesObject,
       corporate_credit_card_expenses_object: corporateCreditCardExpensesObject,
@@ -94,9 +94,9 @@ export class SettingsService {
   }
 
   @Cacheable({
-    cacheBusterObserver: generalSettingsCache
+    cacheBusterObserver: configurationCache
   })
-  getGeneralSettings(workspaceId: number): Observable<GeneralSetting> {
+  getConfiguration(workspaceId: number): Observable<Configuration> {
     return this.apiService.get(`/workspaces/${workspaceId}/configuration/`, {});
   }
 }

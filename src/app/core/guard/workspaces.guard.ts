@@ -31,7 +31,7 @@ export class WorkspacesGuard implements CanActivate {
       [
         this.settingsService.getFyleCredentials(workspaceId),
         this.settingsService.getSageIntacctCredentials(workspaceId),
-        this.settingsService.getGeneralSettings(workspaceId)
+        this.settingsService.getConfiguration(workspaceId)
       ]
     ).pipe(
       map(response => !!response),

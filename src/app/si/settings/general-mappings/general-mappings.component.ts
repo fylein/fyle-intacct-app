@@ -7,7 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { GeneralMapping } from 'src/app/core/models/general-mapping.model';
 import { MappingDestination } from 'src/app/core/models/mapping-destination.model';
-import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { Configuration } from 'src/app/core/models/configuration.model';
 
 @Component({
   selector: 'app-general-mappings',
@@ -33,7 +33,7 @@ export class GeneralMappingsComponent implements OnInit {
   paymentAccount: MappingDestination[];
   sageIntacctReimbursableExpensePaymentType: MappingDestination[];
   sageIntacctCCCExpensePaymentType: MappingDestination[];
-  generalSettings: GeneralSetting;
+  configuration: Configuration;
 
   constructor(
     private route: ActivatedRoute,
@@ -100,23 +100,23 @@ export class GeneralMappingsComponent implements OnInit {
   setMandatoryFields() {
       const that = this;
 
-      if (that.generalSettings.corporate_credit_card_expenses_object && this.generalSettings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
+      if (that.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
         that.form.controls.chargeCard.setValidators(Validators.required);
       }
 
-      if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'BILL') {
+      if (that.configuration.corporate_credit_card_expenses_object && that.configuration.corporate_credit_card_expenses_object === 'BILL') {
         that.form.controls.defaultVendor.setValidators(Validators.required);
       }
 
-      if (that.generalSettings.import_projects) {
+      if (that.configuration.import_projects) {
         that.form.controls.defaultItem.setValidators(Validators.required);
       }
 
-      if (that.generalSettings.sync_fyle_to_sage_intacct_payments) {
+      if (that.configuration.sync_fyle_to_sage_intacct_payments) {
         that.form.controls.paymentAccount.setValidators(Validators.required);
       }
 
-      if (that.generalSettings.corporate_credit_card_expenses_object === 'EXPENSE_REPORT') {
+      if (that.configuration.corporate_credit_card_expenses_object === 'EXPENSE_REPORT') {
         that.form.controls.defaultCCCExpensePaymentType.setValidators(Validators.required);
       }
   }
@@ -174,7 +174,7 @@ export class GeneralMappingsComponent implements OnInit {
         paymentAccount: [that.generalMappings ? that.generalMappings.payment_account_id : null],
         defaultReimbursableExpensePaymentType: [that.generalMappings ? that.generalMappings.default_reimbursable_expense_payment_type_id : null],
         // defaultCCCExpensePaymentType should be a mandatory field for Expense Reports to mark it as non reimbursable for ccc expenses
-        defaultCCCExpensePaymentType: [that.generalMappings ? that.generalMappings.default_ccc_expense_payment_type_id : null, that.generalSettings.corporate_credit_card_expenses_object === 'EXPENSE_REPORT' ? Validators.required : null],
+        defaultCCCExpensePaymentType: [that.generalMappings ? that.generalMappings.default_ccc_expense_payment_type_id : null, that.configuration.corporate_credit_card_expenses_object === 'EXPENSE_REPORT' ? Validators.required : null],
         useDefaultEmployeeLocation: [that.generalMappings ? that.generalMappings.use_intacct_employee_locations : false],
         useDefaultEmployeeDepartment: [that.generalMappings ? that.generalMappings.use_intacct_employee_departments : false]
       });
@@ -187,8 +187,8 @@ export class GeneralMappingsComponent implements OnInit {
     const that = this;
     that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
     that.isLoading = true;
-    that.settingsService.getGeneralSettings(that.workspaceId).subscribe((setting: GeneralSetting) => {
-      that.generalSettings = setting;
+    that.settingsService.getConfiguration(that.workspaceId).subscribe((setting: Configuration) => {
+      that.configuration = setting;
       that.mappingsService.getGeneralMappings().subscribe(res => {
         that.generalMappings = res;
         that.reset();
