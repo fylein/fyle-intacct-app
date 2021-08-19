@@ -91,6 +91,7 @@
       <div class="mat-body-strong" *ngIf="generalSettings.corporate_credit_card_expenses_object && generalSettings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION'">
         <strong class="mappings-dialog--label">
           Default Charge Card
+          <mandatory-field *ngIf="isFieldMandatory('chargeCard')"></mandatory-field>
         </strong>
       </div>
       <mat-form-field class="mappings-dialog--form-element" appearance="outline" required 
@@ -101,10 +102,12 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+      <mandatory-error-message listName="default charge card account" *ngIf="form.controls.chargeCard.touched && !form.controls.chargeCard.valid"></mandatory-error-message>
 
       <div class="mat-body-strong" *ngIf="generalSettings.corporate_credit_card_expenses_object && generalSettings.corporate_credit_card_expenses_object === 'BILL'">
         <strong class="mappings-dialog--label">
           Default Credit Card Vendor
+          <mandatory-field *ngIf="isFieldMandatory('defaultVendor')"></mandatory-field>
         </strong>
       </div>
       <mat-form-field class="mappings-dialog--form-element" appearance="outline" required 
@@ -115,10 +118,12 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+      <mandatory-error-message listName="default credit card vendor" *ngIf="form.controls.defaultVendor.touched && !form.controls.defaultVendor.valid"></mandatory-error-message>
       
       <div class="mat-body-strong" *ngIf="generalSettings.import_projects">
         <strong class="mappings-dialog--label">
           Default Item
+          <mandatory-field *ngIf="isFieldMandatory('defaultItem')"></mandatory-field>
         </strong>
       </div>
       <mat-form-field class="mappings-dialog--form-element" appearance="outline" required 
@@ -129,28 +134,33 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+      <mandatory-error-message listName="default item" *ngIf="form.controls.defaultItem.touched && !form.controls.defaultItem.valid"></mandatory-error-message>
 
       <div class="mat-body-strong" *ngIf="generalSettings.sync_fyle_to_sage_intacct_payments">
         <strong class="mappings-dialog--label">
           Payment Account
+          <mandatory-field *ngIf="isFieldMandatory('paymentAccount')"></mandatory-field>
         </strong>
       </div>
       <mat-form-field class="mappings-dialog--form-element" appearance="outline" required 
         *ngIf="generalSettings.sync_fyle_to_sage_intacct_payments">
         <mat-select placeholder="Select payment Account" formControlName="paymentAccount">
-          <mat-option *ngFor="let bankAccount of sageIntacctPaymentAccounts; let i = index" [value]="sageIntacctPaymentAccounts[i].destination_id">
+          <mat-option *ngFor="let bankAccount of sageIntacctPaymentAccounts; let i = index" [value]="sageIntacctPaymentAccounts[i].destination_id"
+          matTooltip="{{sageIntacctPaymentAccounts[i].value}}"  [matTooltipPosition] = "'right'">
             {{sageIntacctPaymentAccounts[i].value}}
           </mat-option>
         </mat-select>
       </mat-form-field>
+      <mandatory-error-message listName="payment account" *ngIf="form.controls.paymentAccount.touched && !form.controls.paymentAccount.valid"></mandatory-error-message>
 
       <div class="mat-body-strong"
       *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT'">
         <strong class="mappings-dialog--label">
           Default Reimbursable Expense Payment Type
+          <mandatory-field *ngIf="isFieldMandatory('defaultReimbursableExpensePaymentType')"></mandatory-field>
         </strong>
       </div>
-      <mat-form-field class="mappings-dialog--form-element" appearance="outline" required 
+      <mat-form-field class="mappings-dialog--form-element" appearance="outline"
       *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT'">
         <mat-select placeholder="Default Reimbursable Expense Payment Type" formControlName="defaultReimbursableExpensePaymentType">
           <mat-option *ngFor="let option of sageIntacctReimbursableExpensePaymentType" [value]="option.destination_id">
@@ -158,11 +168,13 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+      <mandatory-error-message listName="default reimbursable expense payment type" *ngIf="form.controls.defaultReimbursableExpensePaymentType.touched && !form.controls.defaultReimbursableExpensePaymentType.valid"></mandatory-error-message>
 
       <div class="mat-body-strong"
       *ngIf="generalSettings.corporate_credit_card_expenses_object === 'EXPENSE_REPORT'">
         <strong class="mappings-dialog--label">
           Default CCC Expense Payment Type
+          <mandatory-field *ngIf="isFieldMandatory('defaultCCCExpensePaymentType')"></mandatory-field>
         </strong>
       </div>
       <mat-form-field class="mappings-dialog--form-element" appearance="outline" required 
@@ -173,6 +185,7 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+      <mandatory-error-message listName="default ccc expense payment type" *ngIf="form.controls.defaultCCCExpensePaymentType.touched && !form.controls.defaultCCCExpensePaymentType.valid"></mandatory-error-message>
 
       <mat-slide-toggle color="primary" class="schedule" formControlName="useDefaultEmployeeLocation" *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT'">
         <div class="schedule--toggle-text">
@@ -201,7 +214,7 @@
 
     </div>
 
-    <button class="configurations--save-btn" mat-flat-button color="primary" (click)="submit()" type="submit">
+    <button [disabled]="!form.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="submit()" type="submit">
       Save
     </button>
   </form>

@@ -83,11 +83,11 @@ export class SiComponent implements OnInit {
 
     that.storageService.set('workspaceId', that.workspace.id);
     if (that.workspace.cluster_domain) {
-      that.storageService.set('cluster_domain', that.workspace.cluster_domain);
+      that.storageService.set('clusterDomain', that.workspace.cluster_domain);
     } else {
       that.workspaceService.getClusterDomain().subscribe(
         response => {
-          that.storageService.set('cluster_domain', response);
+          that.storageService.set('clusterDomain', response);
         }
       );
     }

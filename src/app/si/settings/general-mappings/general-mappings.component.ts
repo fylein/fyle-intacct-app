@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MappingsService } from '../../../core/services/mappings.service';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
@@ -46,61 +46,92 @@ export class GeneralMappingsComponent implements OnInit {
 
   submit() {
     const that = this;
+    that.isLoading = true;
+    const locationEntityName: MappingDestination[] = that.sageIntacctLocationEntities.filter((element) => element.destination_id === that.form.value.locationEntity);
+    const defaultLocationName: MappingDestination[] = that.sageIntacctLocations.filter((element) => element.destination_id === that.form.value.location);
+    const defaultDepartmentName: MappingDestination[] = that.sageIntacctDepartments.filter((element) => element.destination_id === that.form.value.department);
+    const defaultProjectName: MappingDestination[] = that.sageIntacctProjects.filter((element) => element.destination_id === that.form.value.project);
+    const defaultVendor: MappingDestination[] = that.sageIntacctDefaultVendor.filter((element) => element.destination_id === that.form.value.defaultVendor);
+    const defaultChargeCard: MappingDestination[] = that.sageIntacctDefaultChargeCard.filter((element) => element.destination_id === that.form.value.chargeCard);
+    const defaultItem: MappingDestination[] = that.sageIntacctDefaultItem.filter((element) => element.destination_id === that.form.value.defaultItem);
+    const paymentAccount: MappingDestination[] = that.sageIntacctPaymentAccounts.filter((element) => element.destination_id === that.form.value.paymentAccount);
+    const defaultReimbursableExpensePaymentType: MappingDestination[] = that.sageIntacctReimbursableExpensePaymentType.filter((element) => element.destination_id === that.form.value.defaultReimbursableExpensePaymentType);
+    const defaultCCCExpensePaymentType: MappingDestination[] = that.sageIntacctCCCExpensePaymentType.filter((element) => element.destination_id === that.form.value.defaultCCCExpensePaymentType);
+    const defaultEmployeeLocation = that.form.value.useDefaultEmployeeLocation;
+    const defaultEmployeeDepartment = that.form.value.useDefaultEmployeeDepartment;
 
-    if (that.form.valid) {
-      that.isLoading = true;
+    const mapping: GeneralMapping = {
+      location_entity_name: locationEntityName[0] ? locationEntityName[0].value : '',
+      location_entity_id: that.form.value.locationEntity ? that.form.value.locationEntity : '',
+      default_location_name: defaultLocationName[0] ? defaultLocationName[0].value : '',
+      default_location_id: that.form.value.location ? that.form.value.location : '',
+      default_department_name: defaultDepartmentName[0] ? defaultDepartmentName[0].value : '',
+      default_department_id: that.form.value.department ? that.form.value.department : '',
+      default_project_name: defaultProjectName[0] ? defaultProjectName[0].value : '',
+      default_project_id: that.form.value.project ? that.form.value.project : '',
+      default_ccc_vendor_name: defaultVendor[0] ? defaultVendor[0].value : '',
+      default_ccc_vendor_id: that.form.value.defaultVendor ? that.form.value.defaultVendor : '',
+      default_charge_card_name: defaultChargeCard[0] ? defaultChargeCard[0].value : '',
+      default_charge_card_id: that.form.value.chargeCard ? that.form.value.chargeCard : '',
+      default_item_id: that.form.value.defaultItem ? that.form.value.defaultItem : '',
+      default_item_name: defaultItem[0] ? defaultItem[0].value : '',
+      payment_account_name: paymentAccount[0] ? paymentAccount[0].value : '',
+      payment_account_id: that.form.value.paymentAccount ? that.form.value.paymentAccount : '',
+      default_reimbursable_expense_payment_type_id: that.form.value.defaultReimbursableExpensePaymentType ? that.form.value.defaultReimbursableExpensePaymentType : '',
+      default_reimbursable_expense_payment_type_name: defaultReimbursableExpensePaymentType[0] ? defaultReimbursableExpensePaymentType[0].value : '',
+      default_ccc_expense_payment_type_id: that.form.value.defaultCCCExpensePaymentType ? that.form.value.defaultCCCExpensePaymentType : '',
+      default_ccc_expense_payment_type_name: defaultCCCExpensePaymentType[0] ? defaultCCCExpensePaymentType[0].value : null,
+      use_intacct_employee_departments: defaultEmployeeDepartment,
+      use_intacct_employee_locations: defaultEmployeeLocation
+    };
 
-      const locationEntityName: MappingDestination[] = that.sageIntacctLocationEntities.filter((element) => element.destination_id === that.form.value.locationEntity);
-      const defaultLocationName: MappingDestination[] = that.sageIntacctLocations.filter((element) => element.destination_id === that.form.value.location);
-      const defaultDepartmentName: MappingDestination[] = that.sageIntacctDepartments.filter((element) => element.destination_id === that.form.value.department);
-      const defaultProjectName: MappingDestination[] = that.sageIntacctProjects.filter((element) => element.destination_id === that.form.value.project);
-      const defaultVendor: MappingDestination[] = that.sageIntacctDefaultVendor.filter((element) => element.destination_id === that.form.value.defaultVendor);
-      const defaultChargeCard: MappingDestination[] = that.sageIntacctDefaultChargeCard.filter((element) => element.destination_id === that.form.value.chargeCard);
-      const defaultItem: MappingDestination[] = that.sageIntacctDefaultItem.filter((element) => element.destination_id === that.form.value.defaultItem);
-      const paymentAccount: MappingDestination[] = that.sageIntacctPaymentAccounts.filter((element) => element.destination_id === that.form.value.paymentAccount);
-      const defaultReimbursableExpensePaymentType: MappingDestination[] = that.sageIntacctReimbursableExpensePaymentType.filter((element) => element.destination_id === that.form.value.defaultReimbursableExpensePaymentType);
-      const defaultCCCExpensePaymentType: MappingDestination[] = that.sageIntacctCCCExpensePaymentType.filter((element) => element.destination_id === that.form.value.defaultCCCExpensePaymentType);
-      const defaultEmployeeLocation = that.form.value.useDefaultEmployeeLocation;
-      const defaultEmployeeDepartment = that.form.value.useDefaultEmployeeDepartment;
+    that.setMandatoryFields();
 
-      const mapping: GeneralMapping = {
-        location_entity_name: locationEntityName[0] ? locationEntityName[0].value : '',
-        location_entity_id: that.form.value.locationEntity ? that.form.value.locationEntity : '',
-        default_location_name: defaultLocationName[0] ? defaultLocationName[0].value : '',
-        default_location_id: that.form.value.location ? that.form.value.location : '',
-        default_department_name: defaultDepartmentName[0] ? defaultDepartmentName[0].value : '',
-        default_department_id: that.form.value.department ? that.form.value.department : '',
-        default_project_name: defaultProjectName[0] ? defaultProjectName[0].value : '',
-        default_project_id: that.form.value.project ? that.form.value.project : '',
-        default_ccc_vendor_name: defaultVendor[0] ? defaultVendor[0].value : '',
-        default_ccc_vendor_id: that.form.value.defaultVendor ? that.form.value.defaultVendor : '',
-        default_charge_card_name: defaultChargeCard[0] ? defaultChargeCard[0].value : '',
-        default_charge_card_id: that.form.value.chargeCard ? that.form.value.chargeCard : '',
-        default_item_id: that.form.value.defaultItem ? that.form.value.defaultItem : '',
-        default_item_name: defaultItem[0] ? defaultItem[0].value : '',
-        payment_account_name: paymentAccount[0] ? paymentAccount[0].value : '',
-        payment_account_id: that.form.value.paymentAccount ? that.form.value.paymentAccount : '',
-        default_reimbursable_expense_payment_type_id: that.form.value.defaultReimbursableExpensePaymentType ? that.form.value.defaultReimbursableExpensePaymentType : '',
-        default_reimbursable_expense_payment_type_name: defaultReimbursableExpensePaymentType[0] ? defaultReimbursableExpensePaymentType[0].value : '',
-        default_ccc_expense_payment_type_id: that.form.value.defaultCCCExpensePaymentType ? that.form.value.defaultCCCExpensePaymentType : '',
-        default_ccc_expense_payment_type_name: defaultCCCExpensePaymentType[0] ? defaultCCCExpensePaymentType[0].value : null,
-        use_intacct_employee_departments: defaultEmployeeDepartment,
-        use_intacct_employee_locations: defaultEmployeeLocation
-      };
-
-      that.mappingsService.postGeneralMappings(mapping).subscribe(() => {
-        that.isLoading = false;
-        that.snackBar.open('General mappings saved successfully');
-        that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
-      }, () => {
-        that.isLoading = false;
-        that.snackBar.open('Please fill all required fields');
-      });
-    } else {
+    that.mappingsService.postGeneralMappings(mapping).subscribe(() => {
+      that.isLoading = false;
+      that.snackBar.open('General mappings saved successfully');
+      that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
+    }, () => {
+      that.isLoading = false;
       that.snackBar.open('Please fill all required fields');
-    }
+    });
   }
 
+  setMandatoryFields() {
+      const that = this;
+
+      if (that.generalSettings.corporate_credit_card_expenses_object && this.generalSettings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
+        that.form.controls.chargeCard.setValidators(Validators.required);
+      }
+
+      if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'BILL') {
+        that.form.controls.defaultVendor.setValidators(Validators.required);
+      }
+
+      if (that.generalSettings.import_projects) {
+        that.form.controls.defaultItem.setValidators(Validators.required);
+      }
+
+      if (that.generalSettings.sync_fyle_to_sage_intacct_payments) {
+        that.form.controls.paymentAccount.setValidators(Validators.required);
+      }
+
+      if (that.generalSettings.corporate_credit_card_expenses_object === 'EXPENSE_REPORT') {
+        that.form.controls.defaultCCCExpensePaymentType.setValidators(Validators.required);
+      }
+  }
+
+  isFieldMandatory(controlName: string) {
+    const abstractControl = this.form.controls[controlName];
+    if (abstractControl.validator) {
+      const validator = abstractControl.validator({} as AbstractControl);
+      if (validator && validator.required) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 
   reset() {
     const that = this;
@@ -147,6 +178,8 @@ export class GeneralMappingsComponent implements OnInit {
         useDefaultEmployeeLocation: [that.generalMappings ? that.generalMappings.use_intacct_employee_locations : false],
         useDefaultEmployeeDepartment: [that.generalMappings ? that.generalMappings.use_intacct_employee_departments : false]
       });
+
+      that.setMandatoryFields();
     });
   }
 

@@ -5,13 +5,17 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ZeroStateComponent } from './zero-state/zero-state.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
+import { MandatoryFieldComponent } from './mandatory-field/mandatory-field.component';
+import { MandatoryErrorMessageComponent } from './mandatory-error-message/mandatory-error-message.component';
 
 
 
 @NgModule({
   declarations: [
     LoaderComponent,
-    ZeroStateComponent
+    ZeroStateComponent,
+    MandatoryFieldComponent,
+    MandatoryErrorMessageComponent
   ],
   imports: [
     CommonModule,
@@ -21,7 +25,9 @@ import { MatButtonModule } from '@angular/material/button';
   ],
   exports: [
     LoaderComponent,
-    ZeroStateComponent
+    ZeroStateComponent,
+    MandatoryFieldComponent,
+    MandatoryErrorMessageComponent
   ]
 })
 export class SharedModule { }
