@@ -6,7 +6,7 @@ import { CategoryMappingsDialogComponent } from './category-mappings-dialog/cate
 import { StorageService } from 'src/app/core/services/storage.service';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { forkJoin, from } from 'rxjs';
-import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { Configuration } from 'src/app/core/models/configuration.model';
 import { Mapping } from 'src/app/core/models/mappings.model';
 import { MappingRow } from 'src/app/core/models/mapping-row.model';
 import { MatTableDataSource } from '@angular/material';
@@ -23,7 +23,7 @@ export class CategoryMappingsComponent implements OnInit {
   categoryMappingRows: MatTableDataSource<MappingRow> = new MatTableDataSource([]);
   count: number;
   pageNumber: number;
-  generalSettings: GeneralSetting;
+  configuration: Configuration;
   columnsToDisplay = ['category', 'sageIntacct'];
 
   constructor(
@@ -78,7 +78,7 @@ export class CategoryMappingsComponent implements OnInit {
   showCCCOption() {
     const that = this;
 
-    if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' && that.generalSettings.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT') {
+    if (that.configuration.corporate_credit_card_expenses_object && that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT' && that.configuration.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT') {
       return true;
     }
 
@@ -130,7 +130,7 @@ export class CategoryMappingsComponent implements OnInit {
         that.columnsToDisplay = ['category', 'sageIntacct', 'ccc'];
       }
       that.categoryMappings = response.results;
-      that.count = that.generalSettings.corporate_credit_card_expenses_object ?  response.count / 2 : response.count;
+      that.count = that.configuration.corporate_credit_card_expenses_object ?  response.count / 2 : response.count;
       that.pageNumber = data.pageNumber;
       that.createCategoryMappingsRows();
 
@@ -143,8 +143,8 @@ export class CategoryMappingsComponent implements OnInit {
     const that = this;
     that.isLoading = true;
     that.workspaceId = that.route.parent.snapshot.params.workspace_id;
-    that.settingsService.getGeneralSettings(this.workspaceId).subscribe(settings => {
-      that.generalSettings = settings;
+    that.settingsService.getConfiguration(this.workspaceId).subscribe(settings => {
+      that.configuration = settings;
       this.isLoading = false;
 
       const data = {

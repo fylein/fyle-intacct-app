@@ -1,20 +1,15 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, FormGroupDirective, NgForm, ValidatorFn, AbstractControl } from '@angular/forms';
-import { Observable } from 'rxjs/internal/Observable';
 import { debounceTime } from 'rxjs/internal/operators/debounceTime';
-import { distinctUntilChanged } from 'rxjs/internal/operators/distinctUntilChanged';
-import { filter } from 'rxjs/internal/operators/filter';
-import { map } from 'rxjs/internal/operators/map';
-import { ActivatedRoute } from '@angular/router';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { forkJoin, from } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MappingSource } from 'src/app/core/models/mapping-source.model';
 import { MappingDestination } from 'src/app/core/models/mapping-destination.model';
-import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { Configuration } from 'src/app/core/models/configuration.model';
 import { GeneralMapping } from 'src/app/core/models/general-mapping.model';
 import { MappingModal } from 'src/app/core/models/mapping-modal.model';
 
@@ -41,7 +36,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
   sageIntacctEmployeeOptions: MappingDestination[];
   cccOptions: MappingDestination[];
   sageIntacctVendorOptions: MappingDestination[];
-  generalSettings: GeneralSetting;
+  configuration: Configuration;
   generalMappings: GeneralMapping;
   defaultCCCObj: MappingDestination;
   editMapping: boolean;
@@ -63,18 +58,18 @@ export class EmployeeMappingsDialogComponent implements OnInit {
   submit() {
     const that = this;
     const fyleEmployee = that.form.controls.fyleEmployee.value;
-    const sageIntacctVendor = that.generalSettings.reimbursable_expenses_object === 'BILL' ? that.form.value.sageIntacctVendor : '';
-    const sageIntacctEmployee = that.generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' ? that.form.value.sageIntacctEmployee : '';
+    const sageIntacctVendor = that.configuration.reimbursable_expenses_object === 'BILL' ? that.form.value.sageIntacctVendor : '';
+    const sageIntacctEmployee = that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT' ? that.form.value.sageIntacctEmployee : '';
     const creditCardAccount = that.form.value.creditCardAccount ? that.form.value.creditCardAccount.value : null;
     const creditCardAccountId = that.form.value.creditCardAccount ? that.form.value.creditCardAccount.destination_id : null;
     if (that.form.valid && (sageIntacctVendor || sageIntacctEmployee)) {
       const employeeMapping = [
       that.mappingsService.postMappings({
         source_type: 'EMPLOYEE',
-        destination_type: that.generalSettings.reimbursable_expenses_object === 'BILL' ? 'VENDOR' : 'EMPLOYEE',
+        destination_type: that.configuration.reimbursable_expenses_object === 'BILL' ? 'VENDOR' : 'EMPLOYEE',
         source_value: fyleEmployee.value,
-        destination_value: that.generalSettings.reimbursable_expenses_object === 'BILL' ? sageIntacctVendor.value : sageIntacctEmployee.value,
-        destination_id: that.generalSettings.reimbursable_expenses_object === 'BILL' ? sageIntacctVendor.destination_id : sageIntacctEmployee.destination_id
+        destination_value: that.configuration.reimbursable_expenses_object === 'BILL' ? sageIntacctVendor.value : sageIntacctEmployee.value,
+        destination_id: that.configuration.reimbursable_expenses_object === 'BILL' ? sageIntacctVendor.destination_id : sageIntacctEmployee.destination_id
       })
     ];
 
@@ -172,7 +167,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
 
   getDefaultCCCObj() {
     const that = this;
-    if (that.generalSettings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
+    if (that.configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
       that.defaultCCCObj =  that.editMapping ? that.creditCardValue.filter(cccObj => cccObj.value === that.data.rowElement.ccc_value)[0] : that.creditCardValue.filter(cccObj => cccObj.value === that.generalMappings.default_charge_card_name)[0];
     }
   }
@@ -189,7 +184,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
       that.mappingsService.getGeneralMappings()
     ]).subscribe(response => {
       that.isLoading = false;
-      const settings = that.generalSettings;
+      const settings = that.configuration;
 
       that.fyleEmployees = response[0];
       that.sageIntacctEmployees = response[1];
@@ -209,9 +204,9 @@ export class EmployeeMappingsDialogComponent implements OnInit {
 
       that.form = that.formBuilder.group({
         fyleEmployee: [fyleEmployee, Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleEmployees)])],
-        sageIntacctVendor: [sageIntacctVendor, that.generalSettings.reimbursable_expenses_object === 'BILL' ? that.forbiddenSelectionValidator(that.sageIntacctVendors) : null],
-        sageIntacctEmployee: [sageIntacctEmployee, that.generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' ? that.forbiddenSelectionValidator(that.sageIntacctEmployees) : null],
-        creditCardAccount: [that.defaultCCCObj || '', (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') ? that.forbiddenSelectionValidator(that.creditCardValue) : null]
+        sageIntacctVendor: [sageIntacctVendor, that.configuration.reimbursable_expenses_object === 'BILL' ? that.forbiddenSelectionValidator(that.sageIntacctVendors) : null],
+        sageIntacctEmployee: [sageIntacctEmployee, that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT' ? that.forbiddenSelectionValidator(that.sageIntacctEmployees) : null],
+        creditCardAccount: [that.defaultCCCObj || '', (that.configuration.corporate_credit_card_expenses_object && that.configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') ? that.forbiddenSelectionValidator(that.creditCardValue) : null]
       });
 
       if (that.editMapping) {
@@ -231,8 +226,8 @@ export class EmployeeMappingsDialogComponent implements OnInit {
 
     that.workSpaceId = that.data.workspaceId;
     that.isLoading = true;
-    that.settingsService.getGeneralSettings(that.workSpaceId).subscribe(settings => {
-      that.generalSettings = settings;
+    that.settingsService.getConfiguration(that.workSpaceId).subscribe(settings => {
+      that.configuration = settings;
       that.isLoading = false;
       that.reset();
     });

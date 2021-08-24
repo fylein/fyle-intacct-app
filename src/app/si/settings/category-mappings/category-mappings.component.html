@@ -43,7 +43,7 @@
 
       <ng-container matColumnDef="sageIntacct">
         <th mat-header-cell *matHeaderCellDef>
-          {{ generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' ? 'Expense Type' : 'Account' }}
+          {{ configuration.reimbursable_expenses_object === 'EXPENSE_REPORT' ? 'Expense Type' : 'Account' }}
         </th>
         <td mat-cell *matCellDef="let element">
           {{element.si_value}}
@@ -62,7 +62,7 @@
     </table>
   </div>
 </div>
-<app-paginator *ngIf="count" [hidden]="!categoryMappingRows.filteredData.length" [is3D]="generalSettings.corporate_credit_card_expenses_object" [pageNumber]="pageNumber" (getMappings)="reset($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
+<app-paginator *ngIf="count" [hidden]="!categoryMappingRows.filteredData.length" [is3D]="configuration.corporate_credit_card_expenses_object" [pageNumber]="pageNumber" (getMappings)="reset($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
 
 <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
   <app-loader></app-loader>

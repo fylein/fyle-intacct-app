@@ -8,7 +8,7 @@ import { SettingsService } from 'src/app/core/services/settings.service';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { MatSnackBar, MatTableDataSource } from '@angular/material';
 import { Mapping } from 'src/app/core/models/mappings.model';
-import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { Configuration } from 'src/app/core/models/configuration.model';
 import { MappingRow } from 'src/app/core/models/mapping-row.model';
 
 @Component({
@@ -24,7 +24,7 @@ export class EmployeeMappingsComponent implements OnInit {
   employeeMappingRows: MatTableDataSource<MappingRow> = new MatTableDataSource([]);
   workspaceId: number;
   isLoading = true;
-  generalSettings: GeneralSetting;
+  configuration: Configuration;
   count: number;
   pageNumber: number;
   columnsToDisplay = ['employee_email', 'si'];
@@ -131,10 +131,10 @@ export class EmployeeMappingsComponent implements OnInit {
     const that = this;
     that.isLoading = true;
     that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
-    that.settingsService.getGeneralSettings(that.workspaceId).subscribe(settings => {
-      that.generalSettings = settings;
+    that.settingsService.getConfiguration(that.workspaceId).subscribe(settings => {
+      that.configuration = settings;
       that.isLoading = false;
-      if (that.generalSettings.corporate_credit_card_expenses_object && that.generalSettings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
+      if (that.configuration.corporate_credit_card_expenses_object && that.configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
         that.columnsToDisplay.push('ccc');
       }
       const data = {

@@ -10,7 +10,7 @@
       <a href="https://www.fylehq.com/help/en/articles/4507437-onboarding-process-to-set-up-fyle-sage-intacct-integration" rel="noopener noreferrer" target="_blank" class="read-more-link" fxLayout="row" fxLayoutAlign="start center">Read more<mat-icon class="read-more-link--icon">open_in_new</mat-icon></a>
     </div>
   </div>
-  <form class="configurations--form" [formGroup]="generalSettingsForm">
+  <form class="configurations--form" [formGroup]="configurationForm">
     <div fxLayout="column" fxLayoutAlign="start stretch">
       <div class="configurations--label">
         Map reimbursable Expenses from Fyle to
@@ -24,7 +24,7 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <mandatory-error-message listName="export type" *ngIf="generalSettingsForm.controls.reimburExpense.touched && !generalSettingsForm.controls.reimburExpense.valid"></mandatory-error-message>
+      <mandatory-error-message listName="export type" *ngIf="configurationForm.controls.reimburExpense.touched && !configurationForm.controls.reimburExpense.valid"></mandatory-error-message>
 
       <div class="configurations--label">
         Map Corporate Credit Card Expenses from Fyle to
@@ -105,7 +105,7 @@
         </div>
       </mat-slide-toggle>
 
-      <button [disabled]="!generalSettingsForm.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="save()" type="submit">
+      <button [disabled]="!configurationForm.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="save()" type="submit">
         Save
       </button>
     </div>

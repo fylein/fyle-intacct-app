@@ -6,7 +6,6 @@ import { StorageService } from 'src/app/core/services/storage.service';
 import { GenericMappingsDialogComponent } from './generic-mappings-dialog/generic-mappings-dialog.component';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { Mapping } from 'src/app/core/models/mappings.model';
-import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
 import { MappingRow } from 'src/app/core/models/mapping-row.model';
 import { MatTableDataSource } from '@angular/material';
@@ -21,7 +20,6 @@ export class GenericMappingsComponent implements OnInit {
   sourceField: string;
   isLoading: boolean;
   mappings: MatTableDataSource<Mapping> = new MatTableDataSource([]);
-  generalSettings: GeneralSetting;
   setting: MappingSetting;
   count: number;
   pageNumber: number;
