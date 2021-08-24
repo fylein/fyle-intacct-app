@@ -4,7 +4,7 @@ import { MappingsService } from 'src/app/core/services/mappings.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { ExpenseField } from 'src/app/core/models/expense-field.model';
-import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { Configuration } from 'src/app/core/models/configuration.model';
 
 @Component({
   selector: 'app-sage-intacct-configurations',
@@ -17,7 +17,7 @@ export class SageIntacctConfigurationsComponent implements OnInit {
   workspaceId: number;
   isParentLoading: boolean;
   fyleFields: ExpenseField[];
-  generalSettings: GeneralSetting;
+  configuration: Configuration;
   sageIntacctConnectionDone: boolean;
 
   constructor(private route: ActivatedRoute, private router: Router, private mappingsService: MappingsService, private settingsService: SettingsService) { }
@@ -37,7 +37,7 @@ export class SageIntacctConfigurationsComponent implements OnInit {
   showExpenseFields() {
     const that = this;
 
-    if (that.fyleFields && that.fyleFields.length && that.generalSettings) {
+    if (that.fyleFields && that.fyleFields.length && that.configuration) {
       return true;
     }
 
@@ -56,11 +56,11 @@ export class SageIntacctConfigurationsComponent implements OnInit {
       forkJoin(
         [
           that.mappingsService.getFyleFields(),
-          that.settingsService.getGeneralSettings(that.workspaceId),
+          that.settingsService.getConfiguration(that.workspaceId),
         ]
       ).subscribe(response => {
         that.fyleFields = response[0];
-        that.generalSettings = response[1];
+        that.configuration = response[1];
         that.isParentLoading = false;
       }, () => {
         that.isParentLoading = false;

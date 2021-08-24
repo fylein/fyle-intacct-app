@@ -102,7 +102,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     let cachedPageSize = that.storageService.get('expense-groups.pageSize') || 10;
     that.pageSize = +that.route.snapshot.queryParams.page_size || cachedPageSize;
     that.state = that.route.snapshot.queryParams.state || 'FAILED';
-    that.settingsService.getGeneralSettings(that.workspaceId).subscribe((settings) => {
+    that.settingsService.getConfiguration(that.workspaceId).subscribe((settings) => {
       if (that.state === 'COMPLETE') {
         that.columnsToDisplay = ['export-date', 'employee', 'export', 'expense-type', 'openSageIntacct'];
       } else {

@@ -11,7 +11,7 @@
     <button class="page-info--primary-action" mat-flat-button color="primary" type="button" (click)="open()">
       Create Employee Mapping
     </button>
-    <button class="secondary-button" mat-flat-button color="secondary" type="button" *ngIf="generalSettings.auto_map_employees" (click)="triggerAutoMapEmployees()">
+    <button class="secondary-button" mat-flat-button color="secondary" type="button" *ngIf="configuration.auto_map_employees" (click)="triggerAutoMapEmployees()">
       Refresh Employee Mappings
     </button>
     <mat-form-field class="simple-search" appearance="outline" *ngIf="count" >
@@ -44,8 +44,8 @@
 
       <ng-container matColumnDef="si">
         <th mat-header-cell *matHeaderCellDef>
-          <span *ngIf="generalSettings.reimbursable_expenses_object === 'BILL'">Sage Intacct Vendor</span>
-          <span *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT'">Sage Intacct Employee</span>
+          <span *ngIf="configuration.reimbursable_expenses_object === 'BILL'">Sage Intacct Vendor</span>
+          <span *ngIf="configuration.reimbursable_expenses_object === 'EXPENSE_REPORT'">Sage Intacct Employee</span>
         </th>
         <td mat-cell *matCellDef="let element">
           {{element.si_value}}

@@ -11,7 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { ChargeCardTransactionsService } from 'src/app/core/services/charge-card-transactions.service';
-import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { Configuration } from 'src/app/core/models/configuration.model';
 import { TaskResponse } from 'src/app/core/models/task-reponse.model';
 
 @Component({
@@ -27,7 +27,7 @@ export class ExportComponent implements OnInit {
   processingExportsCount: number;
   workspaceId: number;
   exportableExpenseGroups: ExpenseGroup[];
-  generalSettings: GeneralSetting;
+  configuration: Configuration;
   failedExpenseGroupCount = 0;
   successfulExpenseGroupCount = 0;
   exportedCount = 0;
@@ -110,22 +110,22 @@ export class ExportComponent implements OnInit {
   createSageIntacctItems() {
     const that = this;
     that.isExporting = true;
-    that.settingsService.getGeneralSettings(that.workspaceId).subscribe((settings) => {
-      that.generalSettings = settings;
+    that.settingsService.getConfiguration(that.workspaceId).subscribe((settings) => {
+      that.configuration = settings;
       const promises = [];
       let allFilteredIds = [];
-      if (that.generalSettings.reimbursable_expenses_object) {
+      if (that.configuration.reimbursable_expenses_object) {
         const filteredIds = that.exportableExpenseGroups.filter(expenseGroup => expenseGroup.fund_source === 'PERSONAL').map(expenseGroup => expenseGroup.id);
         if (filteredIds.length > 0) {
-          promises.push(that.exportReimbursableExpenses(that.generalSettings.reimbursable_expenses_object)(filteredIds));
+          promises.push(that.exportReimbursableExpenses(that.configuration.reimbursable_expenses_object)(filteredIds));
           allFilteredIds = allFilteredIds.concat(filteredIds);
         }
       }
 
-      if (that.generalSettings.corporate_credit_card_expenses_object) {
+      if (that.configuration.corporate_credit_card_expenses_object) {
         const filteredIds = that.exportableExpenseGroups.filter(expenseGroup => expenseGroup.fund_source === 'CCC').map(expenseGroup => expenseGroup.id);
         if (filteredIds.length > 0) {
-          promises.push(that.exportCCCExpenses(that.generalSettings.corporate_credit_card_expenses_object)(filteredIds));
+          promises.push(that.exportCCCExpenses(that.configuration.corporate_credit_card_expenses_object)(filteredIds));
 
           allFilteredIds = allFilteredIds.concat(filteredIds);
         }
