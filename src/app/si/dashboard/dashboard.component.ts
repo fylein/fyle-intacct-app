@@ -11,6 +11,7 @@ import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { WorkspaceService } from 'src/app/core/services/workspace.service';
 import { Workspace } from 'src/app/core/models/workspace.model';
+import { TrackingService } from 'src/app/core/services/tracking.service';
 
 
 const FYLE_URL = environment.fyle_url;
@@ -57,12 +58,33 @@ export class DashboardComponent implements OnInit {
     private mappingsService: MappingsService,
     private storageService: StorageService,
     private windowReferenceService: WindowReferenceService,
-    private snackBar: MatSnackBar) {
+    private snackBar: MatSnackBar,
+    private trackingService: TrackingService) {
       this.windowReference = this.windowReferenceService.nativeWindow;
     }
 
   connectFyle() {
     this.windowReference.location.href = `${FYLE_URL}/app/developers/#/oauth/authorize?client_id=${FYLE_CLIENT_ID}&redirect_uri=${APP_URL}/workspaces/fyle/callback&response_type=code&state=${this.workspaceId}`;
+  }
+
+  onConnectSageIntacctPageVisit(onboarding: boolean = false) {
+    this.trackingService.onConnectSageIntacctPageVisit(onboarding);
+  }
+
+  onConfigurationsPageVisit(onboarding: boolean = false) {
+    this.trackingService.onConfigurationsPageVisit(onboarding);
+  }
+
+  onGeneralMappingsPageVisit(onboarding: boolean = false) {
+    this.trackingService.onGeneralMappingsPageVisit(onboarding);
+  }
+
+  onEmployeeMappingsPageVisit(onboarding: boolean = false) {
+    this.trackingService.onEmployeeMappingsPageVisit(onboarding);
+  }
+
+  onCategoryMappingsPageVisit(onboarding: boolean = false) {
+    this.trackingService.onCategoryMappingsPageVisit(onboarding);
   }
 
   // TODO: remove promises and do with rxjs observables

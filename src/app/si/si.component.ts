@@ -11,6 +11,7 @@ import { Workspace } from '../core/models/workspace.model';
 import { GeneralSetting } from '../core/models/general-setting.model';
 import { MappingSetting } from '../core/models/mapping-setting.model';
 import { MappingSettingResponse } from '../core/models/mapping-setting-response.model';
+import { TrackingService } from '../core/services/tracking.service';
 
 @Component({
   selector: 'app-si',
@@ -37,7 +38,8 @@ export class SiComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private storageService: StorageService,
-    private windowReferenceService: WindowReferenceService) {
+    private windowReferenceService: WindowReferenceService,
+    private trackingService: TrackingService) {
     this.windowReference = this.windowReferenceService.nativeWindow;
   }
 
@@ -75,6 +77,7 @@ export class SiComponent implements OnInit {
 
   switchWorkspace() {
     this.authService.switchWorkspace();
+    this.trackingService.onSwitchWorkspace();
   }
 
   getSettingsAndNavigate() {
@@ -140,15 +143,26 @@ export class SiComponent implements OnInit {
     that.workspaceService.getWorkspaces(that.user.org_id).subscribe(workspaces => {
       if (Array.isArray(workspaces) && workspaces.length > 0) {
         that.workspace = workspaces[0];
+        that.setUserIdentity(that.user.employee_email, {workspaceId : workspaces[0].id});
         that.getSettingsAndNavigate();
+        that.getSageIntacctCompanyName();
       } else {
         that.workspaceService.createWorkspace().subscribe(workspace => {
           that.workspace = workspace;
+          that.setUserIdentity(that.user.employee_email, {workspaceId : workspace.id});
           that.getSettingsAndNavigate();
+          that.getSageIntacctCompanyName();
         });
       }
-      that.getSageIntacctCompanyName();
     });
+  }
+
+  setUserIdentity(email: string, properties) {
+    this.trackingService.onSignIn(email, properties);
+  }
+
+  onSignOut() {
+    this.trackingService.onSignOut();
   }
 
   ngOnInit() {
