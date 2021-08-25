@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 
 
 export class TrackingService {
-  identityEmail = null;
+  identityEmail: string;
 
   constructor(
   ) { }
@@ -15,7 +15,7 @@ export class TrackingService {
     return (window as any).analytics;
   }
 
-  eventTrack(action, properties= {}) {
+  eventTrack(action: string, properties= {}) {
     properties = {
       ...properties,
       Asset: 'Sage-Intacct Web'
@@ -25,43 +25,20 @@ export class TrackingService {
     }
   }
 
-  onSignIn(email: string, properties) {
+  onSignIn(email: string,workSpaceId: number, properties) {
     if (this.tracking) {
       this.tracking.identify(email, {
+        workSpaceId: workSpaceId,
       });
       this.identityEmail = email;
     }
     this.eventTrack('Sign In', properties);
   }
 
-  onConnectSageIntacctPageVisit(onboarding) {
-    if (onboarding) {
-      this.eventTrack('Onboarding: Visited Connect Sage-Intacct Page');
-    }
-  }
-
-  onConfigurationsPageVisit(onboarding) {
-    if (onboarding) {
-      this.eventTrack('Onboarding: Visited Configurations Page');
-    }
-  }
-
-  onGeneralMappingsPageVisit(onboarding) {
-    if (onboarding) {
-      this.eventTrack('Onboarding: Visited General Mapping Page');
-    }
-  }
-
-  onEmployeeMappingsPageVisit(onboarding) {
-    if (onboarding) {
-      this.eventTrack('Onboarding: Visited Employee Mapping Page');
-    }
-  }
-
-  onCategoryMappingsPageVisit(onboarding) {
-    if (onboarding) {
-      this.eventTrack('Onboarding: Visited Category Mapping Page');
-    }
+  onPageVisit(page: string, onboarding: boolean=false) {
+    let event = `Visited ${page} Page`;
+    event = onboarding ? `Onboarding: ${event}` : event;
+    this.eventTrack(event);
   }
 
   onSignOut() {

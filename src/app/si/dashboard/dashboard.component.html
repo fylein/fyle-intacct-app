@@ -45,7 +45,7 @@
           <div routerLink="../settings/connect_sage_intacct/" class="onboarding-stepper--navigation cursor-pointer"
             *ngIf="currentState === allOnboardingStates.fyleConnected"
             [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.fyleConnected}"
-            (click)="onConnectSageIntacctPageVisit('true')">
+            (click)="onConnectSageIntacctPageVisit(true)">
             Connect to Sage Intacct
           </div>
         </div>
@@ -66,7 +66,7 @@
           <div routerLink="../settings/configurations/general/" class="onboarding-stepper--navigation cursor-pointer"
             *ngIf="currentState === allOnboardingStates.sageIntacctConnected"
             [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.sageIntacctConnected}"
-            (click)="onConfigurationsPageVisit('true')">
+            (click)="onConfigurationsPageVisit(true)">
             Go to Configurations
           </div>
         </div>
@@ -81,7 +81,7 @@
           <div routerLink="../settings/general/mappings/" class="onboarding-stepper--navigation cursor-pointer"
             *ngIf="currentState === allOnboardingStates.configurationsDone"
             [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.configurationsDone}"
-            (click)="onGeneralMappingsPageVisit('true')">
+            (click)="onGeneralMappingsPageVisit(true)">
             Go to General Mappings
           </div>
         </div>
@@ -102,7 +102,7 @@
           <div routerLink="../settings/employee/mappings/" class="onboarding-stepper--navigation cursor-pointer"
             *ngIf="currentState === allOnboardingStates.generalMappingsDone"
             [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.generalMappingsDone}"
-            (click)="onEmployeeMappingsPageVisit('true')">
+            (click)="onEmployeeMappingsPageVisit(true)">
             Go to Employee Mappings
           </div>
         </div>
@@ -114,7 +114,7 @@
           <div routerLink="../settings/category/mappings/" class="onboarding-stepper--navigation cursor-pointer"
             *ngIf="currentState === allOnboardingStates.employeeMappingsDone"
             [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.employeeMappingsDone}"
-            (click)="onCategoryMappingsPageVisit('true')">
+            (click)="onCategoryMappingsPageVisit(true)">
             Go to Category Mappings
           </div>
         </div>
