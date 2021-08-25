@@ -35,31 +35,31 @@ export class TrackingService {
   }
 
   onConnectSageIntacctPageVisit(onboarding) {
-    if(onboarding) {
+    if (onboarding) {
       this.eventTrack('Onboarding: Visited Connect Sage-Intacct Page');
     }
   }
 
   onConfigurationsPageVisit(onboarding) {
-    if(onboarding) {
+    if (onboarding) {
       this.eventTrack('Onboarding: Visited Configurations Page');
     }
   }
 
   onGeneralMappingsPageVisit(onboarding) {
-    if(onboarding) {
+    if (onboarding) {
       this.eventTrack('Onboarding: Visited General Mapping Page');
     }
   }
 
   onEmployeeMappingsPageVisit(onboarding) {
-    if(onboarding) {
+    if (onboarding) {
       this.eventTrack('Onboarding: Visited Employee Mapping Page');
     }
   }
 
   onCategoryMappingsPageVisit(onboarding) {
-    if(onboarding) {
+    if (onboarding) {
       this.eventTrack('Onboarding: Visited Category Mapping Page');
     }
   }
