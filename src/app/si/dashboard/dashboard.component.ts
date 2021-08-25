@@ -8,7 +8,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ExpenseGroupsService } from 'src/app/core/services/expense-groups.service';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
+import { WorkspaceService } from 'src/app/core/services/workspace.service';
+import { Workspace } from 'src/app/core/models/workspace.model';
+import { TrackingService } from 'src/app/core/services/tracking.service';
 import { Configuration } from 'src/app/core/models/configuration.model';
+
 
 const FYLE_URL = environment.fyle_url;
 const FYLE_CLIENT_ID = environment.fyle_client_id;
@@ -54,12 +58,33 @@ export class DashboardComponent implements OnInit {
     private mappingsService: MappingsService,
     private storageService: StorageService,
     private windowReferenceService: WindowReferenceService,
-    private snackBar: MatSnackBar) {
+    private snackBar: MatSnackBar,
+    private trackingService: TrackingService) {
       this.windowReference = this.windowReferenceService.nativeWindow;
     }
 
   connectFyle() {
     this.windowReference.location.href = `${FYLE_URL}/app/developers/#/oauth/authorize?client_id=${FYLE_CLIENT_ID}&redirect_uri=${APP_URL}/workspaces/fyle/callback&response_type=code&state=${this.workspaceId}`;
+  }
+
+  onConnectSageIntacctPageVisit(onboarding: boolean = false) {
+    this.trackingService.onPageVisit('Connect Sage-Intacct', onboarding);
+  }
+
+  onConfigurationsPageVisit(onboarding: boolean = false) {
+    this.trackingService.onPageVisit('Configurations', onboarding);
+  }
+
+  onGeneralMappingsPageVisit(onboarding: boolean = false) {
+    this.trackingService.onPageVisit('Genral Mappings', onboarding);
+  }
+
+  onEmployeeMappingsPageVisit(onboarding: boolean = false) {
+    this.trackingService.onPageVisit('Employee Mappings', onboarding);
+  }
+
+  onCategoryMappingsPageVisit(onboarding: boolean = false) {
+    this.trackingService.onPageVisit('Category Mappings', onboarding);
   }
 
   // TODO: remove promises and do with rxjs observables
