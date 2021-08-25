@@ -68,23 +68,23 @@ export class DashboardComponent implements OnInit {
   }
 
   onConnectSageIntacctPageVisit(onboarding: boolean = false) {
-    this.trackingService.onPageVisit('Connect Sage-Intacct',onboarding);
+    this.trackingService.onPageVisit('Connect Sage-Intacct', onboarding);
   }
 
   onConfigurationsPageVisit(onboarding: boolean = false) {
-    this.trackingService.onPageVisit('Configurations',onboarding);
+    this.trackingService.onPageVisit('Configurations', onboarding);
   }
 
   onGeneralMappingsPageVisit(onboarding: boolean = false) {
-    this.trackingService.onPageVisit('Genral Mappings',onboarding);
+    this.trackingService.onPageVisit('Genral Mappings', onboarding);
   }
 
   onEmployeeMappingsPageVisit(onboarding: boolean = false) {
-    this.trackingService.onPageVisit('Employee Mappings',onboarding);
+    this.trackingService.onPageVisit('Employee Mappings', onboarding);
   }
 
   onCategoryMappingsPageVisit(onboarding: boolean = false) {
-    this.trackingService.onPageVisit('Category Mappings',onboarding);
+    this.trackingService.onPageVisit('Category Mappings', onboarding);
   }
 
   // TODO: remove promises and do with rxjs observables

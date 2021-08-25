@@ -25,17 +25,17 @@ export class TrackingService {
     }
   }
 
-  onSignIn(email: string,workSpaceId: number, properties) {
+  onSignIn(email: string, workspaceId: number, properties) {
     if (this.tracking) {
       this.tracking.identify(email, {
-        workSpaceId: workSpaceId,
+        workspaceId,
       });
       this.identityEmail = email;
     }
     this.eventTrack('Sign In', properties);
   }
 
-  onPageVisit(page: string, onboarding: boolean=false) {
+  onPageVisit(page: string, onboarding: boolean= false) {
     let event = `Visited ${page} Page`;
     event = onboarding ? `Onboarding: ${event}` : event;
     this.eventTrack(event);
