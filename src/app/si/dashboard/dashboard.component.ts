@@ -8,10 +8,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ExpenseGroupsService } from 'src/app/core/services/expense-groups.service';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
-import { GeneralSetting } from 'src/app/core/models/general-setting.model';
 import { WorkspaceService } from 'src/app/core/services/workspace.service';
 import { Workspace } from 'src/app/core/models/workspace.model';
 import { TrackingService } from 'src/app/core/services/tracking.service';
+import { Configuration } from 'src/app/core/models/configuration.model';
 
 
 const FYLE_URL = environment.fyle_url;
@@ -36,7 +36,7 @@ enum onboardingStates {
 export class DashboardComponent implements OnInit {
   workspaceId: number;
   isLoading = false;
-  generalSettings: GeneralSetting;
+  configuration: Configuration;
 
   currentState = onboardingStates.initialized;
 
@@ -111,11 +111,11 @@ export class DashboardComponent implements OnInit {
     // TODO: remove promises and do with rxjs observables
     return forkJoin(
       [
-        that.settingsService.getGeneralSettings(that.workspaceId),
+        that.settingsService.getConfiguration(that.workspaceId),
         that.settingsService.getMappingSettings(that.workspaceId)
       ]
     ).toPromise().then((res) => {
-      that.generalSettings = res[0];
+      that.configuration = res[0];
       that.currentState = onboardingStates.configurationsDone;
       return res;
     });
@@ -133,7 +133,7 @@ export class DashboardComponent implements OnInit {
   getEmployeeMappings() {
     const that = this;
     // TODO: remove promises and do with rxjs observables
-    if (that.generalSettings && that.generalSettings.auto_create_destination_entity) {
+    if (that.configuration && that.configuration.auto_create_destination_entity) {
       that.currentState = onboardingStates.employeeMappingsDone;
       return;
     } else {

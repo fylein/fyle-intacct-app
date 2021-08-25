@@ -8,7 +8,7 @@ import { StorageService } from '../core/services/storage.service';
 import { WindowReferenceService } from '../core/services/window.service';
 import { UserProfile } from '../core/models/user-profile.model';
 import { Workspace } from '../core/models/workspace.model';
-import { GeneralSetting } from '../core/models/general-setting.model';
+import { Configuration } from '../core/models/configuration.model';
 import { MappingSetting } from '../core/models/mapping-setting.model';
 import { MappingSettingResponse } from '../core/models/mapping-setting-response.model';
 import { TrackingService } from '../core/services/tracking.service';
@@ -25,7 +25,7 @@ export class SiComponent implements OnInit {
   isLoading = true;
   fyleConnected: boolean;
   companyName: string;
-  generalSettings: GeneralSetting;
+  configuration: Configuration;
   mappingSettings: MappingSetting[];
   showSwitchOrg: boolean;
   navDisabled = true;
@@ -107,7 +107,7 @@ export class SiComponent implements OnInit {
 
     return forkJoin(
       [
-        that.settingsService.getGeneralSettings(that.workspace.id),
+        that.settingsService.getConfiguration(that.workspace.id),
         that.settingsService.getMappingSettings(that.workspace.id)
       ]
     );

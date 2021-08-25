@@ -35,12 +35,12 @@
         </mat-error>
       </mat-form-field>
 
-      <div class="mat-body-strong" *ngIf="generalSettings.reimbursable_expenses_object === 'BILL'">
+      <div class="mat-body-strong" *ngIf="configuration.reimbursable_expenses_object === 'BILL'">
         <strong class="mappings-dialog--label">
           Gl Account
         </strong>
       </div>
-      <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="generalSettings.reimbursable_expenses_object === 'BILL'">
+      <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="configuration.reimbursable_expenses_object === 'BILL'">
         <input type="text" formControlName="sageIntacctAccount" placeholder="Choose Sage Intacct account" matInput
           [matAutocomplete]="siAc" [errorStateMatcher]="matcher">
         <mat-autocomplete #siAc="matAutocomplete" [displayWith]="mappingDisplay">
@@ -53,12 +53,12 @@
         </mat-error>
       </mat-form-field>
 
-      <div class="mat-body-strong" *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT'">
+      <div class="mat-body-strong" *ngIf="configuration.reimbursable_expenses_object === 'EXPENSE_REPORT'">
         <strong class="mappings-dialog--label">
           Expense Type
         </strong>
       </div>
-      <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT'">
+      <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="configuration.reimbursable_expenses_object === 'EXPENSE_REPORT'">
         <input type="text" formControlName="sageIntacctExpenseTypes" placeholder="Choose Sage Intacct expense type" matInput
           [matAutocomplete]="sageIntacctEt" [errorStateMatcher]="matcher">
         <mat-autocomplete #sageIntacctEt="matAutocomplete" [displayWith]="mappingDisplay">

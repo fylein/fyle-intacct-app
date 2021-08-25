@@ -5,7 +5,7 @@ import { SettingsService } from 'src/app/core/services/settings.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { WindowReferenceService } from 'src/app/core/services/window.service';
-import { GeneralSetting } from 'src/app/core/models/general-setting.model';
+import { Configuration } from 'src/app/core/models/configuration.model';
 import { SiComponent } from 'src/app/si/si.component';
 import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
 import { MappingsService } from 'src/app/core/services/mappings.service';
@@ -18,11 +18,11 @@ import { MappingsService } from 'src/app/core/services/mappings.service';
 export class ConfigurationComponent implements OnInit {
 
   isLoading: boolean;
-  generalSettingsForm: FormGroup;
+  configurationForm: FormGroup;
   expenseOptions: { label: string, value: string }[];
   cccExpenseOptions: { label: string, value: string }[];
   workspaceId: number;
-  generalSettings: GeneralSetting;
+  configuration: Configuration;
   mappingSettings: MappingSetting[];
   showAutoCreate: boolean;
   windowReference: Window;
@@ -92,11 +92,11 @@ export class ConfigurationComponent implements OnInit {
 
     forkJoin(
       [
-        that.settingsService.getGeneralSettings(that.workspaceId),
+        that.settingsService.getConfiguration(that.workspaceId),
         that.settingsService.getMappingSettings(that.workspaceId)
       ]
     ).subscribe(responses => {
-      that.generalSettings = responses[0];
+      that.configuration = responses[0];
       that.mappingSettings = responses[1].results;
 
       const projectFieldMapping = that.mappingSettings.filter(
@@ -117,23 +117,23 @@ export class ConfigurationComponent implements OnInit {
         value: 'BILL'
       }];
 
-      that.cccExpenseOptions = that.getCCCExpenseOptions(that.generalSettings.reimbursable_expenses_object);
+      that.cccExpenseOptions = that.getCCCExpenseOptions(that.configuration.reimbursable_expenses_object);
 
       let paymentsSyncOption = '';
-      if (that.generalSettings.sync_fyle_to_sage_intacct_payments) {
+      if (that.configuration.sync_fyle_to_sage_intacct_payments) {
         paymentsSyncOption = 'sync_fyle_to_sage_intacct_payments';
-      } else if (that.generalSettings.sync_sage_intacct_to_fyle_payments) {
+      } else if (that.configuration.sync_sage_intacct_to_fyle_payments) {
         paymentsSyncOption = 'sync_sage_intacct_to_fyle_payments';
       }
 
-      that.generalSettingsForm = that.formBuilder.group({
-        reimburExpense: [that.generalSettings ? that.generalSettings.reimbursable_expenses_object : ''],
-        cccExpense: [that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : ''],
+      that.configurationForm = that.formBuilder.group({
+        reimburExpense: [that.configuration ? that.configuration.reimbursable_expenses_object : ''],
+        cccExpense: [that.configuration ? that.configuration.corporate_credit_card_expenses_object : ''],
         importProjects: [importProjects],
-        importCategories: [that.generalSettings.import_categories],
+        importCategories: [that.configuration.import_categories],
         paymentsSync: [paymentsSyncOption],
-        autoMapEmployees: [that.generalSettings.auto_map_employees],
-        autoCreateDestinationEntity: [that.generalSettings.auto_create_destination_entity]
+        autoMapEmployees: [that.configuration.auto_map_employees],
+        autoCreateDestinationEntity: [that.configuration.auto_create_destination_entity]
       });
 
       const fyleProjectMapping = that.mappingSettings.filter(
@@ -146,26 +146,26 @@ export class ConfigurationComponent implements OnInit {
 
       // disable project sync toggle if either of Fyle / Sage Intacct Projects are already mapped to different fields
       if (fyleProjectMapping.length || sageIntacctProjectMapping.length) {
-        that.generalSettingsForm.controls.importProjects.disable();
+        that.configurationForm.controls.importProjects.disable();
       }
 
-      that.showAutoCreateOption(that.generalSettings.auto_map_employees);
+      that.showAutoCreateOption(that.configuration.auto_map_employees);
 
-      that.generalSettingsForm.controls.reimburExpense.disable();
+      that.configurationForm.controls.reimburExpense.disable();
 
-      that.generalSettingsForm.controls.autoMapEmployees.valueChanges.subscribe((employeeMappingPreference) => {
+      that.configurationForm.controls.autoMapEmployees.valueChanges.subscribe((employeeMappingPreference) => {
         that.showAutoCreateOption(employeeMappingPreference);
       });
 
-      if (that.generalSettings.corporate_credit_card_expenses_object) {
-        that.generalSettingsForm.controls.cccExpense.disable();
+      if (that.configuration.corporate_credit_card_expenses_object) {
+        that.configurationForm.controls.cccExpense.disable();
       }
 
       that.isLoading = false;
     }, () => {
       that.isLoading = false;
       that.mappingSettings = [];
-      that.generalSettingsForm = that.formBuilder.group({
+      that.configurationForm = that.formBuilder.group({
         reimburExpense: ['', Validators.required],
         cccExpense: [null],
         importProjects: [false],
@@ -175,11 +175,11 @@ export class ConfigurationComponent implements OnInit {
         autoCreateDestinationEntity: [false]
       });
 
-      that.generalSettingsForm.controls.autoMapEmployees.valueChanges.subscribe((employeeMappingPreference) => {
+      that.configurationForm.controls.autoMapEmployees.valueChanges.subscribe((employeeMappingPreference) => {
         that.showAutoCreateOption(employeeMappingPreference);
       });
 
-      that.generalSettingsForm.controls.reimburExpense.valueChanges.subscribe((reimburseExpenseMappingPreference) => {
+      that.configurationForm.controls.reimburExpense.valueChanges.subscribe((reimburseExpenseMappingPreference) => {
         that.cccExpenseOptions = that.getCCCExpenseOptions(reimburseExpenseMappingPreference);
       });
 
@@ -199,14 +199,14 @@ export class ConfigurationComponent implements OnInit {
   save() {
     const that = this;
 
-    const reimbursableExpensesObject = that.generalSettingsForm.value.reimburExpense || (that.generalSettings ? that.generalSettings.reimbursable_expenses_object : null);
-    const cccExpensesObject = that.generalSettingsForm.value.cccExpense || (that.generalSettings ? that.generalSettings.corporate_credit_card_expenses_object : null);
+    const reimbursableExpensesObject = that.configurationForm.value.reimburExpense || (that.configuration ? that.configuration.reimbursable_expenses_object : null);
+    const cccExpensesObject = that.configurationForm.value.cccExpense || (that.configuration ? that.configuration.corporate_credit_card_expenses_object : null);
     const categoryMappingObject = that.getCategory(reimbursableExpensesObject)[0].value;
     const employeeMappingsObject = that.getEmployee(reimbursableExpensesObject)[0].value;
-    const importProjects = that.generalSettingsForm.value.importProjects;
-    const importCategories = that.generalSettingsForm.value.importCategories;
-    const autoMapEmployees = that.generalSettingsForm.value.autoMapEmployees ? that.generalSettingsForm.value.autoMapEmployees : null;
-    const autoCreateDestinationEntity = that.generalSettingsForm.value.autoCreateDestinationEntity;
+    const importProjects = that.configurationForm.value.importProjects;
+    const importCategories = that.configurationForm.value.importCategories;
+    const autoMapEmployees = that.configurationForm.value.autoMapEmployees ? that.configurationForm.value.autoMapEmployees : null;
+    const autoCreateDestinationEntity = that.configurationForm.value.autoCreateDestinationEntity;
 
     let fyleToSageIntacct = false;
     let sageIntacctToFyle = false;
@@ -255,9 +255,9 @@ export class ConfigurationComponent implements OnInit {
       });
     }
 
-    if (that.generalSettingsForm.controls.paymentsSync.value) {
-      fyleToSageIntacct = that.generalSettingsForm.value.paymentsSync === 'sync_fyle_to_sage_intacct_payments' ? true : false;
-      sageIntacctToFyle = that.generalSettingsForm.value.paymentsSync === 'sync_sage_intacct_to_fyle_payments' ? true : false;
+    if (that.configurationForm.controls.paymentsSync.value) {
+      fyleToSageIntacct = that.configurationForm.value.paymentsSync === 'sync_fyle_to_sage_intacct_payments' ? true : false;
+      sageIntacctToFyle = that.configurationForm.value.paymentsSync === 'sync_sage_intacct_to_fyle_payments' ? true : false;
     }
 
     that.isLoading = true;
@@ -265,13 +265,13 @@ export class ConfigurationComponent implements OnInit {
     forkJoin(
       [
         that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-        that.settingsService.postGeneralSettings(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, importProjects, importCategories, fyleToSageIntacct, sageIntacctToFyle, autoCreateDestinationEntity, autoMapEmployees)
+        that.settingsService.postConfiguration(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, importProjects, importCategories, fyleToSageIntacct, sageIntacctToFyle, autoCreateDestinationEntity, autoMapEmployees)
       ]
     ).subscribe(() => {
       that.isLoading = true;
       that.snackBar.open('Configuration saved successfully');
 
-      that.si.getGeneralSettings();
+      that.si.getConfigurations();
 
       if (autoMapEmployees) {
         setTimeout(() => {
@@ -291,7 +291,7 @@ export class ConfigurationComponent implements OnInit {
       that.showAutoCreate = true;
     } else {
       that.showAutoCreate = false;
-      that.generalSettingsForm.controls.autoCreateDestinationEntity.setValue(false);
+      that.configurationForm.controls.autoCreateDestinationEntity.setValue(false);
     }
   }
 
