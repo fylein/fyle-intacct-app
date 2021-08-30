@@ -189,7 +189,6 @@ export class SiComponent implements OnInit {
   }
 
   onCategoryMappingsPageVisit() {
-    throw new Error('intacct app error');
     this.trackingService.onPageVisit('Category Mappings');
   }
 
