@@ -8,4 +8,5 @@ interface Env {
   API_URL: string;
   APP_URL: string;
   HOTJAR_ID: string;
+  SENTRY_DSN: string
 }

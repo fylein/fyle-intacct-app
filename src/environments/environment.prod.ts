@@ -5,5 +5,6 @@ export const environment = {
   callback_uri: '{{CALLBACK_URI}}',
   api_url: '{{API_URL}}',
   app_url: '{{APP_URL}}',
-  hotjar_id: '{{HOTJAR_ID}}'
+  hotjar_id: '{{HOTJAR_ID}}',
+  sentry_dsn: '{{SENTRY_DSN}}'
 };

@@ -9,7 +9,8 @@ export const environment = {
   callback_uri: 'CALLBACK URL',
   api_url: 'SAGE INTACCT API URL',
   app_url: 'ANGULAR APP URL',
-  hotjar_id: 'HOTJAR_ID'
+  hotjar_id: 'HOTJAR_ID',
+  sentry_dsn: 'SENTRY_DSN'
 };
 
 /*
