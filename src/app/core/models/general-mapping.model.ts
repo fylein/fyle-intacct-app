@@ -8,6 +8,8 @@ export type GeneralMapping = {
   default_location_id: string;
   default_department_name: string;
   default_department_id: string;
+  default_class_name: string;
+  default_class_id: string;
   default_project_name: string;
   default_project_id: string;
   default_charge_card_name: string;
