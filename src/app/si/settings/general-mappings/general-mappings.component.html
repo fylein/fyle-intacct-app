@@ -88,6 +88,22 @@
         </mat-select>
       </mat-form-field>
 
+      <div class="mat-body-strong">
+        <strong class="mappings-dialog--label">
+          Default Class
+        </strong>
+      </div>
+      <mat-form-field class="mappings-dialog--form-element" appearance="outline">
+        <mat-select placeholder="Default Class" formControlName="defaultClass">
+          <mat-option>
+            None
+          </mat-option>
+          <mat-option *ngFor="let option of sageIntacctClasses" [value]="option.destination_id">
+            {{option.value}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
       <div class="mat-body-strong" *ngIf="configuration.corporate_credit_card_expenses_object && configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION'">
         <strong class="mappings-dialog--label">
           Default Charge Card
