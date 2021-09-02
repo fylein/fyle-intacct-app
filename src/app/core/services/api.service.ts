@@ -24,14 +24,17 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   private handleError(error: HttpErrorResponse) {
-    if (error.error instanceof ErrorEvent) {
-      console.error('An error occurred:', error.error.message);
-    } else {
-      console.error(
-        `Backend returned code ${error.status}, ` + `body was: ${error.error}`
-      );
+    if(error.status >= 500)
+    {
+      if (error.error instanceof ErrorEvent) {
+        console.error('An error occurred:', error.error.message);
+      } else {
+        console.error(
+          `Backend returned code ${error.status}, ` + `body was: ${error.error}`
+        );
+      }
+      return throwError(error);
     }
-    return throwError(error);
   }
   // Having any here is ok
   post(endpoint: string, body: {}): Observable<any> {
