@@ -18,4 +18,6 @@ services:
       FYLE_CLIENT_ID: 
       CALLBACK_URI: 
       API_URL: 
-      APP_URL: 
+      APP_URL:
+      SENTRY_DSN:
+      RELEASE:
