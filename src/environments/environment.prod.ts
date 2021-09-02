@@ -6,5 +6,6 @@ export const environment = {
   api_url: '{{API_URL}}',
   app_url: '{{APP_URL}}',
   hotjar_id: '{{HOTJAR_ID}}',
-  sentry_dsn: '{{SENTRY_DSN}}'
+  sentry_dsn: '{{SENTRY_DSN}}',
+  release: '{{RELEASE}}'
 };

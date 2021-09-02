@@ -6,5 +6,6 @@ export const environment = {
     api_url: $ENV.API_URL,
     app_url: $ENV.APP_URL,
     hotjar_id: $ENV.HOTJAR_ID,
-    sentry_dsn: $ENV.SENTRY_DSN
+    sentry_dsn: $ENV.SENTRY_DSN,
+    release: $ENV.RELEASE
 };

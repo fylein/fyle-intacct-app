@@ -19,4 +19,5 @@ services:
       CALLBACK_URI: 
       API_URL: 
       APP_URL:
-      SENTRY_DSN: 
+      SENTRY_DSN:
+      RELEASE:

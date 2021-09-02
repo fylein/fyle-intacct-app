@@ -11,7 +11,8 @@ module.exports = {
         API_URL: JSON.stringify(process.env.API_URL),
         APP_URL: JSON.stringify(process.env.APP_URL),
         HOTJAR_ID: JSON.stringify(process.env.HOTJAR_ID),
-        SENTRY_DSN: JSON.stringify(process.env.SENTRY_DSN)
+        SENTRY_DSN: JSON.stringify(process.env.SENTRY_DSN),
+        RELEASE: JSON.stringify(process.env.RELEASE)
       }
     })
   ]
