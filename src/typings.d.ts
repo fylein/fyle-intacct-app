@@ -9,5 +9,5 @@ interface Env {
   APP_URL: string;
   HOTJAR_ID: string;
   SENTRY_DSN: string;
-  RELEASE: string
+  RELEASE: string;
 }
