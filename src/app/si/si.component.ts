@@ -189,6 +189,7 @@ export class SiComponent implements OnInit {
   }
 
   onCategoryMappingsPageVisit() {
+    throw new Error('single quote changes');
     this.trackingService.onPageVisit('Category Mappings');
   }
 
