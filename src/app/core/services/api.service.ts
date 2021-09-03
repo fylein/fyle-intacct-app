@@ -23,7 +23,7 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  private handleError(error: HttpErrorResponse) {debugger
+  private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       console.error('An error occurred:', error.error.message);
     } else {
@@ -44,7 +44,7 @@ export class ApiService {
       .pipe(catchError(this.handleError));
   }
   // Having any here is ok
-  get(endpoint: string, apiParams: {}): Observable<any> {debugger
+  get(endpoint: string, apiParams: {}): Observable<any> {
     let params = new HttpParams();
     Object.keys(apiParams).forEach(key => {
       params = params.set(key, apiParams[key]);
