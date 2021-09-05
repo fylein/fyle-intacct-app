@@ -271,7 +271,7 @@ export class ConfigurationComponent implements OnInit {
       that.isLoading = true;
       that.snackBar.open('Configuration saved successfully');
 
-      that.si.getConfigurations();
+      that.si.getGeneralSettings();
 
       if (autoMapEmployees) {
         setTimeout(() => {
