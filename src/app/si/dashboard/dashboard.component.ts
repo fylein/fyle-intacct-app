@@ -14,7 +14,7 @@ import { TrackingService } from 'src/app/core/services/tracking.service';
 import { Configuration } from 'src/app/core/models/configuration.model';
 
 
-const FYLE_URL = environment.fyle_url;
+const FYLE_URL = 'https://accounts1.fyle.tech' || environment.fyle_url;
 const FYLE_CLIENT_ID = environment.fyle_client_id;
 const APP_URL = environment.app_url;
 
