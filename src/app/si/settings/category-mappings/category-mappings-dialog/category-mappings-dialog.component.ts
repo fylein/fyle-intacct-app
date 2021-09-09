@@ -173,7 +173,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
     that.isLoading = true;
 
     forkJoin([
-      that.mappingsService.getFyleExpenseCustomFields('CATEGORY'),
+      that.mappingsService.getFyleExpenseAttributes('CATEGORY'),
       that.mappingsService.getSageIntacctExpenseCustomFields('ACCOUNT'),
       that.mappingsService.getSageIntacctExpenseCustomFields('EXPENSE_TYPE')
     ]).subscribe(response => {
