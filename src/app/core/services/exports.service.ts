@@ -5,16 +5,17 @@ import { WorkspaceService } from './workspace.service';
 @Injectable({
   providedIn: 'root',
 })
-export class ExpenseReportsService {
+export class ExportsService {
   constructor(
     private apiService: ApiService,
     private workspaceService: WorkspaceService) {}
 
-  createExpenseReports(expenseGroupIds: number[]) {
+  triggerExports(expenseGroupIds: number[], exportType: string) {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.post(
-      `/workspaces/${workspaceId}/sage_intacct/expense_reports/trigger/`, {
-        expense_group_ids: expenseGroupIds
+      `/workspaces/${workspaceId}/sage_intacct/exports/trigger/`, {
+        expense_group_ids: expenseGroupIds,
+        export_type: exportType
       }
     );
   }

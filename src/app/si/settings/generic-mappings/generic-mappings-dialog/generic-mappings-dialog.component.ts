@@ -120,7 +120,7 @@ export class GenericMappingsDialogComponent implements OnInit {
     that.isLoading = true;
     forkJoin([
       that.mappingsService.getFyleExpenseAttributes(that.setting.source_field),
-      that.mappingsService.getSageIntacctExpenseCustomFields(that.setting.destination_field)
+      that.mappingsService.getSageIntacctDestinationAttributes(that.setting.destination_field)
     ]).subscribe(response => {
       that.isLoading = false;
 

@@ -7,6 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { GeneralMapping } from 'src/app/core/models/general-mapping.model';
 import { MappingDestination } from 'src/app/core/models/mapping-destination.model';
+import { GroupedDestinationAttributes } from 'src/app/core/models/grouped-destination-attributes';
 import { Configuration } from 'src/app/core/models/configuration.model';
 
 @Component({
@@ -137,37 +138,54 @@ export class GeneralMappingsComponent implements OnInit {
     return false;
   }
 
+  getAttributesFilteredByConfig() {
+    const attributes = [
+      'LOCATION', 'DEPARTMENT', 'PROJECT', 'LOCATION_ENTITY', 'CLASS',
+    ];
+    
+    if (this.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT') {
+        attributes.push('EXPENSE_REPORT');
+    }
+
+    if (this.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
+        attributes.push('CHARGE_CARD_NUMBER');
+    }
+
+    if (this.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'BILL') {
+        attributes.push('VENDOR');
+    }
+
+    if (this.configuration.import_projects) {
+        attributes.push('ITEM');
+    }
+
+    if (this.configuration.sync_fyle_to_sage_intacct_payments) {
+        attributes.push('PAYMENT_ACCOUNT');
+    }
+
+    return attributes;
+  }
+
   reset() {
     const that = this;
     that.isLoading = true;
 
-    forkJoin(
-      [
-        that.mappingsService.getSageIntacctExpenseCustomFields('LOCATION'),
-        that.mappingsService.getSageIntacctExpenseCustomFields('DEPARTMENT'),
-        that.mappingsService.getSageIntacctExpenseCustomFields('PROJECT'),
-        that.mappingsService.getSageIntacctExpenseCustomFields('VENDOR'),
-        that.mappingsService.getSageIntacctExpenseCustomFields('CHARGE_CARD_NUMBER'),
-        that.mappingsService.getSageIntacctExpenseCustomFields('ITEM'),
-        that.mappingsService.getSageIntacctExpenseCustomFields('PAYMENT_ACCOUNT'),
-        that.mappingsService.getSageIntacctExpenseCustomFields('EXPENSE_PAYMENT_TYPE'),
-        that.mappingsService.getSageIntacctExpenseCustomFields('LOCATION_ENTITY'),
-        that.mappingsService.getSageIntacctExpenseCustomFields('CLASS')
-      ]
-    ).subscribe(response => {
+    const attributes = this.getAttributesFilteredByConfig();
+
+    that.mappingsService.getGroupedSageIntacctDestinationAttributes(attributes).subscribe(response => {
       that.isLoading = false;
 
-      that.sageIntacctLocations = response[0];
-      that.sageIntacctDepartments = response[1];
-      that.sageIntacctProjects = response[2];
-      that.sageIntacctDefaultVendor = response[3];
-      that.sageIntacctDefaultChargeCard = response[4];
-      that.sageIntacctDefaultItem = response[5];
-      that.sageIntacctPaymentAccounts = response[6];
-      that.sageIntacctReimbursableExpensePaymentType = response[7].filter(expensePaymentType => expensePaymentType.detail.is_reimbursable);
-      that.sageIntacctCCCExpensePaymentType = response[7].filter(expensePaymentType => expensePaymentType.detail.is_reimbursable === false);
-      that.sageIntacctLocationEntities = response[8];
-      that.sageIntacctClasses = response[9];
+      that.sageIntacctLocations = response.LOCATION;
+      that.sageIntacctDepartments = response.DEPARTMENT;
+      that.sageIntacctProjects = response.PROJECT;
+      that.sageIntacctDefaultVendor = response.VENDOR;
+      that.sageIntacctDefaultChargeCard = response.CHARGE_CARD_NUMBER;
+      that.sageIntacctDefaultItem = response.ITEM;
+      that.sageIntacctPaymentAccounts = response.PAYMENT_ACCOUNT;
+      that.sageIntacctReimbursableExpensePaymentType = response.EXPENSE_PAYMENT_TYPE.filter(expensePaymentType => expensePaymentType.detail.is_reimbursable);
+      that.sageIntacctCCCExpensePaymentType = response.EXPENSE_PAYMENT_TYPE.filter(expensePaymentType => expensePaymentType.detail.is_reimbursable === false);
+      that.sageIntacctLocationEntities = response.LOCATION_ENTITY;
+      that.sageIntacctClasses = response.CLASS;
 
       that.form = that.formBuilder.group({
         locationEntity: [that.generalMappings ? that.generalMappings.location_entity_id : null],
