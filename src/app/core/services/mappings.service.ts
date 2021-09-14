@@ -150,19 +150,19 @@ export class MappingsService {
       }, {
         EXPENSE_TYPE: [],
         VENDOR: [],
-        CLASS:[],
-        CHARGE_CARD_NUMBER:[],
-        ITEM:[],
-        EMPLOYEE:[],
-        ACCOUNT:[],
-        LOCATION_ENTITY:[],
-        CCC_ACCOUNT:[],
-        EXPENSE_PAYMENT_TYPE:[],
-        PAYMENT_ACCOUNT:[],
-        DEPARTMENT:[],
-        PROJECT:[],
-        LOCATION:[],
-        USER_DIMENSION:[]
+        CLASS: [],
+        CHARGE_CARD_NUMBER: [],
+        ITEM: [],
+        EMPLOYEE: [],
+        ACCOUNT: [],
+        LOCATION_ENTITY: [],
+        CCC_ACCOUNT: [],
+        EXPENSE_PAYMENT_TYPE: [],
+        PAYMENT_ACCOUNT: [],
+        DEPARTMENT: [],
+        PROJECT: [],
+        LOCATION: [],
+        USER_DIMENSION: []
       });
     }));
   }

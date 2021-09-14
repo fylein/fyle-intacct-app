@@ -1,4 +1,5 @@
-import { MappingDestination } from "./mapping-destination.model";
+/* tslint:disable */
+import { MappingDestination } from './mapping-destination.model';
 
 export type GroupedDestinationAttributes = {
     EXPENSE_TYPE?: MappingDestination[];

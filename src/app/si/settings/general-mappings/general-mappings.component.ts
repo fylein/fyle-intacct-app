@@ -9,6 +9,7 @@ import { GeneralMapping } from 'src/app/core/models/general-mapping.model';
 import { MappingDestination } from 'src/app/core/models/mapping-destination.model';
 import { GroupedDestinationAttributes } from 'src/app/core/models/grouped-destination-attributes';
 import { Configuration } from 'src/app/core/models/configuration.model';
+import { TouchSequence } from 'selenium-webdriver';
 
 @Component({
   selector: 'app-general-mappings',
@@ -142,7 +143,7 @@ export class GeneralMappingsComponent implements OnInit {
     const attributes = [
       'LOCATION', 'DEPARTMENT', 'PROJECT', 'LOCATION_ENTITY', 'CLASS',
     ];
-    
+
     if (this.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT') {
         attributes.push('EXPENSE_REPORT');
     }
@@ -153,6 +154,10 @@ export class GeneralMappingsComponent implements OnInit {
 
     if (this.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'BILL') {
         attributes.push('VENDOR');
+    }
+
+    if (this.configuration.corporate_credit_card_expenses_object === 'EXPENSE_REPORT') {
+        attributes.push('EXPENSE_PAYMENT_TYPE');
     }
 
     if (this.configuration.import_projects) {
@@ -174,7 +179,6 @@ export class GeneralMappingsComponent implements OnInit {
 
     that.mappingsService.getGroupedSageIntacctDestinationAttributes(attributes).subscribe(response => {
       that.isLoading = false;
-
       that.sageIntacctLocations = response.LOCATION;
       that.sageIntacctDepartments = response.DEPARTMENT;
       that.sageIntacctProjects = response.PROJECT;

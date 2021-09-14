@@ -188,7 +188,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
     const that = this;
     that.isLoading = true;
 
-    const attributes = that.getAttributesFilteredByConfig()
+    const attributes = that.getAttributesFilteredByConfig();
 
     forkJoin([
       that.mappingsService.getFyleExpenseAttributes('EMPLOYEE'),
