@@ -76,6 +76,14 @@
             {{companyName}}
           </span>
         </div>
+        <div class="mat-small" *ngIf="showRefreshIcon">
+          <mat-icon class="refresh"
+            mat-list-icon
+            matTooltip="Sync Fyle and Sage Intacct Dimensions"
+            matTooltipPosition="right" (click)="syncDimension()">
+              sync
+          </mat-icon>
+        </div>
       </div>
 
       <mat-menu class="si--menu" #appMenu="matMenu" xPosition="before">
