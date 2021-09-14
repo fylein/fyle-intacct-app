@@ -10,6 +10,8 @@ import { UserProfile } from '../core/models/user-profile.model';
 import { Workspace } from '../core/models/workspace.model';
 import { Configuration } from '../core/models/configuration.model';
 import { MappingSetting } from '../core/models/mapping-setting.model';
+import { MappingsService } from '../core/services/mappings.service';
+import { MatSnackBar } from '@angular/material';
 import { MappingSettingResponse } from '../core/models/mapping-setting-response.model';
 import { TrackingService } from '../core/services/tracking.service';
 import * as Sentry from '@sentry/angular';
@@ -32,6 +34,7 @@ export class SiComponent implements OnInit {
   navDisabled = true;
   windowReference: Window;
   connectSageIntacct = true;
+  showRefreshIcon: boolean;
 
   constructor(
     private workspaceService: WorkspaceService,
@@ -40,7 +43,10 @@ export class SiComponent implements OnInit {
     private authService: AuthService,
     private storageService: StorageService,
     private windowReferenceService: WindowReferenceService,
-    private trackingService: TrackingService) {
+    private trackingService: TrackingService,
+    private snackBar: MatSnackBar,
+    private mappingsService: MappingsService,
+    ) {
     this.windowReference = this.windowReferenceService.nativeWindow;
   }
 
@@ -192,10 +198,21 @@ export class SiComponent implements OnInit {
     this.trackingService.onPageVisit('Category Mappings');
   }
 
+  syncDimension() {
+    const that = this;
+    that.mappingsService.refreshDimension();
+    that.snackBar.open('Refreshing Fyle and Sage Intacct Data');
+  }
+
+  hideRefreshIconVisibility() {
+    this.showRefreshIcon = false;
+  }
+
   ngOnInit() {
     const that = this;
     const onboarded = that.storageService.get('onboarded');
     that.navDisabled = onboarded !== true;
+    that.showRefreshIcon = !onboarded;
     that.orgsCount = that.authService.getOrgCount();
     that.setupWorkspace();
   }
