@@ -124,6 +124,7 @@ export class SyncComponent implements OnInit {
 
   updateLastSyncStatus() {
     const that = this;
+    that.isLoading = true;
     return from(forkJoin(
       [
         that.workspaceService.getWorkspaceById(),
