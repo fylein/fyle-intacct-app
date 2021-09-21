@@ -98,7 +98,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
           that.isLoading = false;
         }
       }, (error) => {
-        if (error.error && error.error.message && error.error.message === 'Duplicate custom field name') {
+        if (error.error && 'message' in error.error && error.error.message === 'Duplicate custom field name') {
           const fieldName = error.error.field_name.replace(/_/g, ' ').toLowerCase().replace(/\b(\w)/g, s => s.toUpperCase());
           that.snackBar.open(`${fieldName} already exists in Fyle, try creating a custom field with different name`,
           '', {
