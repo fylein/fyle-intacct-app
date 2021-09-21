@@ -103,9 +103,9 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
           that.snackBar.open(`${fieldName} already exists in Fyle, try creating a custom field with different name`,
           '', {
             duration: 5000
-          });  
+          });
         } else {
-          that.snackBar.open('Something went wrong while saving expense fields mapping')
+          that.snackBar.open('Something went wrong while saving expense fields mapping');
         }
         that.getSettings();
       });
