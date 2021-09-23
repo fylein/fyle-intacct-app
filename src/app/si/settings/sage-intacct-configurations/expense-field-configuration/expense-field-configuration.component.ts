@@ -97,7 +97,18 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
         } else {
           that.isLoading = false;
         }
-      }, () => that.snackBar.open('Something went wrong while saving expense fields mapping'));
+      }, (error) => {
+        if (error.error && 'message' in error.error && error.error.message === 'Duplicate custom field name') {
+          const fieldName = error.error.field_name.replace(/_/g, ' ').toLowerCase().replace(/\b(\w)/g, s => s.toUpperCase());
+          that.snackBar.open(`${fieldName} already exists in Fyle, try creating a custom field with different name`,
+          '', {
+            duration: 5000
+          });
+        } else {
+          that.snackBar.open('Something went wrong while saving expense fields mapping');
+        }
+        that.getSettings();
+      });
     } else {
       that.snackBar.open('Please fill all mandatory fields');
     }
