@@ -77,7 +77,7 @@ getExpenseGroupSettings() {
       cccExportDate: [ that.expenseGroupSettings.ccc_export_date_type]
     });
 
-    if (that.configurations.corporate_credit_card_expenses_object === 'CREDIT CARD PURCHASE') {
+    if (that.configurations.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
       that.importExpensesForm.controls.cccExpenseGroupConfiguration.disable();
     }
 
@@ -137,10 +137,8 @@ ngOnInit() {
 
   that.settingsService.getConfiguration(that.workspaceId).subscribe(response => {
     that.configurations = response;
+    that.getExpenseGroupSettings();
   });
-
-  that.getExpenseGroupSettings();
-
 }
 
 }

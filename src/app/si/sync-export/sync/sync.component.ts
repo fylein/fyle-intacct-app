@@ -84,7 +84,6 @@ export class SyncComponent implements OnInit {
       if (response.corporate_credit_card_expenses_object) {
         dialogWidth = '750px';
       }
-    });
 
     const dialogRef = that.dialog.open(ExpenseGroupSettingsDialogComponent, {
       width: dialogWidth,
@@ -95,6 +94,7 @@ export class SyncComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       that.updateLastSyncStatus();
+    });
     });
   }
 
