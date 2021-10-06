@@ -174,7 +174,13 @@ export class EmployeeMappingsDialogComponent implements OnInit {
 
   getAttributesFilteredByConfig() {
     const that = this;
-    const attributes = ['VENDOR', 'EMPLOYEE'];
+    const attributes = [];
+
+    if (that.configuration.reimbursable_expenses_object === 'BILL') {
+      attributes.push('VENDOR');
+    } else if (that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT') {
+      attributes.push('EMPLOYEE');
+    }
 
     if (that.configuration.corporate_credit_card_expenses_object && that.configuration.corporate_credit_card_expenses_object !== 'BILL') {
       attributes.push('CHARGE_CARD_NUMBER');

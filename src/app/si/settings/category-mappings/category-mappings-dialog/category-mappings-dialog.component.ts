@@ -170,10 +170,16 @@ export class CategoryMappingsDialogComponent implements OnInit {
 
   getAttributesFilteredByConfig() {
     const that = this;
-    const attributes = ['EXPENSE_TYPE'];
+    const attributes = [];
+
+    if (that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT') {
+      attributes.push('EXPENSE_TYPE');
+    } else if (that.configuration.reimbursable_expenses_object === 'BILL') {
+      attributes.push('ACCOUNT')
+    }
 
     if (that.showSeparateCCCField()) {
-      attributes.push('ACCOUNT');
+      attributes.push('CCC_ACCOUNT');
     }
 
     return attributes;
@@ -196,7 +202,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
       that.fyleCategories = response[0];
       that.sageIntacctAccounts = response[1].ACCOUNT;
       if (that.configuration.corporate_credit_card_expenses_object && that.configuration.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT') {
-        that.sageIntacctCCCAccounts = response[1].ACCOUNT;
+        that.sageIntacctCCCAccounts = response[1].CCC_ACCOUNT;
       }
       that.sageIntacctExpenseTypes = response[1].EXPENSE_TYPE;
 

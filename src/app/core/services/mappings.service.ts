@@ -145,7 +145,6 @@ export class MappingsService {
         const group: MappingDestination[] = groupedAttributes[attribute.attribute_type] || [];
         group.push(attribute);
         groupedAttributes[attribute.attribute_type] = group;
-
         return groupedAttributes;
       }, {
         EXPENSE_TYPE: [],
