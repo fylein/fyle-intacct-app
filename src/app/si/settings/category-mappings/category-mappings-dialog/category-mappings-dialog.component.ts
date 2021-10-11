@@ -175,7 +175,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
     if (that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT') {
       attributes.push('EXPENSE_TYPE');
     } else if (that.configuration.reimbursable_expenses_object === 'BILL') {
-      attributes.push('ACCOUNT')
+      attributes.push('ACCOUNT');
     }
 
     if (that.showSeparateCCCField()) {
