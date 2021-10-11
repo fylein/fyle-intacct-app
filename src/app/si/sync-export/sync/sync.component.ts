@@ -85,16 +85,16 @@ export class SyncComponent implements OnInit {
         dialogWidth = '750px';
       }
 
-    const dialogRef = that.dialog.open(ExpenseGroupSettingsDialogComponent, {
-      width: dialogWidth,
-      data: {
-        workspaceId: that.workspaceId
-      }
-    });
+      const dialogRef = that.dialog.open(ExpenseGroupSettingsDialogComponent, {
+        width: dialogWidth,
+        data: {
+          workspaceId: that.workspaceId
+        }
+      });
 
-    dialogRef.afterClosed().subscribe(result => {
-      that.updateLastSyncStatus();
-    });
+      dialogRef.afterClosed().subscribe(result => {
+        that.updateLastSyncStatus();
+      });
     });
   }
 
