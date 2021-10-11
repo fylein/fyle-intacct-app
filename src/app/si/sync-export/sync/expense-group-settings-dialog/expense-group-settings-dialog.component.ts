@@ -79,6 +79,7 @@ getExpenseGroupSettings() {
 
     if (that.configurations.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
       that.importExpensesForm.controls.cccExpenseGroupConfiguration.disable();
+      that.importExpensesForm.controls.cccExportDate.disable();
     }
 
     that.isLoading = false;
