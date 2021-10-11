@@ -161,7 +161,6 @@ export class MappingsService {
         DEPARTMENT: [],
         PROJECT: [],
         LOCATION: [],
-        USER_DIMENSION: []
       });
     }));
   }

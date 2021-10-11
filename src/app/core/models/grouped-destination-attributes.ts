@@ -16,5 +16,4 @@ export type GroupedDestinationAttributes = {
     DEPARTMENT?: MappingDestination[];
     PROJECT?: MappingDestination[];
     LOCATION?: MappingDestination[];
-    USER_DIMENSION?: MappingDestination[];
 };
