@@ -32,7 +32,7 @@ save() {
   const cccExpensesGroupedBy = [that.importExpensesForm.getRawValue().cccExpenseGroupConfiguration];
   const expenseState = that.importExpensesForm.value.expenseState;
   const reimbursableExportDateType = that.importExpensesForm.value.reimbursableExportDate;
-  const cccExportDateType = that.importExpensesForm.value.cccExportDate;
+  const cccExportDateType = that.importExpensesForm.getRawValue().cccExportDate;
 
   const expenseGroupSettingsPayload: ExpenseGroupSetting = {
     reimbursable_expense_group_fields: reimbursableExpensesGroupedBy,
