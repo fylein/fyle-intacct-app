@@ -182,7 +182,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
       attributes.push('EMPLOYEE');
     }
 
-    if (that.configuration.corporate_credit_card_expenses_object && that.configuration.corporate_credit_card_expenses_object !== 'BILL') {
+    if (that.configuration.corporate_credit_card_expenses_object && that.configuration.corporate_credit_card_expenses_object === 'CCT') {
       attributes.push('CHARGE_CARD_NUMBER');
     }
 
