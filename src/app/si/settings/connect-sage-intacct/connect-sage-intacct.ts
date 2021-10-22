@@ -41,12 +41,12 @@ export class ConnectSageIntacctComponent implements OnInit {
       si_company_name: companyName,
       si_user_password: userPassword
     }).subscribe((response) => {
+      that.snackBar.open('Sage Intacct account connected successfully');
       that.mappingsService.refreshSageIntacctDimensions(['location_entities']).subscribe(() => {
         that.isLoading = false;
         that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
         that.si.getSageIntacctCompanyName();
       });
-      that.snackBar.open('Sage Intacct account connected successfully');
     }, () => {
       that.snackBar.open('Wrong credentials, please try again');
       that.isLoading = false;
