@@ -172,29 +172,47 @@ export class EmployeeMappingsDialogComponent implements OnInit {
     }
   }
 
+  getAttributesFilteredByConfig() {
+    const that = this;
+    const attributes = [];
+
+    if (that.configuration.reimbursable_expenses_object === 'BILL') {
+      attributes.push('VENDOR');
+    } else if (that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT') {
+      attributes.push('EMPLOYEE');
+    }
+
+    if (that.configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
+      attributes.push('CHARGE_CARD_NUMBER');
+    }
+
+    return attributes;
+
+  }
+
   reset() {
     const that = this;
     that.isLoading = true;
 
+    const attributes = that.getAttributesFilteredByConfig();
+
     forkJoin([
       that.mappingsService.getFyleExpenseAttributes('EMPLOYEE'),
-      that.mappingsService.getSageIntacctExpenseCustomFields('EMPLOYEE'),
-      that.mappingsService.getSageIntacctExpenseCustomFields('VENDOR'),
-      that.mappingsService.getSageIntacctExpenseCustomFields('CHARGE_CARD_NUMBER'),
+      that.mappingsService.getGroupedSageIntacctDestinationAttributes(attributes),
       that.mappingsService.getGeneralMappings()
     ]).subscribe(response => {
       that.isLoading = false;
       const settings = that.configuration;
 
       that.fyleEmployees = response[0];
-      that.sageIntacctEmployees = response[1];
-      that.sageIntacctVendors = response[2];
+      that.sageIntacctEmployees = response[1].EMPLOYEE;
+      that.sageIntacctVendors = response[1].VENDOR;
       if (settings.corporate_credit_card_expenses_object === 'BILL') {
-        that.creditCardValue = response[2];
+        that.creditCardValue = response[1].VENDOR;
       } else if (settings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
-        that.creditCardValue = response[3];
+        that.creditCardValue = response[1].CHARGE_CARD_NUMBER;
       }
-      that.generalMappings = response[4];
+      that.generalMappings = response[2];
 
       that.getDefaultCCCObj();
 
