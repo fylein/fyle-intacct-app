@@ -27,7 +27,7 @@ export class SettingsService {
   })
   getFyleCredentials(): Observable<FyleCredentials> {
     const workspaceId = this.workspaceService.getWorkspaceId();
-    return this.apiService.get(`/workspaces/'${workspaceId}/credentials/fyle/`, {});
+    return this.apiService.get(`/workspaces/${workspaceId}/credentials/fyle/`, {});
   }
 
   @Cacheable({
@@ -36,14 +36,15 @@ export class SettingsService {
   getSageIntacctCredentials(): Observable<SageIntacctCredentials> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    return this.apiService.get(`/workspaces/${workspaceId} /credentials/sage_intacct/`, {});
+    return this.apiService.get(`/workspaces/${workspaceId}/credentials/sage_intacct/`, {});
   }
 
   @CacheBuster({
     cacheBusterNotifier: fyleCredentialsCache
   })
-  connectFyle(workspaceId: number, authorizationCode: string): Observable<FyleCredentials> {
-    return this.apiService.post('/workspaces/' + workspaceId + '/connect_fyle/authorization_code/', {
+  connectFyle(authorizationCode: string): Observable<FyleCredentials> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+    return this.apiService.post(`/workspaces/${workspaceId}/connect_fyle/authorization_code/`, {
       code: authorizationCode
     });
   }
@@ -51,9 +52,10 @@ export class SettingsService {
   @CacheBuster({
     cacheBusterNotifier: sageIntacctCredentialsCache
   })
-  connectSageIntacct(workspaceId: number, data: SageIntacctCredentials): Observable<SageIntacctCredentials> {
+  connectSageIntacct(data: SageIntacctCredentials): Observable<SageIntacctCredentials> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
     globalCacheBusterNotifier.next();
-    return this.apiService.post('/workspaces/' + workspaceId + '/credentials/sage_intacct/', data);
+    return this.apiService.post(`/workspaces/${workspaceId}/credentials/sage_intacct/`, data);
   }
 
   postScheduleSettings(hours: number, scheduleEnabled: boolean): Observable<ScheduleSettings> {
@@ -82,7 +84,8 @@ export class SettingsService {
   @CacheBuster({
     cacheBusterNotifier: configurationCache
   })
-  postConfiguration(workspaceId: number, reimbursableExpensesObject: string, corporateCreditCardExpensesObject: string, importProjects: boolean, importCategories: boolean, fyleToSageIntacct: boolean, sageIntacctToFyle: boolean, autoCreateDestinationEntity: boolean, autoMapEmployees: string = null): Observable<Configuration> {
+  postConfiguration(reimbursableExpensesObject: string, corporateCreditCardExpensesObject: string, importProjects: boolean, importCategories: boolean, fyleToSageIntacct: boolean, sageIntacctToFyle: boolean, autoCreateDestinationEntity: boolean, autoMapEmployees: string = null): Observable<Configuration> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.post(`/workspaces/${workspaceId}/configuration/`, {
       reimbursable_expenses_object: reimbursableExpensesObject,
       corporate_credit_card_expenses_object: corporateCreditCardExpensesObject,

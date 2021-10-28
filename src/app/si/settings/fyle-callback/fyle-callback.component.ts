@@ -16,7 +16,7 @@ export class FyleCallbackComponent implements OnInit {
       const workspaceId: number = params.state;
       const code: string = params.code;
       const that = this;
-      that.settingsService.connectFyle(workspaceId, code).subscribe(response => {
+      that.settingsService.connectFyle(code).subscribe(response => {
         if (response) {
           that.router.navigateByUrl(`workspaces/${workspaceId}/dashboard`);
         }

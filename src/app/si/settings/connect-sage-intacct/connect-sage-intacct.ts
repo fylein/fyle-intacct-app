@@ -35,7 +35,7 @@ export class ConnectSageIntacctComponent implements OnInit {
     const userPassword = this.connectSageIntacctForm.value.userPassword;
 
     that.isLoading = true;
-    that.settingsService.connectSageIntacct(that.workspaceId, {
+    that.settingsService.connectSageIntacct({
       si_user_id: userID,
       si_company_id: companyID,
       si_company_name: companyName,
