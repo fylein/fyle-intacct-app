@@ -75,7 +75,7 @@ export class SiComponent implements OnInit {
   getMappingSettings() {
     const that = this;
 
-    return that.settingsService.getMappingSettings(that.workspace.id).toPromise().then((mappingSetting: MappingSettingResponse) => {
+    return that.settingsService.getMappingSettings().toPromise().then((mappingSetting: MappingSettingResponse) => {
       return mappingSetting.results;
     }, () => {
       that.isLoading = false;
@@ -115,8 +115,8 @@ export class SiComponent implements OnInit {
 
     return forkJoin(
       [
-        that.settingsService.getConfiguration(that.workspace.id),
-        that.settingsService.getMappingSettings(that.workspace.id)
+        that.settingsService.getConfiguration(),
+        that.settingsService.getMappingSettings()
       ]
     );
   }
@@ -139,7 +139,7 @@ export class SiComponent implements OnInit {
 
   getSageIntacctCompanyName() {
     const that = this;
-    that.settingsService.getSageIntacctCredentials(that.workspace.id).subscribe(res => {
+    that.settingsService.getSageIntacctCredentials().subscribe(res => {
       that.connectSageIntacct = false;
       that.companyName = res && res.si_company_name;
     });

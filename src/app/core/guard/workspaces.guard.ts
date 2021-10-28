@@ -29,9 +29,9 @@ export class WorkspacesGuard implements CanActivate {
 
     return forkJoin(
       [
-        this.settingsService.getFyleCredentials(workspaceId),
-        this.settingsService.getSageIntacctCredentials(workspaceId),
-        this.settingsService.getConfiguration(workspaceId)
+        this.settingsService.getFyleCredentials(),
+        this.settingsService.getSageIntacctCredentials(),
+        this.settingsService.getConfiguration()
       ]
     ).pipe(
       map(response => !!response),

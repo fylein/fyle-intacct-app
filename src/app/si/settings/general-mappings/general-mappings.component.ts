@@ -65,30 +65,31 @@ export class GeneralMappingsComponent implements OnInit {
     const defaultEmployeeDepartment = that.form.value.useDefaultEmployeeDepartment;
 
     const mapping: GeneralMapping = {
-      location_entity_name: locationEntityName[0] ? locationEntityName[0].value : '',
-      location_entity_id: that.form.value.locationEntity ? that.form.value.locationEntity : '',
-      default_location_name: defaultLocationName[0] ? defaultLocationName[0].value : '',
-      default_location_id: that.form.value.location ? that.form.value.location : '',
-      default_department_name: defaultDepartmentName[0] ? defaultDepartmentName[0].value : '',
-      default_department_id: that.form.value.department ? that.form.value.department : '',
-      default_project_name: defaultProjectName[0] ? defaultProjectName[0].value : '',
-      default_project_id: that.form.value.project ? that.form.value.project : '',
-      default_ccc_vendor_name: defaultVendor[0] ? defaultVendor[0].value : '',
-      default_ccc_vendor_id: that.form.value.defaultVendor ? that.form.value.defaultVendor : '',
-      default_class_name: defaultClass[0] ? defaultClass[0].value : '',
-      default_class_id: that.form.value.defaultClass ? that.form.value.defaultClass : '',
-      default_charge_card_name: defaultChargeCard[0] ? defaultChargeCard[0].value : '',
-      default_charge_card_id: that.form.value.chargeCard ? that.form.value.chargeCard : '',
-      default_item_id: that.form.value.defaultItem ? that.form.value.defaultItem : '',
-      default_item_name: defaultItem[0] ? defaultItem[0].value : '',
-      payment_account_name: paymentAccount[0] ? paymentAccount[0].value : '',
-      payment_account_id: that.form.value.paymentAccount ? that.form.value.paymentAccount : '',
+      location_entity_name: locationEntityName[0] ? locationEntityName[0].value : null,
+      location_entity_id: that.form.value.locationEntity ? that.form.value.locationEntity : null,
+      default_location_name: defaultLocationName[0] ? defaultLocationName[0].value : null,
+      default_location_id: that.form.value.location ? that.form.value.location : null,
+      default_department_name: defaultDepartmentName[0] ? defaultDepartmentName[0].value : null,
+      default_department_id: that.form.value.department ? that.form.value.department : null,
+      default_project_name: defaultProjectName[0] ? defaultProjectName[0].value : null,
+      default_project_id: that.form.value.project ? that.form.value.project : null,
+      default_ccc_vendor_name: defaultVendor[0] ? defaultVendor[0].value : null,
+      default_ccc_vendor_id: that.form.value.defaultVendor ? that.form.value.defaultVendor : null,
+      default_class_name: defaultClass[0] ? defaultClass[0].value : null,
+      default_class_id: that.form.value.defaultClass ? that.form.value.defaultClass : null,
+      default_charge_card_name: defaultChargeCard[0] ? defaultChargeCard[0].value : null,
+      default_charge_card_id: that.form.value.chargeCard ? that.form.value.chargeCard : null,
+      default_item_id: that.form.value.defaultItem ? that.form.value.defaultItem : null,
+      default_item_name: defaultItem[0] ? defaultItem[0].value : null,
+      payment_account_name: paymentAccount[0] ? paymentAccount[0].value : null,
+      payment_account_id: that.form.value.paymentAccount ? that.form.value.paymentAccount : null,
       default_reimbursable_expense_payment_type_id: that.form.value.defaultReimbursableExpensePaymentType ? that.form.value.defaultReimbursableExpensePaymentType : '',
       default_reimbursable_expense_payment_type_name: defaultReimbursableExpensePaymentType[0] ? defaultReimbursableExpensePaymentType[0].value : '',
       default_ccc_expense_payment_type_id: that.form.value.defaultCCCExpensePaymentType ? that.form.value.defaultCCCExpensePaymentType : '',
       default_ccc_expense_payment_type_name: defaultCCCExpensePaymentType[0] ? defaultCCCExpensePaymentType[0].value : null,
       use_intacct_employee_departments: defaultEmployeeDepartment,
-      use_intacct_employee_locations: defaultEmployeeLocation
+      use_intacct_employee_locations: defaultEmployeeLocation,
+      workspace: that.workspaceId
     };
 
     that.setMandatoryFields();
@@ -216,7 +217,7 @@ export class GeneralMappingsComponent implements OnInit {
     const that = this;
     that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
     that.isLoading = true;
-    that.settingsService.getConfiguration(that.workspaceId).subscribe((setting: Configuration) => {
+    that.settingsService.getConfiguration().subscribe((setting: Configuration) => {
       that.configuration = setting;
       that.mappingsService.getGeneralMappings().subscribe(res => {
         that.generalMappings = res;

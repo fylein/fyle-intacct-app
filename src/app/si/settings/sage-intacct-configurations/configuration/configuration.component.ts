@@ -92,8 +92,8 @@ export class ConfigurationComponent implements OnInit {
 
     forkJoin(
       [
-        that.settingsService.getConfiguration(that.workspaceId),
-        that.settingsService.getMappingSettings(that.workspaceId)
+        that.settingsService.getConfiguration(),
+        that.settingsService.getMappingSettings()
       ]
     ).subscribe(responses => {
       that.configuration = responses[0];
@@ -264,8 +264,8 @@ export class ConfigurationComponent implements OnInit {
 
     forkJoin(
       [
-        that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-        that.settingsService.postConfiguration(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, importProjects, importCategories, fyleToSageIntacct, sageIntacctToFyle, autoCreateDestinationEntity, autoMapEmployees)
+        that.settingsService.postMappingSettings(mappingsSettingsPayload),
+        that.settingsService.postConfiguration(reimbursableExpensesObject, cccExpensesObject, importProjects, importCategories, fyleToSageIntacct, sageIntacctToFyle, autoCreateDestinationEntity, autoMapEmployees)
       ]
     ).subscribe(() => {
       that.isLoading = true;

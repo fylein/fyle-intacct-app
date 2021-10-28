@@ -58,7 +58,7 @@ export class ConnectSageIntacctComponent implements OnInit {
     that.isSaveDisabled = false;
     that.workspaceId = that.route.snapshot.parent.params.workspace_id;
     that.isLoading = true;
-    that.settingsService.getSageIntacctCredentials(that.workspaceId).subscribe((res) => {
+    that.settingsService.getSageIntacctCredentials().subscribe((res) => {
       that.connectSageIntacctForm = that.formBuilder.group({
         userID: res.si_user_id ? res.si_user_id : '',
         companyID: res.si_company_id ? res.si_company_id : '',

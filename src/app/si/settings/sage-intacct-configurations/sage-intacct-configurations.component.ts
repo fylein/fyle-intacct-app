@@ -51,12 +51,12 @@ export class SageIntacctConfigurationsComponent implements OnInit {
     that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
     that.state = that.route.snapshot.firstChild.routeConfig.path.toUpperCase() || 'GENERAL';
 
-    that.settingsService.getSageIntacctCredentials(that.workspaceId).subscribe(() => {
+    that.settingsService.getSageIntacctCredentials().subscribe(() => {
       that.sageIntacctConnectionDone = true;
       forkJoin(
         [
           that.mappingsService.getFyleFields(),
-          that.settingsService.getConfiguration(that.workspaceId),
+          that.settingsService.getConfiguration(),
         ]
       ).subscribe(response => {
         that.fyleFields = response[0];

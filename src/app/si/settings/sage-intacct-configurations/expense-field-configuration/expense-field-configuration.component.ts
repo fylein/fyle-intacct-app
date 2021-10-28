@@ -87,7 +87,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
         }
       });
 
-      that.settingsService.postMappingSettings(that.workspaceId, expenseFields).subscribe((mappingSetting: MappingSetting[]) => {
+      that.settingsService.postMappingSettings(expenseFields).subscribe((mappingSetting: MappingSetting[]) => {
         that.si.refreshDashboardMappingSettings(mappingSetting);
         that.createFormFields(mappingSetting);
         if (hasCustomField) {
@@ -215,7 +215,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
   getMappingSettings() {
     const that = this;
 
-    return that.settingsService.getMappingSettings(that.workspaceId).toPromise().then((mappingSetting: MappingSettingResponse) => {
+    return that.settingsService.getMappingSettings().toPromise().then((mappingSetting: MappingSettingResponse) => {
       that.createFormFields(mappingSetting.results);
 
       return mappingSetting;

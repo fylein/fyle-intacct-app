@@ -8,6 +8,8 @@ import { ScheduleSettings } from '../models/schedule-setting.model';
 import { MappingSettingResponse } from '../models/mapping-setting-response.model';
 import { Configuration } from '../models/configuration.model';
 import { MappingSetting } from '../models/mapping-setting.model';
+import { WorkspaceService } from './workspace.service';
+
 
 const fyleCredentialsCache = new Subject<void>();
 const sageIntacctCredentialsCache = new Subject<void>();
@@ -18,20 +20,23 @@ const mappingsSettingsCache = new Subject<void>();
   providedIn: 'root',
 })
 export class SettingsService {
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService, private workspaceService: WorkspaceService) { }
 
   @Cacheable({
     cacheBusterObserver: fyleCredentialsCache
   })
-  getFyleCredentials(workspaceId: number): Observable<FyleCredentials> {
-    return this.apiService.get('/workspaces/' + workspaceId + '/credentials/fyle/', {});
+  getFyleCredentials(): Observable<FyleCredentials> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+    return this.apiService.get(`/workspaces/'${workspaceId}/credentials/fyle/`, {});
   }
 
   @Cacheable({
     cacheBusterObserver: sageIntacctCredentialsCache
   })
-  getSageIntacctCredentials(workspaceId: number): Observable<SageIntacctCredentials> {
-    return this.apiService.get('/workspaces/' + workspaceId + '/credentials/sage_intacct/', {});
+  getSageIntacctCredentials(): Observable<SageIntacctCredentials> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(`/workspaces/${workspaceId} /credentials/sage_intacct/`, {});
   }
 
   @CacheBuster({
@@ -51,21 +56,26 @@ export class SettingsService {
     return this.apiService.post('/workspaces/' + workspaceId + '/credentials/sage_intacct/', data);
   }
 
-  postScheduleSettings(workspaceId: number, hours: number, scheduleEnabled: boolean): Observable<ScheduleSettings> {
+  postScheduleSettings(hours: number, scheduleEnabled: boolean): Observable<ScheduleSettings> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
     return this.apiService.post(`/workspaces/${workspaceId}/schedule/`, {
       hours,
       schedule_enabled: scheduleEnabled
     });
   }
 
-  getScheduleSettings(workspaceId: number): Observable<ScheduleSettings> {
+  getScheduleSettings(): Observable<ScheduleSettings> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
     return this.apiService.get(`/workspaces/${workspaceId}/schedule/`, {});
   }
 
   @Cacheable({
     cacheBusterObserver: mappingsSettingsCache
   })
-  getMappingSettings(workspaceId: number): Observable<MappingSettingResponse> {
+  getMappingSettings(): Observable<MappingSettingResponse> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.get(`/workspaces/${workspaceId}/mappings/settings/`, {});
   }
 
@@ -89,14 +99,18 @@ export class SettingsService {
   @CacheBuster({
     cacheBusterNotifier: mappingsSettingsCache
   })
-  postMappingSettings(workspaceId: number, mappingSettings: MappingSetting[]): Observable<MappingSetting[]> {
+  postMappingSettings(mappingSettings: MappingSetting[]): Observable<MappingSetting[]> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
     return this.apiService.post(`/workspaces/${workspaceId}/mappings/settings/`, mappingSettings);
   }
 
   @Cacheable({
     cacheBusterObserver: configurationCache
   })
-  getConfiguration(workspaceId: number): Observable<Configuration> {
+  getConfiguration(): Observable<Configuration> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
     return this.apiService.get(`/workspaces/${workspaceId}/configuration/`, {});
   }
 }

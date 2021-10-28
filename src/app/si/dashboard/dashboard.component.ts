@@ -91,7 +91,7 @@ export class DashboardComponent implements OnInit {
   // TODO: remove promises and do with rxjs observables
   checkFyleLoginStatus() {
     const that = this;
-    return that.settingsService.getFyleCredentials(that.workspaceId).toPromise().then(credentials => {
+    return that.settingsService.getFyleCredentials().toPromise().then(credentials => {
       that.currentState = onboardingStates.fyleConnected;
       return credentials;
     });
@@ -101,7 +101,7 @@ export class DashboardComponent implements OnInit {
   getSageIntacctStatus() {
     const that = this;
 
-    return that.settingsService.getSageIntacctCredentials(that.workspaceId).toPromise().then(credentials => {
+    return that.settingsService.getSageIntacctCredentials().toPromise().then(credentials => {
       that.currentState = onboardingStates.sageIntacctConnected;
       return credentials;
     });
@@ -112,8 +112,8 @@ export class DashboardComponent implements OnInit {
     // TODO: remove promises and do with rxjs observables
     return forkJoin(
       [
-        that.settingsService.getConfiguration(that.workspaceId),
-        that.settingsService.getMappingSettings(that.workspaceId)
+        that.settingsService.getConfiguration(),
+        that.settingsService.getMappingSettings()
       ]
     ).toPromise().then((res) => {
       that.configuration = res[0];

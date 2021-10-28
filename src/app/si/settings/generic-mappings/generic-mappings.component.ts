@@ -89,7 +89,7 @@ export class GenericMappingsComponent implements OnInit {
       that.isLoading = true;
       that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
       that.sourceField = that.route.snapshot.params.source_field;
-      that.settingsService.getMappingSettings(that.workspaceId).subscribe(response => {
+      that.settingsService.getMappingSettings().subscribe(response => {
         that.setting = response.results.filter(setting => setting.source_field === that.sourceField.toUpperCase())[0];
         const data = {
           pageSize: that.storageService.get('mappings.pageSize') || 50,

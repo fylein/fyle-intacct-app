@@ -75,7 +75,7 @@ export class ExportComponent implements OnInit {
   createSageIntacctItems() {
     const that = this;
     that.isExporting = true;
-    that.settingsService.getConfiguration(that.workspaceId).subscribe((settings) => {
+    that.settingsService.getConfiguration().subscribe((settings) => {
       that.configuration = settings;
       const promises = [];
       let allFilteredIds = [];
@@ -117,7 +117,7 @@ export class ExportComponent implements OnInit {
 
   getSageIntacctCompanyName() {
     const that = this;
-    that.settingsService.getSageIntacctCredentials(that.workspaceId).subscribe(res => {
+    that.settingsService.getSageIntacctCredentials().subscribe(res => {
       that.companyName = res && res.si_company_name;
     });
   }

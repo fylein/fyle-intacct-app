@@ -136,7 +136,7 @@ ngOnInit() {
     }
   ];
 
-  that.settingsService.getConfiguration(that.workspaceId).subscribe(response => {
+  that.settingsService.getConfiguration().subscribe(response => {
     that.configurations = response;
     that.getExpenseGroupSettings();
   });

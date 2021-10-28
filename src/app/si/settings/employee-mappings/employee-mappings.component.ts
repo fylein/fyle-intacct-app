@@ -131,7 +131,7 @@ export class EmployeeMappingsComponent implements OnInit {
     const that = this;
     that.isLoading = true;
     that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
-    that.settingsService.getConfiguration(that.workspaceId).subscribe(settings => {
+    that.settingsService.getConfiguration().subscribe(settings => {
       that.configuration = settings;
       that.isLoading = false;
       if (that.configuration.corporate_credit_card_expenses_object && that.configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {

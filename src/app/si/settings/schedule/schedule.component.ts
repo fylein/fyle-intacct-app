@@ -27,7 +27,7 @@ export class ScheduleComponent implements OnInit {
   getSettings() {
     const that = this;
     that.isLoading = true;
-    that.settingsService.getScheduleSettings(that.workspaceId).subscribe((settings: ScheduleSettings) => {
+    that.settingsService.getScheduleSettings().subscribe((settings: ScheduleSettings) => {
       that.settings = settings;
       that.form.setValue({
         hours: settings.interval_hours,
@@ -46,7 +46,7 @@ export class ScheduleComponent implements OnInit {
     const scheduleEnabled = this.form.value.scheduleEnabled;
 
     that.isLoading = true;
-    that.settingsService.postScheduleSettings(that.workspaceId, hours, scheduleEnabled).subscribe(response => {
+    that.settingsService.postScheduleSettings(hours, scheduleEnabled).subscribe(response => {
       that.isLoading = false;
       that.snackBar.open('Scheduling saved');
       that.getSettings();
@@ -68,7 +68,7 @@ export class ScheduleComponent implements OnInit {
       if (!newValue && oldValue !== newValue) {
         if (that.settings) {
           that.isLoading = true;
-          that.settingsService.postScheduleSettings(that.workspaceId, 0, false).subscribe(() => {
+          that.settingsService.postScheduleSettings(0, false).subscribe(() => {
             that.isLoading = false;
             that.snackBar.open('Scheduling turned off');
             that.getSettings();

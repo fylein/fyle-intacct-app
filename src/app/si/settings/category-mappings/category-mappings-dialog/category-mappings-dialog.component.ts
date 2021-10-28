@@ -245,7 +245,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
 
     that.workSpaceId = that.data.workspaceId;
     that.isLoading = true;
-    that.settingsService.getConfiguration(that.workSpaceId).subscribe(settings => {
+    that.settingsService.getConfiguration().subscribe(settings => {
       that.configuration = settings;
       that.isLoading = false;
       that.reset();

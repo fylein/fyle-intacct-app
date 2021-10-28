@@ -80,7 +80,7 @@ export class SyncComponent implements OnInit {
 
     let dialogWidth = '450px';
 
-    that.settingsService.getConfiguration(that.workspaceId).subscribe(response => {
+    that.settingsService.getConfiguration().subscribe(response => {
       if (response.corporate_credit_card_expenses_object) {
         dialogWidth = '750px';
       }
