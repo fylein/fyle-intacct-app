@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ValidatorFn } from '@angular/forms';
-import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { SettingsService } from 'src/app/core/services/settings.service';
+import { MappingsService } from 'src/app/core/services/mappings.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SiComponent } from '../../si.component';
@@ -21,6 +21,7 @@ export class ConnectSageIntacctComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private settingsService: SettingsService,
+    private mappingsService: MappingsService,
     private route: ActivatedRoute,
     private router: Router,
     private snackBar: MatSnackBar,
@@ -39,11 +40,13 @@ export class ConnectSageIntacctComponent implements OnInit {
       si_company_id: companyID,
       si_company_name: companyName,
       si_user_password: userPassword
-    }).subscribe(() => {
+    }).subscribe((response) => {
       that.snackBar.open('Sage Intacct account connected successfully');
-      that.isLoading = false;
-      that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
-      that.si.getSageIntacctCompanyName();
+      that.mappingsService.refreshSageIntacctDimensions(['location_entities']).subscribe(() => {
+        that.isLoading = false;
+        that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
+        that.si.getSageIntacctCompanyName();
+      });
     }, () => {
       that.snackBar.open('Wrong credentials, please try again');
       that.isLoading = false;

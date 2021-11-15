@@ -168,23 +168,43 @@ export class CategoryMappingsDialogComponent implements OnInit {
     this.setupSageIntacctCCCAccountWatchers();
   }
 
+  getAttributesFilteredByConfig() {
+    const that = this;
+    const attributes = [];
+
+    if (that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT') {
+      attributes.push('EXPENSE_TYPE');
+    } else if (that.configuration.reimbursable_expenses_object === 'BILL') {
+      attributes.push('ACCOUNT');
+    }
+
+    if (that.showSeparateCCCField()) {
+      attributes.push('CCC_ACCOUNT');
+    }
+
+    return attributes;
+  }
+
+
   reset() {
     const that = this;
+    const attributes = that.getAttributesFilteredByConfig();
+
     that.isLoading = true;
 
     forkJoin([
       that.mappingsService.getFyleExpenseAttributes('CATEGORY'),
-      that.mappingsService.getSageIntacctExpenseCustomFields('ACCOUNT'),
-      that.mappingsService.getSageIntacctExpenseCustomFields('EXPENSE_TYPE')
+      that.mappingsService.getGroupedSageIntacctDestinationAttributes(attributes)
+
     ]).subscribe(response => {
       that.isLoading = false;
 
       that.fyleCategories = response[0];
-      that.sageIntacctAccounts = response[1];
+      that.sageIntacctAccounts = response[1].ACCOUNT;
       if (that.configuration.corporate_credit_card_expenses_object && that.configuration.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT') {
-        that.sageIntacctCCCAccounts = response[1];
+        that.sageIntacctCCCAccounts = response[1].CCC_ACCOUNT;
       }
-      that.sageIntacctExpenseTypes = response[2];
+      that.sageIntacctExpenseTypes = response[1].EXPENSE_TYPE;
 
       const fyleCategory = that.editMapping ? that.fyleCategories.filter(category => category.value === that.data.rowElement.fyle_value)[0] : '';
       const sageIntacctAccount = that.configuration.reimbursable_expenses_object === 'BILL' && that.editMapping ? that.sageIntacctAccounts.filter(siAccObj => siAccObj.value === that.data.rowElement.si_value)[0] : '';

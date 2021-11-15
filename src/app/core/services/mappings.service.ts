@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Cacheable, CacheBuster } from 'ngx-cacheable';
-import { empty, Observable, Subject } from 'rxjs';
+import { empty, Observable, Subject, from } from 'rxjs';
 import { concatMap, expand, map, publishReplay, refCount, reduce } from 'rxjs/operators';
 import { ApiService } from 'src/app/core/services/api.service';
 import { AttributeCount } from '../models/attribute-count.model';
@@ -9,6 +9,7 @@ import { GeneralMapping } from '../models/general-mapping.model';
 import { MappingDestination } from '../models/mapping-destination.model';
 import { MappingSource } from '../models/mapping-source.model';
 import { MappingsResponse } from '../models/mappings-response.model';
+import { GroupedDestinationAttributes } from '../models/grouped-destination-attributes';
 import { Mapping } from '../models/mappings.model';
 import { WorkspaceService } from './workspace.service';
 
@@ -52,10 +53,12 @@ export class MappingsService {
     return this.sourceWorkspace;
   }
 
-  refreshSageIntacctDimensions() {
+  refreshSageIntacctDimensions(dimensionsToSync: string[] = []) {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    return this.apiService.post(`/workspaces/${workspaceId}/sage_intacct/refresh_dimensions/`, {});
+    return this.apiService.post(`/workspaces/${workspaceId}/sage_intacct/refresh_dimensions/`, {
+      dimensions_to_sync: dimensionsToSync
+    });
   }
 
   refreshFyleDimensions() {
@@ -92,11 +95,11 @@ export class MappingsService {
     );
   }
 
-  getSageIntacctExpenseCustomFields(attributeType: string): Observable<MappingDestination[]> {
+  getSageIntacctDestinationAttributes(attributeTypes: string | string[]): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/expense_custom_fields/`, {
-      attribute_type: attributeType
+    return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/destination_attributes/`, {
+      attribute_types: attributeTypes
     });
   }
 
@@ -135,6 +138,33 @@ export class MappingsService {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.post(`/workspaces/${workspaceId}/mappings/auto_map_employees/trigger/`, {});
   }
+
+  getGroupedSageIntacctDestinationAttributes(attributeTypes: string[]): Observable<GroupedDestinationAttributes> {
+    return from(this.getSageIntacctDestinationAttributes(attributeTypes).toPromise().then((response: MappingDestination[]) => {
+      return response.reduce((groupedAttributes: GroupedDestinationAttributes, attribute: MappingDestination) => {
+        const group: MappingDestination[] = groupedAttributes[attribute.attribute_type] || [];
+        group.push(attribute);
+        groupedAttributes[attribute.attribute_type] = group;
+        return groupedAttributes;
+      }, {
+        EXPENSE_TYPE: [],
+        VENDOR: [],
+        CLASS: [],
+        CHARGE_CARD_NUMBER: [],
+        ITEM: [],
+        EMPLOYEE: [],
+        ACCOUNT: [],
+        LOCATION_ENTITY: [],
+        CCC_ACCOUNT: [],
+        EXPENSE_PAYMENT_TYPE: [],
+        PAYMENT_ACCOUNT: [],
+        DEPARTMENT: [],
+        PROJECT: [],
+        LOCATION: [],
+      });
+    }));
+  }
+
 
   @Cacheable({
     cacheBusterObserver: generalMappingsCache
