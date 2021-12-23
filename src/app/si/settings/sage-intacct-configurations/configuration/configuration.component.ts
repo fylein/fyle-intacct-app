@@ -75,7 +75,12 @@ export class ConfigurationComponent implements OnInit {
     {
       label: 'Bill',
       value: 'BILL'
-    }];
+    },
+    {
+      label: 'Journal Entry',
+      value: 'JOURNAL_ENTRY'
+    },
+  ];
 
     if (reimburExpenseMappedTo === 'EXPENSE_REPORT') {
       cccExpenseOptions.push({
