@@ -1,0 +1,50 @@
+<div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
+  <app-loader></app-loader>
+</div>
+
+<div *ngIf="!isLoading" fxLayout="column" fxLayoutAlign="start stretch">
+  <div class="page-info">
+    <div class="page-info--description">
+      Customize the data set you would like to pass to the memo field of Sage Intacct while exporting expenses from Fyle.
+    </div>
+  </div>
+  <div class="page-info">
+    <div class="memo--label">
+      Select and reorder the fields
+      <mandatory-field></mandatory-field>
+    </div>
+  </div>
+    <form class="configurations--form" [formGroup]="form">
+      <div fxLayout="column" fxLayoutAlign="start stretch" fxFlex="100">
+        <mat-form-field floatLabel="always" appearance="outline" class="form-margin">
+          <mat-select formControlName="memoStructure" multiple>
+            <div cdkDropList (cdkDropListDropped)="drop($event)">
+                <mat-option *ngFor="let option of defaultMemoFields" [value]="option" cdkDrag>
+                  {{ getTitle(option) | titlecase }}
+                </mat-option>
+            </div>
+          </mat-select>
+        </mat-form-field>
+        <mandatory-error-message listName="option" *ngIf="form.controls.memoStructure.touched && !form.controls.memoStructure.valid"></mandatory-error-message>
+      </div>
+    </form>
+
+    <div class="page-info">
+      <div class="preview-label">
+        Here is a sample preview of the memo in Sage Intacct with the above-selected data set. 
+      </div>
+    </div>
+    <div *ngIf="!isLoading" class="info-box" fxLayout="row" fxLayoutAlign="start center">
+      <div fxFlex="50" class="info-box-text">
+        <ng-container>
+          {{ showPreview(configuration.memo_structure) }}
+        </ng-container>
+      </div>
+      <div fxFlex="25"></div>
+    </div>
+    <div class="page-info">
+    <button class="configurations--save-btn" [disabled]="!form.valid" mat-flat-button color="primary" (click)="save()">
+      Save
+    </button>
+    </div>
+</div>
