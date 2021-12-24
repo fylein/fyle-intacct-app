@@ -253,7 +253,7 @@ export class ConfigurationComponent implements OnInit {
       });
     }
 
-    if (cccExpensesObject === 'BILL' || cccExpensesObject === 'CHARGE_CARD_TRANSACTION') {
+    if (cccExpensesObject === 'BILL' || cccExpensesObject === 'CHARGE_CARD_TRANSACTION' || cccExpensesObject === 'JOURNAL_ENTRY') {
       mappingsSettingsPayload.push({
         source_field: 'CATEGORY',
         destination_field: 'CCC_ACCOUNT'
