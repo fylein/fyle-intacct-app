@@ -9,6 +9,7 @@ export type Configuration = {
   sync_sage_intacct_to_fyle_payments: boolean;
   auto_map_employees: string;
   auto_create_destination_entity: boolean;
+  memo_structure?: string[];
   created_at: Date;
   updated_at: Date;
   workspace: number;

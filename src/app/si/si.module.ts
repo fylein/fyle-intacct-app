@@ -57,6 +57,8 @@ import { GenericMappingsDialogComponent } from './settings/generic-mappings/gene
 import { ExpenseGroupSettingsDialogComponent } from './sync-export/sync/expense-group-settings-dialog/expense-group-settings-dialog.component';
 import { MatTooltipModule } from '@angular/material';
 import { PaginatorComponent } from './settings/paginator/paginator.component';
+import { MemoStructureComponent } from './settings/sage-intacct-configurations/memo-structure/memo-structure.component';
+import { CdkDrag, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -85,7 +87,8 @@ import { PaginatorComponent } from './settings/paginator/paginator.component';
     ExpenseGroupSettingsDialogComponent,
     GenericMappingsComponent,
     GenericMappingsDialogComponent,
-    PaginatorComponent
+    PaginatorComponent,
+    MemoStructureComponent
   ],
   entryComponents: [
     EmployeeMappingsDialogComponent,
@@ -123,7 +126,8 @@ import { PaginatorComponent } from './settings/paginator/paginator.component';
     MatStepperModule,
     MatProgressBarModule,
     RxReactiveFormsModule,
-    MatTooltipModule
+    MatTooltipModule,
+    DragDropModule
   ],
   providers: [
     {

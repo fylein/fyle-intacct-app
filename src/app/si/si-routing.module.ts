@@ -23,6 +23,7 @@ import { ConfigurationComponent } from './settings/sage-intacct-configurations/c
 import { ExpenseFieldConfigurationComponent } from './settings/sage-intacct-configurations/expense-field-configuration/expense-field-configuration.component';
 import { GenericMappingsComponent } from './settings/generic-mappings/generic-mappings.component';
 import { SageIntacctConfigurationsComponent } from './settings/sage-intacct-configurations/sage-intacct-configurations.component';
+import { MemoStructureComponent } from './settings/sage-intacct-configurations/memo-structure/memo-structure.component';
 
 const routes: Routes = [{
   path: '',
@@ -91,6 +92,10 @@ const routes: Routes = [{
             {
               path: 'expense_fields',
               component: ExpenseFieldConfigurationComponent
+            },
+            {
+              path: 'memo_structure',
+              component: MemoStructureComponent
             }
           ]
         },

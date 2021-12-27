@@ -1,0 +1,102 @@
+@import 'variables.scss';
+
+$text-error: #ff6e40;
+
+::ng-deep .memo {
+  &--header {
+    border-bottom: 1px solid $fy-layout-background;
+  }
+
+  &--label {
+    font-size: 14px;
+    margin-bottom: 2px;
+    color: $fy-nav-text;
+  }
+
+  &--form {
+    font-size: 14px;
+    margin: 24px;
+    max-width: 550px;
+    color: $fy-nav-text;
+  }
+}
+
+.preview-label {
+  margin-top: -2em;
+  font-size: 14px;
+  margin-bottom: 2px;
+  color: $fy-nav-text;
+}
+
+.read-more {
+  position: absolute;
+  margin: 1px 4px 0px 5px;
+}
+
+.info-box {
+  margin: 16px 24px;
+}
+
+.form-margin {
+  margin-top: -2em;
+}
+
+.info-box-text {
+  font-size: 15px;
+  border: 2px solid rgba(0, 98, 255, 0.04);
+  padding: 20px;
+  background: rgba(0, 98, 255, 0.02);
+  background-clip: padding-box;
+  margin-top: -2em;
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+              0 8px 10px 1px rgba(0, 0, 0, 0.14),
+              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+::ng-deep .configurations {
+  &--header {
+    border-bottom: 1px solid $fy-layout-background;
+  }
+
+  &--form {
+    font-size: 14px;
+    max-width: 450px;
+    color: $fy-nav-text;
+  }
+
+  &--label {
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  &--input {
+    .mat-select-value-text {
+      color: $fy-nav-text;
+    }
+  }
+
+  &--save-btn {
+    max-width: 32px;
+  }
+
+  &--errors {
+    font-size: 14px;
+    margin: 0 0 16px;
+    color: $text-error;
+    position: relative;
+    top: -12px;
+  }
+}
