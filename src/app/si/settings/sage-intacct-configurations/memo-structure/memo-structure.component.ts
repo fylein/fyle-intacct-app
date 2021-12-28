@@ -44,7 +44,8 @@ export class MemoStructureComponent implements OnInit {
         purpose: 'Client Meeting',
         merchant: 'Pizza Hut',
         report_number: 'C/2021/12/R/1',
-        spent_on: today.toLocaleDateString()
+        spent_on: today.toLocaleDateString(),
+        expense_link: 'https://app.fylehq.com/app/main/#/enterprise/view_expense/'
     };
 
     let text = '';
