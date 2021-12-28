@@ -10,6 +10,8 @@ import { MappingDestination } from 'src/app/core/models/mapping-destination.mode
 import { GroupedDestinationAttributes } from 'src/app/core/models/grouped-destination-attributes';
 import { Configuration } from 'src/app/core/models/configuration.model';
 import { TouchSequence } from 'selenium-webdriver';
+import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
+import { MappingSettingResponse } from 'src/app/core/models/mapping-setting-response.model';
 
 @Component({
   selector: 'app-general-mappings',
@@ -37,6 +39,8 @@ export class GeneralMappingsComponent implements OnInit {
   sageIntacctCCCExpensePaymentType: MappingDestination[];
   sageIntacctClasses: MappingDestination[];
   configuration: Configuration;
+  mappingSettings: MappingSetting[];
+
 
   constructor(
     private route: ActivatedRoute,
@@ -114,16 +118,16 @@ export class GeneralMappingsComponent implements OnInit {
         that.form.controls.defaultVendor.setValidators(Validators.required);
       }
 
-      if (that.configuration.import_projects) {
-        that.form.controls.defaultItem.setValidators(Validators.required);
-      }
-
       if (that.configuration.sync_fyle_to_sage_intacct_payments) {
         that.form.controls.paymentAccount.setValidators(Validators.required);
       }
 
       if (that.configuration.corporate_credit_card_expenses_object === 'EXPENSE_REPORT') {
         that.form.controls.defaultCCCExpensePaymentType.setValidators(Validators.required);
+      }
+
+      if (that.mappingSettings) {
+        that.form.controls.defaultItem.setValidators(Validators.required);
       }
   }
 
@@ -160,14 +164,13 @@ export class GeneralMappingsComponent implements OnInit {
         attributes.push('EXPENSE_PAYMENT_TYPE');
     }
 
-    if (this.configuration.import_projects) {
-        attributes.push('ITEM');
-    }
-
     if (this.configuration.sync_fyle_to_sage_intacct_payments) {
         attributes.push('PAYMENT_ACCOUNT');
     }
 
+    if (this.mappingSettings) {
+      attributes.push('ITEM');
+  }
     return attributes;
   }
 
@@ -216,8 +219,18 @@ export class GeneralMappingsComponent implements OnInit {
     const that = this;
     that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
     that.isLoading = true;
-    that.settingsService.getConfiguration(that.workspaceId).subscribe((setting: Configuration) => {
-      that.configuration = setting;
+
+    forkJoin(
+      [
+        that.settingsService.getConfiguration(that.workspaceId),
+        this.settingsService.getMappingSettings(this.workspaceId)
+      ]
+    ).subscribe((responses) => {
+      that.configuration = responses[0];
+      that.mappingSettings = responses[1].results.filter(
+        setting => setting.destination_field === 'PROJECT'
+      );
+
       that.mappingsService.getGeneralMappings().subscribe(res => {
         that.generalMappings = res;
         that.reset();
