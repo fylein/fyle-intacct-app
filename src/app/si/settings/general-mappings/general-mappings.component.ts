@@ -126,7 +126,7 @@ export class GeneralMappingsComponent implements OnInit {
         that.form.controls.defaultCCCExpensePaymentType.setValidators(Validators.required);
       }
 
-      if (that.mappingSettings) {
+      if (that.mappingSettings.length) {
         that.form.controls.defaultItem.setValidators(Validators.required);
       }
   }
@@ -168,7 +168,7 @@ export class GeneralMappingsComponent implements OnInit {
         attributes.push('PAYMENT_ACCOUNT');
     }
 
-    if (this.mappingSettings) {
+    if (this.mappingSettings.length) {
       attributes.push('ITEM');
   }
     return attributes;

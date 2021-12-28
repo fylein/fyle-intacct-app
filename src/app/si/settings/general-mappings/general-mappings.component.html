@@ -136,14 +136,14 @@
       </mat-form-field>
       <mandatory-error-message listName="default credit card vendor" *ngIf="form.controls.defaultVendor.touched && !form.controls.defaultVendor.valid"></mandatory-error-message>
       
-      <div class="mat-body-strong" *ngIf="mappingSettings">
+      <div class="mat-body-strong" *ngIf="mappingSettings.length">
         <strong class="mappings-dialog--label">
           Default Item
           <mandatory-field *ngIf="isFieldMandatory('defaultItem')"></mandatory-field>
         </strong>
       </div>
       <mat-form-field class="mappings-dialog--form-element" appearance="outline" required 
-       *ngIf="mappingSettings">
+       *ngIf="mappingSettings.length">
         <mat-select placeholder="Default Item" formControlName="defaultItem">
           <mat-option *ngFor="let option of sageIntacctDefaultItem" [value]="option.destination_id">
             {{option.value}}
