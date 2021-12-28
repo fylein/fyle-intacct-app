@@ -51,6 +51,17 @@ export class ApiService {
         return this.handleError(error, 'POST');
       }));
   }
+  patch(endpoint: string, body: {}): Observable<any> {
+    return this.http
+      .patch(
+        API_BASE_URL + endpoint,
+        body,
+        httpOptions
+      )
+      .pipe(catchError(error => {
+        return this.handleError(error, 'PATCH');
+      }));
+  }
   // Having any here is ok
   get(endpoint: string, apiParams: {}): Observable<any> {
     let params = new HttpParams();
