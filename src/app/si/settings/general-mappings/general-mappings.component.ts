@@ -11,7 +11,6 @@ import { GroupedDestinationAttributes } from 'src/app/core/models/grouped-destin
 import { Configuration } from 'src/app/core/models/configuration.model';
 import { TouchSequence } from 'selenium-webdriver';
 import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
-import { MappingSettingResponse } from 'src/app/core/models/mapping-setting-response.model';
 
 @Component({
   selector: 'app-general-mappings',
@@ -39,7 +38,7 @@ export class GeneralMappingsComponent implements OnInit {
   sageIntacctCCCExpensePaymentType: MappingDestination[];
   sageIntacctClasses: MappingDestination[];
   configuration: Configuration;
-  mappingSettings: MappingSetting[];
+  projectMappingSetting: MappingSetting[];
 
 
   constructor(
@@ -126,7 +125,7 @@ export class GeneralMappingsComponent implements OnInit {
         that.form.controls.defaultCCCExpensePaymentType.setValidators(Validators.required);
       }
 
-      if (that.mappingSettings.length) {
+      if (that.projectMappingSetting.length) {
         that.form.controls.defaultItem.setValidators(Validators.required);
       }
   }
@@ -168,7 +167,7 @@ export class GeneralMappingsComponent implements OnInit {
         attributes.push('PAYMENT_ACCOUNT');
     }
 
-    if (this.mappingSettings.length) {
+    if (this.projectMappingSetting.length) {
       attributes.push('ITEM');
   }
     return attributes;
@@ -227,7 +226,7 @@ export class GeneralMappingsComponent implements OnInit {
       ]
     ).subscribe((responses) => {
       that.configuration = responses[0];
-      that.mappingSettings = responses[1].results.filter(
+      that.projectMappingSetting = responses[1].results.filter(
         setting => setting.destination_field === 'PROJECT'
       );
 
