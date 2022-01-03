@@ -73,6 +73,10 @@ export class CategoryMappingsComponent implements OnInit {
    *
    * Bill - CCT - No
    *
+   * ER -  JE - Yes
+   *
+   * BILL - JE - No
+   *
    * @returns a boolean flag to show / hide ccc category mappings column.
    */
   showCCCOption() {
