@@ -48,4 +48,8 @@ export class TrackingService {
   onSwitchWorkspace() {
     this.eventTrack('Switching Workspace');
   }
+
+  onModifyMemo(selectedFields) {
+    this.eventTrack('Modifying Memo', selectedFields);
+  }
 }

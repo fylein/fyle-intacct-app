@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Configuration } from 'src/app/core/models/configuration.model';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TrackingService } from 'src/app/core/services/tracking.service';
+
 @Component({
   selector: 'app-memo-structure',
   templateUrl: './memo-structure.component.html',
@@ -19,7 +21,7 @@ export class MemoStructureComponent implements OnInit {
   defaultMemoFields: string[];
   form: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private settingsService: SettingsService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, public dialog: MatDialog) { }
+  constructor(private formBuilder: FormBuilder, private settingsService: SettingsService, private trackingService: TrackingService, private route: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, public dialog: MatDialog) { }
 
 
   drop(event: CdkDragDrop<string[]>) {
@@ -92,6 +94,15 @@ export class MemoStructureComponent implements OnInit {
 
     that.settingsService.patchConfiguration(that.workspaceId, memoStructure).subscribe((response) => {
       that.snackBar.open('Custom Memo saved successfully');
+
+      const trackingProperties = {
+        workspace_id: that.workspaceId,
+        oldMemoFields: that.configuration.memo_structure,
+        newMemoFields: memoStructure
+      };
+
+      that.trackingService.onModifyMemo(trackingProperties);
+
       that.configuration = response;
       that.isLoading = false;
     }, () => {
