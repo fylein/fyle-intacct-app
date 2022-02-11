@@ -10,6 +10,7 @@ export type Configuration = {
   auto_map_employees: string;
   auto_create_destination_entity: boolean;
   memo_structure?: string[];
+  import_tax_codes: boolean;
   created_at: Date;
   updated_at: Date;
   workspace: number;

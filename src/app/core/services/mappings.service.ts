@@ -139,6 +139,8 @@ export class MappingsService {
     return this.apiService.post(`/workspaces/${workspaceId}/mappings/auto_map_employees/trigger/`, {});
   }
 
+  
+
   getGroupedSageIntacctDestinationAttributes(attributeTypes: string[]): Observable<GroupedDestinationAttributes> {
     return from(this.getSageIntacctDestinationAttributes(attributeTypes).toPromise().then((response: MappingDestination[]) => {
       return response.reduce((groupedAttributes: GroupedDestinationAttributes, attribute: MappingDestination) => {
@@ -161,6 +163,7 @@ export class MappingsService {
         DEPARTMENT: [],
         PROJECT: [],
         LOCATION: [],
+        TAX_CODE: []
       });
     }));
   }
