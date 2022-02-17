@@ -163,7 +163,7 @@ export class MappingsService {
         DEPARTMENT: [],
         PROJECT: [],
         LOCATION: [],
-        TAX_CODE: []
+        TAX_DETAIL: []
       });
     }));
   }
