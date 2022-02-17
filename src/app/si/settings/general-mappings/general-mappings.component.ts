@@ -185,7 +185,7 @@ export class GeneralMappingsComponent implements OnInit {
     if (this.configuration.import_tax_codes) {
       attributes.push('TAX_DETAIL');
     }
-  
+
     return attributes;
   }
 
@@ -249,7 +249,6 @@ export class GeneralMappingsComponent implements OnInit {
       );
 
       that.mappingsService.getGeneralMappings().subscribe(res => {
-        console.log('res', res)
         that.generalMappings = res;
         that.reset();
       }, () => {

@@ -228,7 +228,7 @@ export class ConfigurationComponent implements OnInit {
       mappingsSettingsPayload.push({
         source_field: 'TAX_GROUP',
         destination_field: 'TAX_DETAIL'
-      })
+      });
     }
 
     mappingsSettingsPayload.push({
