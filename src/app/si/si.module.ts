@@ -59,6 +59,7 @@ import { MatTooltipModule } from '@angular/material';
 import { PaginatorComponent } from './settings/paginator/paginator.component';
 import { MemoStructureComponent } from './settings/sage-intacct-configurations/memo-structure/memo-structure.component';
 import { CdkDrag, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { LocationEntityComponent } from './settings/sage-intacct-configurations/location-entity/location-entity.component';
 
 @NgModule({
   declarations: [
@@ -88,7 +89,8 @@ import { CdkDrag, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop
     GenericMappingsComponent,
     GenericMappingsDialogComponent,
     PaginatorComponent,
-    MemoStructureComponent
+    MemoStructureComponent,
+    LocationEntityComponent
   ],
   entryComponents: [
     EmployeeMappingsDialogComponent,

@@ -1,0 +1,34 @@
+<div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
+    <app-loader></app-loader>
+</div>
+<div *ngIf="!isLoading" class="general-mappings" fxLayout="column" fxLayoutAlign="start stretch">
+    <div class="page-info">
+        <div fxLayout="row" fxLayoutAlign="start center" class="page-info--description" *ngIf="!isLoading">
+          Set up Sage Intacct Location Entity.
+        </div>
+    </div>
+    <form class="general-mappings--form" [formGroup]="subsidiaryForm" *ngIf="!isLoading">
+      <div fxLayout="column" fxLayoutAlign="start stretch">
+        <div class="mat-body-strong">
+          SageIntacct Location Entity
+          <mandatory-field></mandatory-field>
+        </div>
+        <mat-form-field floatLabel="always" appearance="outline" required>
+          <mat-select class="general-mappings--input" placeholder="Select Location Entity"
+            formControlName="netsuiteSubsidiaries">
+            <mat-option [value]="">
+                Top Level
+            </mat-option>
+            <mat-option *ngFor="let netsuiteLocation of netsuiteSubsidiaries; let i = index"
+              [value]="netsuiteSubsidiaries[i].destination_id">
+              {{netsuiteSubsidiaries[i].value}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mandatory-error-message listName="subsidiary" *ngIf="subsidiaryForm.controls.netsuiteSubsidiaries.touched && !subsidiaryForm.controls.netsuiteSubsidiaries.valid"></mandatory-error-message>
+        <button [disabled]="subsidiaryMappingDone || !subsidiaryForm.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="submit()" type="submit">
+          Save
+        </button>
+      </div>
+    </form>
+  </div>

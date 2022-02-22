@@ -165,6 +165,19 @@ export class MappingsService {
     }));
   }
 
+  postSubsidiaryMappings(subsidiaryMappingPayload: any): Observable<any> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    console.log(subsidiaryMappingPayload)
+    return this.apiService.post(`/workspaces/${workspaceId}/mappings/location_entity/`, subsidiaryMappingPayload);
+  }
+
+  getLocationEntityMapping(): Observable<any> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+    return this.apiService.get(
+      `/workspaces/${workspaceId}/mappings/location_entity/`, {}
+    );
+  }
 
   @Cacheable({
     cacheBusterObserver: generalMappingsCache

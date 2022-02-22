@@ -36,6 +36,10 @@ export class SageIntacctConfigurationsComponent implements OnInit {
       that.state = state;
       that.router.navigate([`workspaces/${that.workspaceId}/settings/configurations/${that.state.toLowerCase()}`]);
     }
+    if (that.state === 'LOCATION_ENTITY') {
+      that.state = state;
+      that.router.navigate([`workspaces/${that.workspaceId}/settings/configurations/${that.state.toLowerCase()}`]);
+    }
   }
 
   showExpenseFields() {
