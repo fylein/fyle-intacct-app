@@ -3,25 +3,23 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MappingDestination } from 'src/app/core/models/mapping-destination.model';
 import { MappingsService } from 'src/app/core/services/mappings.service';
-import { SettingsService } from 'src/app/core/services/settings.service';
 
 @Component({
   selector: 'app-location-entity',
   templateUrl: './location-entity.component.html',
-  styleUrls: ['./location-entity.component.scss']
+  styleUrls: ['./location-entity.component.scss', '../../../si.component.scss']
 })
 
 export class LocationEntityComponent implements OnInit {
 
-  subsidiaryForm: FormGroup;
+  locationEntityForm: FormGroup;
   workspaceId: number;
-  netsuiteSubsidiaries: MappingDestination[];
+  siLocationEntities: MappingDestination[];
   isLoading: boolean;
-  subsidiaryMappings: any;
-  subsidiaryMappingDone = false;
+  locationEntityMappings: any;
+  locationEntityMappingDone = false;
 
   constructor(private formBuilder: FormBuilder,
-              private settingsService: SettingsService,
               private mappingsService: MappingsService,
               private route: ActivatedRoute,
               private router: Router) {}
@@ -29,36 +27,36 @@ export class LocationEntityComponent implements OnInit {
   submit() {
     const that = this;
 
-    const subsidiaryId = that.subsidiaryForm.value.netsuiteSubsidiaries;
-    const netsuiteSubsidiary = that.netsuiteSubsidiaries.filter(filteredSubsidiary => filteredSubsidiary.destination_id === subsidiaryId)[0];
+    const locationEntityId = that.locationEntityForm.value.siLocationEntities;
+    const siEntityMapping = that.siLocationEntities.filter(filteredLocationEntity => filteredLocationEntity.destination_id === locationEntityId)[0];
     that.isLoading = true;
 
-    const subsidiaryMappingPayload: any = {
-      location_entity_name: netsuiteSubsidiary.value,
-      destination_id: netsuiteSubsidiary.destination_id,
-      country_name: 'us',
+    const locationEntityMappingPayload: any = {
+      location_entity_name: siEntityMapping.value,
+      destination_id: siEntityMapping.destination_id,
+      country_name: siEntityMapping.detail.country,
       workspace: that.workspaceId
     };
 
-    that.mappingsService.postSubsidiaryMappings(subsidiaryMappingPayload).subscribe(() => {
+    that.mappingsService.postLocationEntityMapping(locationEntityMappingPayload).subscribe(() => {
       that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
     });
   }
 
-  getSubsidiaryMappings() {
+  getlocationEntityMappings() {
     const that = this;
-    that.mappingsService.getLocationEntityMapping().subscribe(subsidiaryMappings => {
+    that.mappingsService.getLocationEntityMapping().subscribe(locationEntityMappings => {
       that.isLoading = false;
-      that.subsidiaryMappings = subsidiaryMappings;
-      that.subsidiaryMappingDone = true;
-      that.subsidiaryForm = that.formBuilder.group({
-        netsuiteSubsidiaries: [that.subsidiaryMappings ? that.subsidiaryMappings.destination_id : '']
+      that.locationEntityMappings = locationEntityMappings;
+      that.locationEntityMappingDone = true;
+      that.locationEntityForm = that.formBuilder.group({
+        siLocationEntities: [that.locationEntityMappings ? that.locationEntityMappings.destination_id : '']
       });
-      that.subsidiaryForm.controls.netsuiteSubsidiaries.disable();
+      that.locationEntityForm.controls.siLocationEntities.disable();
     }, () => {
       that.isLoading = false;
-      that.subsidiaryForm = that.formBuilder.group({
-        netsuiteSubsidiaries: ['', Validators.required]
+      that.locationEntityForm = that.formBuilder.group({
+        siLocationEntities: ['', Validators.required]
       });
     });
   }
@@ -67,10 +65,9 @@ export class LocationEntityComponent implements OnInit {
     const that = this;
     that.workspaceId = that.route.snapshot.parent.parent.params.workspace_id;
     that.isLoading = true;
-    that.mappingsService.getSageIntacctDestinationAttributes('LOCATION_ENTITY').subscribe((subsidiaries) => {
-      that.netsuiteSubsidiaries = subsidiaries;
-      that.getSubsidiaryMappings();
+    that.mappingsService.getSageIntacctDestinationAttributes('LOCATION_ENTITY').subscribe((locationEntities) => {
+      that.siLocationEntities = locationEntities.filter(entity => entity.detail.country !== null);
+      that.getlocationEntityMappings();
     });
   }
-
 }

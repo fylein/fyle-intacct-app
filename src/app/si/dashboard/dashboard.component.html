@@ -25,7 +25,7 @@
         <div class="onboarding-stepper--step" fxLayout="row" fxLayoutAlign="space-between center">
           <div fxLayout="row" fxLayoutAlign="start center">
             <mat-icon class="onboarding-stepper--check"
-              [ngClass]="{'onboarding-stepper--check__complete': currentState === allOnboardingStates.fyleConnected || currentState === allOnboardingStates.sageIntacctConnected || currentState === allOnboardingStates.configurationsDone || currentState === allOnboardingStates.generalMappingsDone || currentState === allOnboardingStates.employeeMappingsDone}">
+              [ngClass]="{'onboarding-stepper--check__complete': currentState === allOnboardingStates.fyleConnected || currentState === allOnboardingStates.sageIntacctConnected || currentState === allOnboardingStates.locationEntityMappingDone || currentState === allOnboardingStates.configurationsDone || currentState === allOnboardingStates.generalMappingsDone || currentState === allOnboardingStates.employeeMappingsDone}">
               check_circle</mat-icon>
             <div class="onboarding-stepper--desc">Connect to Fyle Account</div>
           </div>
@@ -38,7 +38,7 @@
         <div class="onboarding-stepper--step" fxLayout="row" fxLayoutAlign="space-between center">
           <div fxLayout="row" fxLayoutAlign="start center">
             <mat-icon class="onboarding-stepper--check"
-              [ngClass]="{'onboarding-stepper--check__complete': currentState === allOnboardingStates.sageIntacctConnected || currentState === allOnboardingStates.configurationsDone || currentState === allOnboardingStates.generalMappingsDone || currentState === allOnboardingStates.employeeMappingsDone}">
+              [ngClass]="{'onboarding-stepper--check__complete': currentState === allOnboardingStates.sageIntacctConnected || currentState === allOnboardingStates.locationEntityMappingDone || currentState === allOnboardingStates.configurationsDone || currentState === allOnboardingStates.generalMappingsDone || currentState === allOnboardingStates.employeeMappingsDone}">
               check_circle</mat-icon>
             <div class="onboarding-stepper--desc">Connect to Sage Intacct Account</div>
           </div>
@@ -47,6 +47,20 @@
             [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.fyleConnected}"
             (click)="onConnectSageIntacctPageVisit(true)">
             Connect to Sage Intacct
+          </div>
+        </div>
+        <div class="onboarding-stepper--step" fxLayout="row" fxLayoutAlign="space-between center">
+          <div fxLayout="row" fxLayoutAlign="start center">
+            <mat-icon class="onboarding-stepper--check"
+              [ngClass]="{'onboarding-stepper--check__complete': currentState === allOnboardingStates.locationEntityMappingDone || currentState === allOnboardingStates.configurationsDone || currentState === allOnboardingStates.generalMappingsDone || currentState === allOnboardingStates.cardsMappingDone || currentState === allOnboardingStates.employeeMappingsDone}">
+              check_circle</mat-icon>
+            <div class="onboarding-stepper--desc">Select Sage Intacct Location Entity</div>
+          </div>
+          <div routerLink="../settings/configurations/location_entity/" class="onboarding-stepper--navigation cursor-pointer"
+            *ngIf="currentState === allOnboardingStates.sageIntacctConnected"
+            [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.sageIntacctConnected}"
+            (click)="onSelectSubsidiaryPageVisit(true)">
+            Select Location Entity
           </div>
         </div>
       </mat-step>
@@ -64,8 +78,8 @@
             <div class="onboarding-stepper--desc">Map Fyle fields to Sage Intacct fields</div>
           </div>
           <div routerLink="../settings/configurations/general/" class="onboarding-stepper--navigation cursor-pointer"
-            *ngIf="currentState === allOnboardingStates.sageIntacctConnected"
-            [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.sageIntacctConnected}"
+            *ngIf="currentState === allOnboardingStates.locationEntityMappingDone"
+            [ngClass]="{'onboarding-stepper--navigation__active': currentState === allOnboardingStates.locationEntityMappingDone}"
             (click)="onConfigurationsPageVisit(true)">
             Go to Configurations
           </div>

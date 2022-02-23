@@ -6,7 +6,7 @@
       Configurations
     </div>
     <nav mat-tab-nav-bar>
-      <a mat-tab-link (click)="changeState('LOCATION_ENTITY')" [active]="state==='LOCATION_ENTITY'">
+      <a mat-tab-link (click)="changeState('LOCATION_ENTITY')" [active]="state==='LOCATION_ENTITY'" *ngIf='sageIntacctConnectionDone'>
         Location Entity
       </a>
       <a mat-tab-link (click)="changeState('GENERAL')" [active]="state==='GENERAL'" *ngIf='sageIntacctConnectionDone'>

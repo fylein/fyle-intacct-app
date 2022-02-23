@@ -165,11 +165,10 @@ export class MappingsService {
     }));
   }
 
-  postSubsidiaryMappings(subsidiaryMappingPayload: any): Observable<any> {
+  postLocationEntityMapping(locationEntityMappingPayload: any): Observable<any> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
-    console.log(subsidiaryMappingPayload)
-    return this.apiService.post(`/workspaces/${workspaceId}/mappings/location_entity/`, subsidiaryMappingPayload);
+    return this.apiService.post(`/workspaces/${workspaceId}/mappings/location_entity/`, locationEntityMappingPayload);
   }
 
   getLocationEntityMapping(): Observable<any> {

@@ -57,7 +57,7 @@ export class SageIntacctConfigurationsComponent implements OnInit {
     that.isParentLoading = true;
 
     that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
-    that.state = that.route.snapshot.firstChild.routeConfig.path.toUpperCase() || 'GENERAL';
+    that.state = that.route.snapshot.firstChild.routeConfig.path.toUpperCase() || 'LOCATION_ENTITY';
 
     that.settingsService.getSageIntacctCredentials(that.workspaceId).subscribe(() => {
       that.sageIntacctConnectionDone = true;
