@@ -9,4 +9,3 @@ export type LocationEntityMapping = {
     updated_at?: Date;
     workspace: number;
   };
-  
