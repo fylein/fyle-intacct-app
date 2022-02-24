@@ -29,7 +29,7 @@ export class LocationEntityComponent implements OnInit {
     const that = this;
 
     const locationEntityId = that.locationEntityForm.value.siLocationEntities;
-    
+
     let locationEntityMappingPayload;
 
     if (that.locationEntityForm.value.siLocationEntities !== 'top_level') {
