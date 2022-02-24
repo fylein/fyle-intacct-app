@@ -19,6 +19,10 @@
         <mat-form-field floatLabel="always" appearance="outline" required>
           <mat-select class="general-mappings--input" placeholder="Select Location Entity"
             formControlName="siLocationEntities">
+            <mat-option
+              [value]="'top_level'">
+              Top Level
+            </mat-option>
             <mat-option *ngFor="let locationEntity of siLocationEntities; let i = index"
               [value]="siLocationEntities[i].destination_id">
               {{siLocationEntities[i].value}}

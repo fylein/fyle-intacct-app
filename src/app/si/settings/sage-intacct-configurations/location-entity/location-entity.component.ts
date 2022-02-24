@@ -29,15 +29,26 @@ export class LocationEntityComponent implements OnInit {
     const that = this;
 
     const locationEntityId = that.locationEntityForm.value.siLocationEntities;
-    const siEntityMapping = that.siLocationEntities.filter(filteredLocationEntity => filteredLocationEntity.destination_id === locationEntityId)[0];
-    that.isLoading = true;
+    
+    let locationEntityMappingPayload;
 
-    const locationEntityMappingPayload: LocationEntityMapping = {
-      location_entity_name: siEntityMapping.value,
-      destination_id: siEntityMapping.destination_id,
-      country_name: siEntityMapping.detail.country,
-      workspace: that.workspaceId
-    };
+    if (that.locationEntityForm.value.siLocationEntities !== 'top_level') {
+      const siEntityMapping = that.siLocationEntities.filter(filteredLocationEntity => filteredLocationEntity.destination_id === locationEntityId)[0];
+      locationEntityMappingPayload = {
+        location_entity_name: siEntityMapping.value,
+        destination_id: siEntityMapping.destination_id,
+        country_name: siEntityMapping.detail.country,
+        workspace: that.workspaceId
+      };
+    } else {
+      locationEntityMappingPayload = {
+        location_entity_name: 'Top Level',
+        destination_id: 'top_level',
+        country_name: null,
+        workspace: that.workspaceId
+      };
+    }
+    that.isLoading = true;
 
     that.mappingsService.postLocationEntityMapping(locationEntityMappingPayload).subscribe(() => {
       that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
@@ -68,6 +79,7 @@ export class LocationEntityComponent implements OnInit {
     that.isLoading = true;
     that.mappingsService.getSageIntacctDestinationAttributes('LOCATION_ENTITY').subscribe((locationEntities) => {
       that.siLocationEntities = locationEntities.filter(entity => entity.detail.country !== null);
+
       that.getlocationEntityMappings();
     });
   }
