@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LocationEntityMapping } from 'src/app/core/models/location-entity-mapping.model';
 import { MappingDestination } from 'src/app/core/models/mapping-destination.model';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 
@@ -16,7 +17,7 @@ export class LocationEntityComponent implements OnInit {
   workspaceId: number;
   siLocationEntities: MappingDestination[];
   isLoading: boolean;
-  locationEntityMappings: any;
+  locationEntityMappings: LocationEntityMapping;
   locationEntityMappingDone = false;
 
   constructor(private formBuilder: FormBuilder,
@@ -31,7 +32,7 @@ export class LocationEntityComponent implements OnInit {
     const siEntityMapping = that.siLocationEntities.filter(filteredLocationEntity => filteredLocationEntity.destination_id === locationEntityId)[0];
     that.isLoading = true;
 
-    const locationEntityMappingPayload: any = {
+    const locationEntityMappingPayload: LocationEntityMapping = {
       location_entity_name: siEntityMapping.value,
       destination_id: siEntityMapping.destination_id,
       country_name: siEntityMapping.detail.country,

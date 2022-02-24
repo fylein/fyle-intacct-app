@@ -12,6 +12,7 @@ import { MappingsResponse } from '../models/mappings-response.model';
 import { GroupedDestinationAttributes } from '../models/grouped-destination-attributes';
 import { Mapping } from '../models/mappings.model';
 import { WorkspaceService } from './workspace.service';
+import { LocationEntityMapping } from '../models/location-entity-mapping.model';
 
 const generalMappingsCache = new Subject<void>();
 
@@ -165,13 +166,13 @@ export class MappingsService {
     }));
   }
 
-  postLocationEntityMapping(locationEntityMappingPayload: any): Observable<any> {
+  postLocationEntityMapping(locationEntityMappingPayload: LocationEntityMapping): Observable<any> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
     return this.apiService.post(`/workspaces/${workspaceId}/mappings/location_entity/`, locationEntityMappingPayload);
   }
 
-  getLocationEntityMapping(): Observable<any> {
+  getLocationEntityMapping(): Observable<LocationEntityMapping> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.get(
       `/workspaces/${workspaceId}/mappings/location_entity/`, {}
