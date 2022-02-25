@@ -1,0 +1,38 @@
+<div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
+    <app-loader></app-loader>
+</div>
+<div *ngIf="!isLoading" class="general-mappings" fxLayout="column" fxLayoutAlign="start stretch">
+    <div class="page-info">
+      <div fxLayout="row" fxLayoutAlign="start center" class="page-info--description">
+        <div>
+          Please Select SageIntacct Location Entity.
+        </div>
+        <a href="https://www.fylehq.com/help/en/articles/4507437-onboarding-process-to-set-up-fyle-sage-intacct-integration" rel="noopener noreferrer" target="_blank" class="read-more-link" fxLayout="row" fxLayoutAlign="start center">Read more<mat-icon class="read-more-link--icon">open_in_new</mat-icon></a>
+      </div>
+    </div>
+    <form class="general-mappings--form" [formGroup]="locationEntityForm" *ngIf="!isLoading">
+      <div fxLayout="column" fxLayoutAlign="start stretch">
+        <div class="mat-body-strong">
+          SageIntacct Location Entity
+          <mandatory-field></mandatory-field>
+        </div>
+        <mat-form-field floatLabel="always" appearance="outline" required>
+          <mat-select class="general-mappings--input" placeholder="Select Location Entity"
+            formControlName="siLocationEntities">
+            <mat-option
+              [value]="'top_level'">
+              Top Level
+            </mat-option>
+            <mat-option *ngFor="let locationEntity of siLocationEntities; let i = index"
+              [value]="siLocationEntities[i].destination_id">
+              {{siLocationEntities[i].value}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mandatory-error-message listName="locationEntity" *ngIf="locationEntityForm.controls.siLocationEntities.touched && !locationEntityForm.controls.siLocationEntities.valid"></mandatory-error-message>
+        <button [disabled]="locationEntityMappingDone || !locationEntityForm.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="submit()" type="submit">
+          Save
+        </button>
+      </div>
+    </form>
+  </div>

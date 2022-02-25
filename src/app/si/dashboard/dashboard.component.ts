@@ -21,6 +21,7 @@ enum onboardingStates {
   initialized,
   fyleConnected,
   sageIntacctConnected,
+  locationEntityMappingDone,
   configurationsDone,
   generalMappingsDone,
   employeeMappingsDone,
@@ -104,6 +105,14 @@ export class DashboardComponent implements OnInit {
     return that.settingsService.getSageIntacctCredentials(that.workspaceId).toPromise().then(credentials => {
       that.currentState = onboardingStates.sageIntacctConnected;
       return credentials;
+    });
+  }
+
+  getLocationEntityMapping() {
+    const that = this;
+    return that.mappingsService.getLocationEntityMapping().toPromise().then(locationEntityMapping => {
+      that.currentState = onboardingStates.locationEntityMappingDone;
+      return locationEntityMapping;
     });
   }
 
@@ -230,6 +239,8 @@ export class DashboardComponent implements OnInit {
       that.checkFyleLoginStatus()
         .then(() => {
           return that.getSageIntacctStatus();
+        }).then(() => {
+          return that.getLocationEntityMapping();
         }).then(() => {
           that.updateDimensionTables();
           return that.getConfigurations();
