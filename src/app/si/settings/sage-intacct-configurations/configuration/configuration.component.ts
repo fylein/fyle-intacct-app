@@ -329,9 +329,6 @@ export class ConfigurationComponent implements OnInit {
 
     that.mappingService.getLocationEntityMapping().subscribe((mapping) => {
        that.entityCountry = mapping.country_name;
-       if (mapping.country_name !== 'United States') {
-         that.isTaxesEnabled = true;
-       }
        that.getAllSettings();
     });
   }
