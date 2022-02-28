@@ -26,9 +26,12 @@ export class ConfigurationComponent implements OnInit {
   mappingSettings: MappingSetting[];
   showAutoCreate: boolean;
   windowReference: Window;
+  entityCountry: string;
+  isTaxesEnabled = false;
 
   constructor(private formBuilder: FormBuilder,
               private settingsService: SettingsService,
+              private mappingService: MappingsService,
               private route: ActivatedRoute,
               private router: Router,
               private snackBar: MatSnackBar,
@@ -167,6 +170,10 @@ export class ConfigurationComponent implements OnInit {
         that.configurationForm.controls.cccExpense.disable();
       }
 
+      if (that.entityCountry === 'United States') {
+        that.configurationForm.controls.importTaxCodes.disable();
+      }
+
       that.isLoading = false;
     }, () => {
       that.isLoading = false;
@@ -189,6 +196,10 @@ export class ConfigurationComponent implements OnInit {
       that.configurationForm.controls.reimburExpense.valueChanges.subscribe((reimburseExpenseMappingPreference) => {
         that.cccExpenseOptions = that.getCCCExpenseOptions(reimburseExpenseMappingPreference);
       });
+
+      if (that.entityCountry === 'United States') {
+        that.configurationForm.controls.importTaxCodes.disable();
+      }
 
       that.expenseOptions = [{
         label: 'Expense Report',
@@ -316,7 +327,13 @@ export class ConfigurationComponent implements OnInit {
 
     that.isLoading = true;
 
-    that.getAllSettings();
+    that.mappingService.getLocationEntityMapping().subscribe((mapping) => {
+       that.entityCountry = mapping.country_name;
+       if (mapping.country_name !== 'United States') {
+         that.isTaxesEnabled = true;
+       }
+       that.getAllSettings();
+    });
   }
 
 }
