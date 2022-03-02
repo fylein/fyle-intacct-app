@@ -37,6 +37,7 @@ export class GeneralMappingsComponent implements OnInit {
   sageIntacctReimbursableExpensePaymentType: MappingDestination[];
   sageIntacctCCCExpensePaymentType: MappingDestination[];
   sageIntacctClasses: MappingDestination[];
+  taxCodes: MappingDestination[];
   configuration: Configuration;
   projectMappingSetting: MappingSetting[];
 
@@ -67,6 +68,9 @@ export class GeneralMappingsComponent implements OnInit {
     const defaultEmployeeLocation = that.form.value.useDefaultEmployeeLocation;
     const defaultEmployeeDepartment = that.form.value.useDefaultEmployeeDepartment;
 
+    const defaultTaxCodeId = that.form.value.sageIntacctTaxCodes;
+    const defaultTaxCode = that.taxCodes.filter(filteredTaxCode => filteredTaxCode.destination_id === defaultTaxCodeId)[0];
+
     const mapping: GeneralMapping = {
       location_entity_name: locationEntityName[0] ? locationEntityName[0].value : '',
       location_entity_id: that.form.value.locationEntity ? that.form.value.locationEntity : '',
@@ -91,7 +95,9 @@ export class GeneralMappingsComponent implements OnInit {
       default_ccc_expense_payment_type_id: that.form.value.defaultCCCExpensePaymentType ? that.form.value.defaultCCCExpensePaymentType : '',
       default_ccc_expense_payment_type_name: defaultCCCExpensePaymentType[0] ? defaultCCCExpensePaymentType[0].value : null,
       use_intacct_employee_departments: defaultEmployeeDepartment,
-      use_intacct_employee_locations: defaultEmployeeLocation
+      use_intacct_employee_locations: defaultEmployeeLocation,
+      default_tax_code_name: defaultTaxCode ? defaultTaxCode.value : null,
+      default_tax_code_id: defaultTaxCode ? defaultTaxCode.destination_id : null
     };
 
     that.setMandatoryFields();
@@ -128,6 +134,11 @@ export class GeneralMappingsComponent implements OnInit {
       if (that.projectMappingSetting.length) {
         that.form.controls.defaultItem.setValidators(Validators.required);
       }
+
+      if (that.configuration.import_tax_codes) {
+        that.form.controls.sageIntacctTaxCodes.setValidators(Validators.required);
+      }
+
   }
 
   isFieldMandatory(controlName: string) {
@@ -169,7 +180,12 @@ export class GeneralMappingsComponent implements OnInit {
 
     if (this.projectMappingSetting.length) {
       attributes.push('ITEM');
-  }
+    }
+
+    if (this.configuration.import_tax_codes) {
+      attributes.push('TAX_DETAIL');
+    }
+
     return attributes;
   }
 
@@ -192,6 +208,7 @@ export class GeneralMappingsComponent implements OnInit {
       that.sageIntacctCCCExpensePaymentType = response.EXPENSE_PAYMENT_TYPE.filter(expensePaymentType => expensePaymentType.detail.is_reimbursable === false);
       that.sageIntacctLocationEntities = response.LOCATION_ENTITY;
       that.sageIntacctClasses = response.CLASS;
+      that.taxCodes = response.TAX_DETAIL;
 
       that.form = that.formBuilder.group({
         locationEntity: [that.generalMappings ? that.generalMappings.location_entity_id : null],
@@ -207,7 +224,8 @@ export class GeneralMappingsComponent implements OnInit {
         // defaultCCCExpensePaymentType should be a mandatory field for Expense Reports to mark it as non reimbursable for ccc expenses
         defaultCCCExpensePaymentType: [that.generalMappings ? that.generalMappings.default_ccc_expense_payment_type_id : null, that.configuration.corporate_credit_card_expenses_object === 'EXPENSE_REPORT' ? Validators.required : null],
         useDefaultEmployeeLocation: [that.generalMappings ? that.generalMappings.use_intacct_employee_locations : false],
-        useDefaultEmployeeDepartment: [that.generalMappings ? that.generalMappings.use_intacct_employee_departments : false]
+        useDefaultEmployeeDepartment: [that.generalMappings ? that.generalMappings.use_intacct_employee_departments : false],
+        sageIntacctTaxCodes: [that.generalMappings ? that.generalMappings.default_tax_code_id : '']
       });
 
       that.setMandatoryFields();

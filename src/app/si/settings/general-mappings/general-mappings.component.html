@@ -179,6 +179,21 @@
         </mat-select>
       </mat-form-field>
       <mandatory-error-message listName="default ccc expense payment type" *ngIf="form.controls.defaultCCCExpensePaymentType.touched && !form.controls.defaultCCCExpensePaymentType.valid"></mandatory-error-message>
+      
+      <div class="mat-body-strong" *ngIf="configuration.import_tax_codes">
+        Default Tax Code
+        <mandatory-field *ngIf="isFieldMandatory('sageIntacctTaxCodes')"></mandatory-field>
+      </div>
+        <mat-form-field floatLabel="always" appearance="outline" required
+          *ngIf="configuration.import_tax_codes">
+          <mat-select class="general-mappings--input" placeholder="Select Tax Group"
+            formControlName="sageIntacctTaxCodes">
+            <mat-option *ngFor="let taxCode of taxCodes; let i = index" [value]="taxCodes[i].destination_id">
+              {{taxCodes[i].value}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mandatory-error-message listName="default tax code" *ngIf="form.controls.sageIntacctTaxCodes.touched && !form.controls.sageIntacctTaxCodes.valid"></mandatory-error-message>
 
       <mat-slide-toggle color="primary" class="schedule" formControlName="useDefaultEmployeeLocation" *ngIf="configuration.reimbursable_expenses_object === 'EXPENSE_REPORT'">
         <div class="schedule--toggle-text">

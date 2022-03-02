@@ -26,9 +26,12 @@ export class ConfigurationComponent implements OnInit {
   mappingSettings: MappingSetting[];
   showAutoCreate: boolean;
   windowReference: Window;
+  entityCountry: string;
+  isTaxesEnabled = false;
 
   constructor(private formBuilder: FormBuilder,
               private settingsService: SettingsService,
+              private mappingService: MappingsService,
               private route: ActivatedRoute,
               private router: Router,
               private snackBar: MatSnackBar,
@@ -138,7 +141,8 @@ export class ConfigurationComponent implements OnInit {
         importCategories: [that.configuration.import_categories],
         paymentsSync: [paymentsSyncOption],
         autoMapEmployees: [that.configuration.auto_map_employees],
-        autoCreateDestinationEntity: [that.configuration.auto_create_destination_entity]
+        autoCreateDestinationEntity: [that.configuration.auto_create_destination_entity],
+        importTaxCodes: [that.configuration.import_tax_codes]
       });
 
       const fyleProjectMapping = that.mappingSettings.filter(
@@ -166,6 +170,10 @@ export class ConfigurationComponent implements OnInit {
         that.configurationForm.controls.cccExpense.disable();
       }
 
+      if (that.entityCountry === 'United States') {
+        that.configurationForm.controls.importTaxCodes.disable();
+      }
+
       that.isLoading = false;
     }, () => {
       that.isLoading = false;
@@ -177,7 +185,8 @@ export class ConfigurationComponent implements OnInit {
         importCategories: [false],
         paymentsSync: [null],
         autoMapEmployees: [null],
-        autoCreateDestinationEntity: [false]
+        autoCreateDestinationEntity: [false],
+        importTaxCodes: [null]
       });
 
       that.configurationForm.controls.autoMapEmployees.valueChanges.subscribe((employeeMappingPreference) => {
@@ -187,6 +196,10 @@ export class ConfigurationComponent implements OnInit {
       that.configurationForm.controls.reimburExpense.valueChanges.subscribe((reimburseExpenseMappingPreference) => {
         that.cccExpenseOptions = that.getCCCExpenseOptions(reimburseExpenseMappingPreference);
       });
+
+      if (that.entityCountry === 'United States') {
+        that.configurationForm.controls.importTaxCodes.disable();
+      }
 
       that.expenseOptions = [{
         label: 'Expense Report',
@@ -212,6 +225,7 @@ export class ConfigurationComponent implements OnInit {
     const importCategories = that.configurationForm.value.importCategories;
     const autoMapEmployees = that.configurationForm.value.autoMapEmployees ? that.configurationForm.value.autoMapEmployees : null;
     const autoCreateDestinationEntity = that.configurationForm.value.autoCreateDestinationEntity;
+    const importTaxCodes = that.configurationForm.value.importTaxCodes ? that.configurationForm.value.importTaxCodes : null;
 
     let fyleToSageIntacct = false;
     let sageIntacctToFyle = false;
@@ -220,6 +234,13 @@ export class ConfigurationComponent implements OnInit {
       source_field: 'EMPLOYEE',
       destination_field: employeeMappingsObject
     }];
+
+    if (importTaxCodes) {
+      mappingsSettingsPayload.push({
+        source_field: 'TAX_GROUP',
+        destination_field: 'TAX_DETAIL'
+      });
+    }
 
     mappingsSettingsPayload.push({
       source_field: 'CATEGORY',
@@ -270,7 +291,7 @@ export class ConfigurationComponent implements OnInit {
     forkJoin(
       [
         that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-        that.settingsService.postConfiguration(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, importProjects, importCategories, fyleToSageIntacct, sageIntacctToFyle, autoCreateDestinationEntity, autoMapEmployees)
+        that.settingsService.postConfiguration(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, importProjects, importCategories, fyleToSageIntacct, sageIntacctToFyle, autoCreateDestinationEntity, importTaxCodes, autoMapEmployees)
       ]
     ).subscribe(() => {
       that.isLoading = true;
@@ -306,7 +327,10 @@ export class ConfigurationComponent implements OnInit {
 
     that.isLoading = true;
 
-    that.getAllSettings();
+    that.mappingService.getLocationEntityMapping().subscribe((mapping) => {
+       that.entityCountry = mapping.country_name;
+       that.getAllSettings();
+    });
   }
 
 }
