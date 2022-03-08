@@ -170,7 +170,7 @@ export class ConfigurationComponent implements OnInit {
         that.configurationForm.controls.cccExpense.disable();
       }
 
-      if (that.entityCountry === 'United States') {
+      if (!that.entityCountry || that.entityCountry === 'United States') {
         that.configurationForm.controls.importTaxCodes.disable();
       }
 
@@ -197,7 +197,7 @@ export class ConfigurationComponent implements OnInit {
         that.cccExpenseOptions = that.getCCCExpenseOptions(reimburseExpenseMappingPreference);
       });
 
-      if (that.entityCountry === 'United States') {
+      if (!that.entityCountry || that.entityCountry === 'United States') {
         that.configurationForm.controls.importTaxCodes.disable();
       }
 

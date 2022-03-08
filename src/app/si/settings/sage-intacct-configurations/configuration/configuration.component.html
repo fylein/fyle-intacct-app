@@ -105,7 +105,7 @@
         </div>
       </mat-slide-toggle>
 
-      <mat-slide-toggle color="primary" class="schedule"  formControlName="importTaxCodes">
+      <mat-slide-toggle color="primary" class="schedule" *ngIf="(entityCountry && entityCountry !== 'United States')" formControlName="importTaxCodes">
         <div class="schedule--toggle-text">Import Sage Intacct Tax Codes to Fyle</div>
       </mat-slide-toggle>
 
