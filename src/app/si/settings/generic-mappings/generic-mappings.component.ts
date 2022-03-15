@@ -19,6 +19,7 @@ export class GenericMappingsComponent implements OnInit {
   workspaceId: number;
   sourceField: string;
   isLoading: boolean;
+  docLink: string;
   mappings: MatTableDataSource<Mapping> = new MatTableDataSource([]);
   setting: MappingSetting;
   count: number;
@@ -89,6 +90,12 @@ export class GenericMappingsComponent implements OnInit {
       that.isLoading = true;
       that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
       that.sourceField = that.route.snapshot.params.source_field;
+      that.docLink = 'https://www.fylehq.com/help/en/articles/4507437-onboarding-process-to-set-up-fyle-sage-intacct-integration';
+
+      if (that.sourceField === 'tax_group') {
+        that.docLink = 'https://help.fylehq.com/en/articles/6046724-importing-tax-code-from-sage-intacct-to-fyle';
+      }
+
       that.settingsService.getMappingSettings(that.workspaceId).subscribe(response => {
         that.setting = response.results.filter(setting => setting.source_field === that.sourceField.toUpperCase())[0];
         const data = {
