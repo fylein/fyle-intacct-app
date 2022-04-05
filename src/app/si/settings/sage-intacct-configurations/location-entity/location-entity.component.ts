@@ -78,7 +78,7 @@ export class LocationEntityComponent implements OnInit {
     that.workspaceId = that.route.snapshot.parent.parent.params.workspace_id;
     that.isLoading = true;
     that.mappingsService.getSageIntacctDestinationAttributes('LOCATION_ENTITY').subscribe((locationEntities) => {
-      that.siLocationEntities = locationEntities.filter(entity => (entity.detail && entity.detail.country));
+      that.siLocationEntities = locationEntities;
 
       that.getlocationEntityMappings();
     });
