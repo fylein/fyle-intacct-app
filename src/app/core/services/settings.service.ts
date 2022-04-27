@@ -19,7 +19,7 @@ const mappingsSettingsCache = new Subject<void>();
   providedIn: 'root',
 })
 export class SettingsService {
-  constructor(private apiService: ApiService, private workspace:WorkspaceService) { }
+  constructor(private apiService: ApiService, private workspace: WorkspaceService) { }
 
   @Cacheable({
     cacheBusterObserver: fyleCredentialsCache
@@ -52,10 +52,10 @@ export class SettingsService {
     return this.apiService.post('/workspaces/' + workspaceId + '/credentials/sage_intacct/', data);
   }
 
-  postScheduleSettings(hours: number, scheduleEnabled: boolean, selectedEmail:[], addedEmail:{}): Observable<ScheduleSettings> {
+  postScheduleSettings(hours: number, scheduleEnabled: boolean, selectedEmail: [], addedEmail: {}): Observable<ScheduleSettings> {
     const workspaceId =  this.workspace.getWorkspaceId();
     return this.apiService.post(`/workspaces/${workspaceId}/schedule/`, {
-      hours: hours,
+      hours,
       schedule_enabled: scheduleEnabled,
       added_email: addedEmail,
       selected_email: selectedEmail

@@ -26,7 +26,7 @@ import { SearchPipe } from './pipes/search.pipe';
     MatProgressSpinnerModule,
     FlexLayoutModule,
     MatButtonModule,
-    FormsModule, 
+    FormsModule,
     ReactiveFormsModule
   ],
   exports: [

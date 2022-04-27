@@ -4,14 +4,14 @@
 // TODO: the variable placeholders should have _
 export const environment = {
   production: false,
-  fyle_url: 'https://accounts.fyle.tech',
-  fyle_client_id: 'tpayfjPPHTDgv',
-  callback_uri: 'http://localhost:4200/auth/callback',
-  api_url: 'http://localhost:8004/api',
-  app_url: 'http://localhost:4200',
-  hotjar_id: '',
-  sentry_dsn: '',
-  release: 'dev'
+  fyle_url: 'FYLE URL',
+  fyle_client_id: 'FYLE CLIENT ID',
+  callback_uri: 'CALLBACK URL',
+  api_url: 'SAGE INTACCT API URL',
+  app_url: 'ANGULAR APP URL',
+  hotjar_id: 'HOTJAR_ID',
+  sentry_dsn: 'SENTRY_DSN',
+  release: 'RELEASE'
 };
 
 /*
