@@ -1,0 +1,30 @@
+.search-select {
+    background: #f5f5f5;
+
+    // &--search-input {
+    //     padding: 7px 9px 7px 9px;
+    // }
+
+    &--search-area {
+        background: #ffffff;
+        border: 1px solid #ddd;
+        height: 28px;
+    }
+
+    // &--search-icon {
+    //     padding: 8px 10px 7px 10px;
+    // }
+    display: flex;
+}
+
+input {
+    border: none;
+    border-width: 0px;
+    padding: 8px 0px 6px 0px;
+    width: 100%;
+}
+
+input:focus-visible {
+    border: none;
+    outline: none;
+}

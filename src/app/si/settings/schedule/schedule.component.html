@@ -2,19 +2,135 @@
   <app-loader></app-loader>
 </div>
 <div *ngIf="!isLoading">
-  <div class="page-header schedule--header">
+  <!-- <div class="page-header schedule--header"> -->
     <div class="page-header--name mat-h2">
       Automated Import/Export
     </div>
-  </div>
-  <div class="page-info">
-    <div fxLayout="row" fxLayoutAlign="start center" class="page-info--description">
-      Set up an automatic process for importing expense groups from Fyle and exporting them to Sage Intacct.
-      <a href="https://www.fylehq.com/help/en/articles/4507450-fyle-sage-intacct-integration" target="_blank" rel="noopener noreferrer" class="read-more-link" fxLayout="row" fxLayoutAlign="start center">Read more<mat-icon class="read-more-link--icon">open_in_new</mat-icon></a>
-    </div>
-  </div>
+  <!-- </div> -->
   <form class="schedule--form" [formGroup]="form">
+    <!-- new -->
+    <div class="schedule--select">
+      <div fxLayout="row" class="schedule--header-title" fxLayoutAlign="start center">
+        Enablee Automated Import-Export
+        <mat-slide-toggle color="primary" class="schedule--toggle" formControlName="scheduleEnabled">
+          <div class="schedule--toggle-text">Enabled</div>
+        </mat-slide-toggle>
+      </div>
+      <div class="schedule--header-info">
+        Set up an automatic process for importing expense groups
+        <div fxLayout="row">
+          from Fyle and exporting them to Sage Intacct.
+          <a href="https://www.fylehq.com/help/en/articles/4507450-fyle-sage-intacct-integration" 
+            target="_blank" rel="noopener noreferrer" class="read-more-link" fxLayout="row" fxLayoutAlign="start center">
+            Read more<mat-icon class="read-more-link--icon">open_in_new</mat-icon></a>
+          
+        </div>
+      </div>
+    </div>
+
     <div fxLayout="column" fxLayoutAlign="start stretch">
+      <div *ngIf="form.controls.scheduleEnabled.value">
+        <div fxLayout="column" class="schedule--select" fxLayoutAlign="start stretch">
+          <div fxLayout="row" class="schedule--header-title" fxLayoutAlign="start center">
+            Select the frequency of the export
+            <mandatory-field></mandatory-field>
+          </div>
+          <span class="schedule--header-info">Select the frequancy at which you want your Automated import-export to
+            happen</span>
+          <mat-form-field class="schedule--dropdown" appearance="outline" required>
+            <mat-select placeholder="Select hours" disableOptionCentering panelClass="simpleSelect"
+              formControlName="hours">
+              <mat-option *ngFor="let hour of hours" [value]="hour">
+                {{hour}} hour<span *ngIf="hour>1">s</span>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mandatory-error-message class="schedule--error" customErrorMessage="Please select the frequency hours"
+          *ngIf="form.controls.hours.touched && !form.controls.hours.valid"></mandatory-error-message>
+        </div>
+
+        <div fxLayout="column" class="schedule--select" fxLayoutAlign="start stretch">
+          <div fxLayout="row" class="schedule--header-title" fxLayoutAlign="start center">
+            Select an email address to notify upon export failure
+            <mat-icon class="info-icon main"
+             matTooltip="The selected email address will be notified instantly upon export failure"
+             [inline]="true" 
+             matTooltipPosition="after"
+             >info</mat-icon>
+          </div>
+          <div class="schedule--header-info">
+            <div fxLayout="row">
+              You can select one or more email address from the given list,
+               or add new one to get email notifications
+              <a href="https://help.fylehq.com/en/articles/6064944-how-to-be-notified-when-auto-export-fails-in-fyle-netsuite-integration" target="_blank"
+                rel="noopener noreferrer" class="read-more-link" fxLayout="row" fxLayoutAlign="start center">Read more
+                <mat-icon class="read-more-link--icon">open_in_new</mat-icon>
+              </a>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayoutAlign="start center">
+            <mat-form-field class="schedule--dropdown" appearance="outline" required>
+              <mat-select placeholder="Select Admins" disableOptionCentering panelClass="myPanelClass"
+                formControlName="emails" multiple>
+                <app-simple-search-select [form]="form"></app-simple-search-select>
+                <mat-select-trigger fxLayout="row" fxLayoutAlign="space-between center">
+                  <div fxLayout="row">
+                    <div fxLayout="row" fxLayoutAlign="space-between center" class="selected-email">
+                      <div class="display-email">
+                        {{form.value.emails ? form.value.emails[0] : ''}}
+                      </div>
+                      <div fxLayout="column" class="vertical"></div>
+                      <div class="mat-icon-close" (click)="delete($event, form.value.emails[0])">
+                        <mat-icon>close</mat-icon>
+                      </div>
+                    </div>
+                    <div *ngIf="form.value.emails?.length > 1" class="example-additional-selection">
+                      <div class="email-number">
+                        +{{form.value.emails.length - 1}}
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="form.value.emails?.length > 1" class="delele-all-icon"
+                    (click)="delete($event, form.value.emails[0], true)">
+                    <mat-icon>close</mat-icon>
+                  </div>
+                </mat-select-trigger>
+                <mat-option 
+                  (click)="clearSearchText($event)"
+                  *ngFor="let hour of workspaceAdmins | search : form.value.searchOption" class="multiline-mat-option"
+                  [value]="hour.email">
+                  <div fxLayout="column" fxLayoutAlign="end start">
+                    <div>
+                      {{hour.name}}
+                    </div>
+                    <div class="schedule--bottom-name">
+                      {{hour.email}}
+                    </div>
+                  </div>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <span *ngIf="form.controls.hours.value" class="schedule--span-or">or</span>
+
+            <div *ngIf="form.controls.hours.value" fxLayout="row" class="cursor-pointer" fxLayoutAlign="start center" (click)="open()">
+              <img class="schedule--add-btn" src="assets/images/pngs/add.png">
+              <span class="schedule--span-or">Add new email address</span>
+            </div>
+          </div>
+
+
+        </div>
+
+      </div>
+      <button [disabled]="!form.valid" *ngIf="form.controls.scheduleEnabled.value" class="schedule--save-btn"
+        mat-flat-button color="primary" type="submit" (click)="submit()">
+        Save
+      </button>
+    </div>    
+    <!-- //old -->
+    <!-- <div fxLayout="column" fxLayoutAlign="start stretch">
       <mat-slide-toggle color="primary" formControlName="scheduleEnabled">
         <div class="schedule--toggle-text">Enabled</div>
       </mat-slide-toggle>
@@ -42,6 +158,6 @@
         type="submit" (click)="submit()">
         Save
       </button>
-    </div>
+    </div> -->
   </form>
 </div>

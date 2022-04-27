@@ -1,31 +1,201 @@
-@import 'variables.scss';
+@import "variables.scss";
 
 $fy-panel: #f5f5f5;
+
+:host ::ng-deep .mat-form-field-type-mat-select .mat-form-field-flex {
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+}
+
+:host ::ng-deep .mat-form-field-infix {
+  padding-top: 6px;
+}
+
+:host ::ng-deep .mat-form-field-appearance-outline .mat-select-arrow-wrapper {
+  transform: translateY(1px) !important;
+}
+
+.close {
+  height: 18px;
+  color: #a9acbc;
+}
+
+.mat-icon-close {
+  color: #a9acbc;
+  padding-left: 5px;
+  padding-top: 5px;
+}
+
+.vertical {
+  border-left: 1px solid #dfdfe2;
+  height: 20px;
+  margin-left: 10px;
+}
+
+.display-email {
+  display: block; 
+  max-width: 160px; 
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.selected-email {
+  height: 22px;
+  background-color: #ffffff;
+  border: 1px solid #dfdfe2;
+  border-radius: 12px;
+  padding: 10px 10px 10px 10px;
+  height: 15px;
+  font-size: 12px;
+  line-height: 20px;
+  margin-top: 2px;
+}
+
+.delele-all-icon {
+  margin-top: 5px;
+  color: #5a5d72;
+}
+
+.info-icon {
+  text-align: center;
+  cursor: default;
+  margin-left: 5px;
+  font-size: 20px;
+  max-height: 24px;
+  vertical-align: middle;
+}
+
+.main {
+  max-width: 24px;
+  color: #5C98E5;
+}
+
+
+.example-additional-selection {
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+  letter-spacing: 0.0016em;
+  color: #5a5d72;
+  background-color: #f5f5f5;
+  text-align: center;
+  border-radius: 15px;
+  margin-left: 5px;
+  margin-top: 1px;
+}
+
+.email-number {
+  margin-top: 5px;
+}
+
+.multiline-mat-option.mat-option {
+  white-space: normal;
+  line-height: normal;
+  height: unset;
+  padding-top: 0.9em;
+  padding-bottom: 0.9em;
+}
 
 .schedule {
   &--header {
     border-bottom: 1px solid $fy-layout-background;
+    color: $fy-nav-text;
+    padding: 30px 23px;
+    margin: 0;
   }
 
-  &--toggle-text {
+  &--header-title {
+    font-style: normal;
+    font-weight: 500;
     font-size: 14px;
+    line-height: 17.92px;
+    color: #2c304e;
+    margin-top: 15px;
+  }
+
+  &--header-info {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17.92px;
+    margin-top: 5px;
+    color: $fy-nav-text;
+  }
+
+  &--bottom-name {
+    height: 15px;
+    font-size: 12px;
+    line-height: 15px;
+    color: #a9acbc;
+  }
+
+  &--bottom-email {
+    height: 18px;
+    font-size: 14px;
+    line-height: 18px;
+    color: #414562;
   }
 
   &--form {
     color: $fy-nav-text;
-    margin: 24px;
-    max-width: 360px;
+    font-style: normal;
+    font-weight: 500;
     font-size: 14px;
+    line-height: 18px;
   }
 
-  &--inner-form {
-    background-color: $fy-panel;
-    border-radius: 4px;
-    padding: 12px;
-    margin: 16px 0;
+  &--span-or {
+    margin-left: 5px;
+    margin-bottom: 8px;
+    margin-right: 25px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+
+    color: #2c304e;
+  }
+
+  &--frequency {
+    margin: 24px;
+    max-width: 360px;
+  }
+
+  &--toggle {
+    padding-left: 300px;
+  }
+
+  &--desc {
+    width: 350px;
+  }
+
+  &--dropdown {
+    width: 320px;
+    padding-top: 10px;
+    margin-right: 20px;
+  }
+
+  &--select {
+    border-bottom: 1px solid $fy-layout-background;
+    padding: 10px 23px;
   }
 
   &--save-btn {
     max-width: 120px;
+    margin: 20px;
+  }
+
+  &--add-btn {
+    margin-bottom: 8px;
+    height: 16px;
+    width: 16px;
+    font-style: bold;
+  }
+
+  &--error {
+    padding-top: 20px;
+    margin-bottom: -40px;
+    margin-left: -20px;
   }
 }
