@@ -21,7 +21,7 @@ export class ScheduleComponent implements OnInit {
   isLoading = false;
   hours = [...Array(24).keys()].map(day => day + 1);
   settings: ScheduleSettings;
-  workspaceAdmins: any[] = [];
+  workspaceAdmins: string[] = [];
   constructor(
     private formBuilder: FormBuilder,
     private settingsService: SettingsService,

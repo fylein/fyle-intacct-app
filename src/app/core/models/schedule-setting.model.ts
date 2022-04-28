@@ -8,5 +8,5 @@ export type ScheduleSettings = {
   interval_hours: number;
   schedule: number;
   emails_selected: string[];
-  additional_email_options: any[];
+  additional_email_options: string[];
 };
