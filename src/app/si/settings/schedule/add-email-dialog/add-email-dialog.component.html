@@ -1,0 +1,44 @@
+<h2 mat-dialog-title>
+  <div class="mappings-dialog--header" fxLayout="row" fxLayoutAlign="space-between center">
+    <div class="mat-title">
+      Add new Email Address
+    </div>
+    <mat-icon class="cursor-pointer" aria-hidden="false" aria-label="close this dialog" mat-dialog-close>close
+    </mat-icon>
+  </div>
+  <hr />
+</h2>
+<div class="admin-info">
+  Add an email address on which you would like to recieve your integration notification mails.
+</div>
+<div>
+  <mat-dialog-content>
+    <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
+      <app-loader></app-loader>
+    </div>
+    <form *ngIf="!isLoading" class="mappings-dialog--form" [formGroup]="form">
+      <div fxLayout="column" fxLayoutAlign="start stretch">
+        <div class="header-name">
+          Name
+          <mandatory-field></mandatory-field>
+        </div>
+        <mat-form-field class="mappings-dialog--form-element" appearance="outline">
+          <input required type="text" formControlName="adminName" placeholder="Type Name Here" matInput>
+        </mat-form-field>
+        <div class="header-name">
+          Email
+          <mandatory-field></mandatory-field>
+        </div>
+        <mat-form-field class="mappings-dialog--form-element" appearance="outline">
+          <input type="text" formControlName="adminEmail" placeholder="Type email address here (ex- john@acme.com)"
+            matInput>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button type="button" mat-flat-button mat-dialog-close>Cancel</button>
+    <button [disabled]="!form.valid" class="mappings-dialog--save-btn" mat-flat-button color="primary" type="submit" (click)="submit()">
+      Add and Save
+    </button>
+  </mat-dialog-actions>
