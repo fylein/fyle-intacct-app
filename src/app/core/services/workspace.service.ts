@@ -38,5 +38,10 @@ export class WorkspaceService {
     return this.apiService.get(`/workspaces/cluster_domain/${workspaceId}/`, {});
   }
 
+  getWorkspaceAdmins(): Observable<[]> {
+    const workspaceId =  this.getWorkspaceId();
+    return this.apiService.get(`/workspaces/${workspaceId}/admins/`, {});
+  }
+
   // TODO: Add a method with implicit workspace id and replace calls everwhere
 }

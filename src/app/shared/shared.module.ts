@@ -7,7 +7,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MandatoryFieldComponent } from './mandatory-field/mandatory-field.component';
 import { MandatoryErrorMessageComponent } from './mandatory-error-message/mandatory-error-message.component';
-
+import { SimpleSearchSelectComponent } from './simple-search-select/simple-search-select.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SearchPipe } from './pipes/search.pipe';
 
 
 @NgModule({
@@ -15,19 +17,25 @@ import { MandatoryErrorMessageComponent } from './mandatory-error-message/mandat
     LoaderComponent,
     ZeroStateComponent,
     MandatoryFieldComponent,
-    MandatoryErrorMessageComponent
+    MandatoryErrorMessageComponent,
+    SimpleSearchSelectComponent,
+    SearchPipe,
   ],
   imports: [
     CommonModule,
     MatProgressSpinnerModule,
     FlexLayoutModule,
-    MatButtonModule
+    MatButtonModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   exports: [
     LoaderComponent,
     ZeroStateComponent,
     MandatoryFieldComponent,
-    MandatoryErrorMessageComponent
+    MandatoryErrorMessageComponent,
+    SimpleSearchSelectComponent,
+    SearchPipe,
   ]
 })
 export class SharedModule { }
