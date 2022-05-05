@@ -17,10 +17,10 @@
         Set up an automatic process for importing expense groups
         <div fxLayout="row">
           from Fyle and exporting them to Sage Intacct.
-          <a href="https://www.fylehq.com/help/en/articles/4507450-fyle-sage-intacct-integration" 
-            target="_blank" rel="noopener noreferrer" class="read-more-link" fxLayout="row" fxLayoutAlign="start center">
+          <a href="https://www.fylehq.com/help/en/articles/4507450-fyle-sage-intacct-integration" target="_blank"
+            rel="noopener noreferrer" class="read-more-link" fxLayout="row" fxLayoutAlign="start center">
             Read more<mat-icon class="read-more-link--icon">open_in_new</mat-icon></a>
-          
+
         </div>
       </div>
     </div>
@@ -43,24 +43,23 @@
             </mat-select>
           </mat-form-field>
           <mandatory-error-message class="schedule--error" customErrorMessage="Please select the frequency hours"
-          *ngIf="form.controls.hours.touched && !form.controls.hours.valid"></mandatory-error-message>
+            *ngIf="form.controls.hours.touched && !form.controls.hours.valid"></mandatory-error-message>
         </div>
 
         <div fxLayout="column" class="schedule--select" fxLayoutAlign="start stretch">
           <div fxLayout="row" class="schedule--header-title" fxLayoutAlign="start center">
             Select an email address to notify upon export failure
             <mat-icon class="info-icon main"
-             matTooltip="The selected email address will be notified instantly upon export failure"
-             [inline]="true" 
-             matTooltipPosition="after"
-             >info</mat-icon>
+              matTooltip="The selected email address will be notified instantly upon export failure" [inline]="true"
+              matTooltipPosition="after">info</mat-icon>
           </div>
           <div class="schedule--header-info">
             <div fxLayout="row">
               You can select one or more email address from the given list,
-               or add new one to get email notifications
-              <a href="https://help.fylehq.com/en/articles/6064944-how-to-be-notified-when-auto-export-fails-in-fyle-netsuite-integration" target="_blank"
-                rel="noopener noreferrer" class="read-more-link" fxLayout="row" fxLayoutAlign="start center">Read more
+              or add new one to get email notifications
+              <a href="https://help.fylehq.com/en/articles/6189978-how-to-be-notified-when-auto-export-fails-in-fyle-sage-intacct-integration"
+                target="_blank" rel="noopener noreferrer" class="read-more-link" fxLayout="row"
+                fxLayoutAlign="start center">Read more
                 <mat-icon class="read-more-link--icon">open_in_new</mat-icon>
               </a>
             </div>
@@ -93,8 +92,7 @@
                     <mat-icon>close</mat-icon>
                   </div>
                 </mat-select-trigger>
-                <mat-option 
-                  (click)="clearSearchText($event)"
+                <mat-option (click)="clearSearchText($event)"
                   *ngFor="let hour of workspaceAdmins | search : form.value.searchOption" class="multiline-mat-option"
                   [value]="hour.email">
                   <div fxLayout="column" fxLayoutAlign="end start">
@@ -111,7 +109,8 @@
 
             <span *ngIf="form.controls.hours.value" class="schedule--span-or">or</span>
 
-            <div *ngIf="form.controls.hours.value" fxLayout="row" class="cursor-pointer" fxLayoutAlign="start center" (click)="open()">
+            <div *ngIf="form.controls.hours.value" fxLayout="row" class="cursor-pointer" fxLayoutAlign="start center"
+              (click)="open()">
               <img class="schedule--add-btn" src="assets/images/pngs/add.png">
               <span class="schedule--span-or">Add new email address</span>
             </div>
@@ -125,6 +124,6 @@
         mat-flat-button color="primary" type="submit" (click)="submit()">
         Save
       </button>
-    </div>    
+    </div>
   </form>
 </div>
