@@ -47,7 +47,6 @@ export class InfoComponent implements OnInit {
 
   openExpenseInFyle(expense) {
     const that = this;
-    const clusterDomain = this.storageService.get('clusterDomain');
     const user = that.authService.getUser();
     this.windowReference.open(`${environment.fyle_app_url}/app/main/#/enterprise/view_expense/${expense.expense_id}?org_id=${user.org_id}`, '_blank');
   }
