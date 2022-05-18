@@ -159,7 +159,7 @@ export class GeneralMappingsComponent implements OnInit {
     ];
 
     if (this.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT') {
-        attributes.push('EXPENSE_REPORT');
+        attributes.push('EXPENSE_PAYMENT_TYPE');
     }
 
     if (this.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
