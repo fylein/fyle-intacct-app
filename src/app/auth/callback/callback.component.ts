@@ -45,7 +45,13 @@ export class CallbackComponent implements OnInit {
               that.authService.getUserProfile(),
               that.authService.getFyleOrgs()
             ]).subscribe(responses => {
-              that.storageService.set('user', responses[0]);
+              const user = {
+                employee_email: responses[0].data.user.email,
+                full_name: responses[0].data.user.full_name,
+                org_id: responses[0].data.org.id,
+                org_name: responses[0].data.org.name
+              };
+              that.storageService.set('user', user);
               that.storageService.set('orgsCount', responses[1].length);
               that.router.navigate(['/workspaces']);
             });
