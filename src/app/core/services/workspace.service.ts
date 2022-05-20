@@ -33,11 +33,6 @@ export class WorkspaceService {
     return id ? +id : null;
   }
 
-  getClusterDomain(): Observable<string> {
-    const workspaceId = this.getWorkspaceId();
-    return this.apiService.get(`/workspaces/cluster_domain/${workspaceId}/`, {});
-  }
-
   getWorkspaceAdmins(): Observable<[]> {
     const workspaceId =  this.getWorkspaceId();
     return this.apiService.get(`/workspaces/${workspaceId}/admins/`, {});
