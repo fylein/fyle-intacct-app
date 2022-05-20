@@ -142,7 +142,8 @@ export class ConfigurationComponent implements OnInit {
         paymentsSync: [paymentsSyncOption],
         autoMapEmployees: [that.configuration.auto_map_employees],
         autoCreateDestinationEntity: [that.configuration.auto_create_destination_entity],
-        importTaxCodes: [that.configuration.import_tax_codes]
+        importTaxCodes: [that.configuration.import_tax_codes],
+        changeAccountingPeriod: [that.configuration.change_accounting_period],
       });
 
       const fyleProjectMapping = that.mappingSettings.filter(
@@ -186,7 +187,8 @@ export class ConfigurationComponent implements OnInit {
         paymentsSync: [null],
         autoMapEmployees: [null],
         autoCreateDestinationEntity: [false],
-        importTaxCodes: [null]
+        importTaxCodes: [null],
+        changeAccountingPeriod: [false]
       });
 
       that.configurationForm.controls.autoMapEmployees.valueChanges.subscribe((employeeMappingPreference) => {
@@ -226,6 +228,7 @@ export class ConfigurationComponent implements OnInit {
     const autoMapEmployees = that.configurationForm.value.autoMapEmployees ? that.configurationForm.value.autoMapEmployees : null;
     const autoCreateDestinationEntity = that.configurationForm.value.autoCreateDestinationEntity;
     const importTaxCodes = that.configurationForm.value.importTaxCodes ? that.configurationForm.value.importTaxCodes : null;
+    const changeAccountingPeriod = that.configurationForm.value.changeAccountingPeriod ? that.configurationForm.value.changeAccountingPeriod : false;
 
     let fyleToSageIntacct = false;
     let sageIntacctToFyle = false;
@@ -291,7 +294,7 @@ export class ConfigurationComponent implements OnInit {
     forkJoin(
       [
         that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-        that.settingsService.postConfiguration(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, importProjects, importCategories, fyleToSageIntacct, sageIntacctToFyle, autoCreateDestinationEntity, importTaxCodes, autoMapEmployees)
+        that.settingsService.postConfiguration(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, importProjects, importCategories, fyleToSageIntacct, sageIntacctToFyle, autoCreateDestinationEntity, importTaxCodes, autoMapEmployees, changeAccountingPeriod)
       ]
     ).subscribe(() => {
       that.isLoading = true;
