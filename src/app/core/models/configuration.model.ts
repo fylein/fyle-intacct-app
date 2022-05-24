@@ -12,6 +12,7 @@ export type Configuration = {
   memo_structure?: string[];
   import_tax_codes: boolean;
   change_accounting_period: boolean;
+  import_vendors_as_merchants?: boolean;
   created_at: Date;
   updated_at: Date;
   workspace: number;
