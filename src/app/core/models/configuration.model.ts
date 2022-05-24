@@ -11,6 +11,7 @@ export type Configuration = {
   auto_create_destination_entity: boolean;
   memo_structure?: string[];
   import_tax_codes: boolean;
+  change_accounting_period: boolean;
   created_at: Date;
   updated_at: Date;
   workspace: number;
