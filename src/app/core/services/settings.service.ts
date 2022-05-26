@@ -89,7 +89,6 @@ export class SettingsService {
       auto_create_destination_entity: autoCreateDestinationEntity,
       change_accounting_period: changeAccountingPeriod,
       import_vendors_as_merchants: importVendorAsMerchants,
-
       workspace: workspaceId,
     });
   }
