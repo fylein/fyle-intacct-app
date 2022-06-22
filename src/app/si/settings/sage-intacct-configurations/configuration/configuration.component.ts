@@ -137,6 +137,7 @@ export class ConfigurationComponent implements OnInit {
       that.configurationForm = that.formBuilder.group({
         reimburExpense: [that.configuration ? that.configuration.reimbursable_expenses_object : ''],
         cccExpense: [that.configuration ? that.configuration.corporate_credit_card_expenses_object : ''],
+        employees: [that.configuration ? that.configuration.employee_field_mapping : ''],
         importProjects: [importProjects],
         importCategories: [that.configuration.import_categories],
         paymentsSync: [paymentsSyncOption],
@@ -221,8 +222,8 @@ export class ConfigurationComponent implements OnInit {
   save() {
     const that = this;
 
-    const reimbursableExpensesObject = that.configurationForm.value.reimburExpense || (that.configuration ? that.configuration.reimbursable_expenses_object : null);
-    const cccExpensesObject = that.configurationForm.value.cccExpense || (that.configuration ? that.configuration.corporate_credit_card_expenses_object : null);
+    const reimbursableExpensesObject = that.configurationForm.getRawValue().reimburExpense;
+    const cccExpensesObject = that.configurationForm.getRawValue().cccExpense;
     const categoryMappingObject = that.getCategory(reimbursableExpensesObject)[0].value;
     const employeeMappingsObject = that.getEmployee(reimbursableExpensesObject)[0].value;
     const importProjects = that.configurationForm.value.importProjects;
@@ -273,6 +274,7 @@ export class ConfigurationComponent implements OnInit {
       }
     }
 
+    // TODO: remove this when employee mapping is migrated
     if (cccExpensesObject === 'CHARGE_CARD_TRANSACTION') {
       mappingsSettingsPayload.push({
         source_field: 'EMPLOYEE',
@@ -297,7 +299,7 @@ export class ConfigurationComponent implements OnInit {
     forkJoin(
       [
         that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-        that.settingsService.postConfiguration(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, importProjects, importCategories, fyleToSageIntacct, sageIntacctToFyle, autoCreateDestinationEntity, importTaxCodes, autoMapEmployees, changeAccountingPeriod, importVendorAsMerchants)
+        that.settingsService.postConfiguration(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, employeeMappingsObject, importProjects, importCategories, fyleToSageIntacct, sageIntacctToFyle, autoCreateDestinationEntity, importTaxCodes, autoMapEmployees, changeAccountingPeriod, importVendorAsMerchants)
       ]
     ).subscribe(() => {
       that.isLoading = true;
