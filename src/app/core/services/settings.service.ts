@@ -76,10 +76,11 @@ export class SettingsService {
   @CacheBuster({
     cacheBusterNotifier: configurationCache
   })
-  postConfiguration(workspaceId: number, reimbursableExpensesObject: string, corporateCreditCardExpensesObject: string, importProjects: boolean, importCategories: boolean, fyleToSageIntacct: boolean, sageIntacctToFyle: boolean, autoCreateDestinationEntity: boolean, importTaxCodes: boolean, autoMapEmployees: string = null, changeAccountingPeriod: boolean, importVendorAsMerchants: boolean): Observable<Configuration> {
+  postConfiguration(workspaceId: number, reimbursableExpensesObject: string, corporateCreditCardExpensesObject: string, employeeMappingsObject: string, importProjects: boolean, importCategories: boolean, fyleToSageIntacct: boolean, sageIntacctToFyle: boolean, autoCreateDestinationEntity: boolean, importTaxCodes: boolean, autoMapEmployees: string = null, changeAccountingPeriod: boolean, importVendorAsMerchants: boolean): Observable<Configuration> {
     return this.apiService.post(`/workspaces/${workspaceId}/configuration/`, {
       reimbursable_expenses_object: reimbursableExpensesObject,
       corporate_credit_card_expenses_object: corporateCreditCardExpensesObject,
+      employee_field_mapping: employeeMappingsObject,
       import_projects: importProjects,
       import_categories: importCategories,
       import_tax_codes: importTaxCodes,

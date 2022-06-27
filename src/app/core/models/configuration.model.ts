@@ -1,6 +1,7 @@
 /* tslint:disable */
 export type Configuration = {
   id: number;
+  employee_field_mapping: string;
   reimbursable_expenses_object: string;
   corporate_credit_card_expenses_object: string;
   import_projects?: boolean;
