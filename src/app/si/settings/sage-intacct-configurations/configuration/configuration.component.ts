@@ -137,7 +137,6 @@ export class ConfigurationComponent implements OnInit {
       that.configurationForm = that.formBuilder.group({
         reimburExpense: [that.configuration ? that.configuration.reimbursable_expenses_object : ''],
         cccExpense: [that.configuration ? that.configuration.corporate_credit_card_expenses_object : ''],
-        employees: [that.configuration ? that.configuration.employee_field_mapping : ''],
         importProjects: [importProjects],
         importCategories: [that.configuration.import_categories],
         paymentsSync: [paymentsSyncOption],
