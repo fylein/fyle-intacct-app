@@ -172,12 +172,12 @@ export class CategoryMappingsDialogComponent implements OnInit {
 
       const fyleCategory = that.editMapping ? that.fyleCategories.filter(category => category.value === that.data.categoryMappingRow.source_category.value)[0] : '';
       const sageIntacctAccount = that.editMapping ? that.sageIntacctAccounts.filter(siAccObj => that.data.categoryMappingRow.destination_account && siAccObj.value === that.data.categoryMappingRow.destination_account.value)[0] : '';
-      const sageIntacctExpenseTypes = that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT' && that.editMapping ? that.sageIntacctExpenseTypes.filter(siExpTypeObj => that.data.categoryMappingRow.destination_expense_head && siExpTypeObj.value === that.data.categoryMappingRow.destination_expense_head.value)[0] : '';
+      const sageIntacctExpenseType = that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT' && that.editMapping ? that.sageIntacctExpenseTypes.filter(siExpTypeObj => that.data.categoryMappingRow.destination_expense_head && siExpTypeObj.value === that.data.categoryMappingRow.destination_expense_head.value)[0] : '';
 
       that.form = that.formBuilder.group({
         fyleCategory: [fyleCategory, Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleCategories)])],
-        sageIntacctAccount: [sageIntacctAccount],
-        sageIntacctExpenseTypes: [sageIntacctExpenseTypes],
+        sageIntacctAccount: [sageIntacctAccount, Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.sageIntacctAccounts)])],
+        sageIntacctExpenseTypes: [sageIntacctExpenseType, Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.sageIntacctExpenseTypes)])],
       });
 
       if (that.editMapping) {
