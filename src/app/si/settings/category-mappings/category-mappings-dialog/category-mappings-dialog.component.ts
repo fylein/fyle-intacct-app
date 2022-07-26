@@ -142,7 +142,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
     const that = this;
     const attributes = [];
 
-    if (that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT' || (that.showSeparateCCCField() && that.configuration.corporate_credit_card_expenses_object === 'EXPENSE_REPORT')) {
+    if (that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT') {
       attributes.push('EXPENSE_TYPE');
     }
 
