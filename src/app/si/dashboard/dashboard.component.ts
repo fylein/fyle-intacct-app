@@ -149,7 +149,7 @@ export class DashboardComponent implements OnInit {
       that.currentState = onboardingStates.employeeMappingsDone;
       return;
     } else {
-      return that.mappingsService.getMappings('EMPLOYEE', null, 1).toPromise().then((res) => {
+      return that.mappingsService.getEmployeeMappings(1, 0).toPromise().then((res) => {
         if (res.results.length > 0) {
           that.currentState = onboardingStates.employeeMappingsDone;
         } else {
@@ -207,8 +207,7 @@ export class DashboardComponent implements OnInit {
   syncDimension() {
     const that = this;
 
-    that.mappingsService.refreshFyleDimensions().subscribe(() => {});
-    that.mappingsService.refreshSageIntacctDimensions().subscribe(() => {});
+    that.mappingsService.refreshDimension();
 
     that.snackBar.open('Refreshing Fyle and Sage Intacct Data');
   }
