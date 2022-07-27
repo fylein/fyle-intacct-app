@@ -4,6 +4,9 @@ import { empty, Observable, Subject, from } from 'rxjs';
 import { concatMap, expand, map, publishReplay, refCount, reduce } from 'rxjs/operators';
 import { ApiService } from 'src/app/core/services/api.service';
 import { AttributeCount } from '../models/attribute-count.model';
+import { CategoryMappingsResponse } from '../models/category-mapping-response.model';
+import { CategoryMapping } from '../models/category-mapping.model';
+import { EmployeeMappingsResponse } from '../models/employee-mapping-response.model';
 import { ExpenseField } from '../models/expense-field.model';
 import { GeneralMapping } from '../models/general-mapping.model';
 import { MappingDestination } from '../models/mapping-destination.model';
@@ -166,6 +169,21 @@ export class MappingsService {
         TAX_DETAIL: []
       });
     }));
+  }
+
+  getCategoryMappings(pageLimit: number, pageOffset: number): Observable<CategoryMappingsResponse> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+    return this.apiService.get(
+      `/workspaces/${workspaceId}/mappings/category/`, {
+        limit: pageLimit,
+        offset: pageOffset
+      }
+    );
+  }
+
+  postCategoryMappings(mapping: CategoryMapping): Observable<Mapping> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+    return this.apiService.post(`/workspaces/${workspaceId}/mappings/category/`, mapping);
   }
 
   postLocationEntityMapping(locationEntityMappingPayload: LocationEntityMapping): Observable<any> {

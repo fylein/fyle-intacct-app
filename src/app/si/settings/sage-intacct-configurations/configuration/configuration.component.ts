@@ -281,26 +281,19 @@ export class ConfigurationComponent implements OnInit {
       });
     }
 
-    if (cccExpensesObject === 'BILL' || cccExpensesObject === 'CHARGE_CARD_TRANSACTION' || cccExpensesObject === 'JOURNAL_ENTRY') {
-      mappingsSettingsPayload.push({
-        source_field: 'CATEGORY',
-        destination_field: 'CCC_ACCOUNT'
-      });
-    }
-
     if (that.configurationForm.controls.paymentsSync.value) {
       fyleToSageIntacct = that.configurationForm.value.paymentsSync === 'sync_fyle_to_sage_intacct_payments' ? true : false;
       sageIntacctToFyle = that.configurationForm.value.paymentsSync === 'sync_sage_intacct_to_fyle_payments' ? true : false;
     }
 
     that.isLoading = true;
+    const postSettings = [];
 
-    forkJoin(
-      [
-        that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload),
-        that.settingsService.postConfiguration(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, employeeMappingsObject, importProjects, importCategories, fyleToSageIntacct, sageIntacctToFyle, autoCreateDestinationEntity, importTaxCodes, autoMapEmployees, changeAccountingPeriod, importVendorAsMerchants)
-      ]
-    ).subscribe(() => {
+    postSettings.push(that.settingsService.postConfiguration(that.workspaceId, reimbursableExpensesObject, cccExpensesObject, employeeMappingsObject, importProjects, importCategories, fyleToSageIntacct, sageIntacctToFyle, autoCreateDestinationEntity, importTaxCodes, autoMapEmployees, changeAccountingPeriod, importVendorAsMerchants));
+    if (mappingsSettingsPayload.length) {
+      postSettings.push(that.settingsService.postMappingSettings(that.workspaceId, mappingsSettingsPayload));
+    }
+    forkJoin(postSettings).subscribe(() => {
       that.isLoading = true;
       that.snackBar.open('Configuration saved successfully');
 

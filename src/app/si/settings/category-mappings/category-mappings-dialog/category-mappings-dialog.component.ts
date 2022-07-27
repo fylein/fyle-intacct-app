@@ -11,6 +11,7 @@ import { MappingSource } from 'src/app/core/models/mapping-source.model';
 import { MappingDestination } from 'src/app/core/models/mapping-destination.model';
 import { Configuration } from 'src/app/core/models/configuration.model';
 import { MappingModal } from 'src/app/core/models/mapping-modal.model';
+import { CategoryMapping } from 'src/app/core/models/category-mapping.model';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MappingErrorStateMatcher implements ErrorStateMatcher {
@@ -54,7 +55,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
   forbiddenSelectionValidator(options: (MappingSource|MappingDestination)[]): ValidatorFn {
     return (control: AbstractControl): { [key: string]: object } | null => {
       const forbidden = !options.some((option) => {
-        return control.value.id && option.id === control.value.id;
+        return option && control.value && control.value.id && option.id === control.value.id;
       });
       return forbidden ? {
         forbiddenOption: {
@@ -67,49 +68,30 @@ export class CategoryMappingsDialogComponent implements OnInit {
   submit() {
     const that = this;
 
-    const fyleCategory = that.form.controls.fyleCategory.value;
-    const sageIntacctAccount = that.configuration.reimbursable_expenses_object === 'BILL' ? that.form.value.sageIntacctAccount : '';
-    const sageIntacctExpenseTypes = that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT' ? that.form.value.sageIntacctExpenseTypes : '';
+    const sourceId = that.form.controls.fyleCategory.value.id;
+    const destinationAccountId = that.form.controls.sageIntacctAccount.value ? that.form.controls.sageIntacctAccount.value.id : null;
+    const destinationExpenseHeadId = that.form.controls.sageIntacctExpenseTypes.value ? that.form.controls.sageIntacctExpenseTypes.value.id : null;
 
-    let sageIntacctCCCAccount;
-    let mappings;
-
-    const cccObj = that.configuration.corporate_credit_card_expenses_object;
-    if (cccObj && cccObj !== 'EXPENSE_REPORT') {
-      sageIntacctCCCAccount = that.form.controls.sageIntacctCCCAccount.value || that.form.controls.sageIntacctAccount.value;
-    }
-
-    if (that.form.valid && (sageIntacctAccount || sageIntacctExpenseTypes)) {
+    if (that.form.valid && (destinationAccountId || destinationExpenseHeadId)) {
       that.isLoading = true;
-      mappings = [
-        that.mappingsService.postMappings({
-          source_type: 'CATEGORY',
-          destination_type: that.configuration.reimbursable_expenses_object === 'BILL' ? 'ACCOUNT' : 'EXPENSE_TYPE',
-          source_value: fyleCategory.value,
-          destination_value: that.configuration.reimbursable_expenses_object === 'BILL' ? sageIntacctAccount.value : sageIntacctExpenseTypes.value,
-          destination_id: that.configuration.reimbursable_expenses_object === 'BILL' ? sageIntacctAccount.destination_id : sageIntacctExpenseTypes.destination_id
-        })
-      ];
 
-      if (sageIntacctCCCAccount) {
-        mappings.push(
-          that.mappingsService.postMappings({
-            source_type: 'CATEGORY',
-            destination_type: 'CCC_ACCOUNT',
-            source_value: fyleCategory.value,
-            destination_value: sageIntacctCCCAccount.value,
-            destination_id: sageIntacctCCCAccount.destination_id
-          })
-        );
-      }
+      const categoryMappingsPayload: CategoryMapping = {
+        source_category: {
+          id: sourceId
+        },
+        destination_account: {
+          id: destinationAccountId
+        },
+        destination_expense_head: {
+          id: destinationExpenseHeadId
+        },
+        workspace: that.workSpaceId
+      };
 
-      forkJoin(mappings).subscribe(response => {
-        that.snackBar.open('Mapping saved successfully');
+      that.mappingsService.postCategoryMappings(categoryMappingsPayload).subscribe(() => {
+        that.snackBar.open('Category Mapping saved successfully');
         that.isLoading = false;
         that.dialogRef.close();
-      }, err => {
-        that.snackBar.open('Something went wrong');
-        that.isLoading = false;
       });
     } else {
       that.snackBar.open('Form has invalid fields');
@@ -138,17 +120,6 @@ export class CategoryMappingsDialogComponent implements OnInit {
     });
   }
 
-  setupSageIntacctCCCAccountWatchers() {
-    const that = this;
-
-    that.form.controls.sageIntacctCCCAccount.valueChanges.pipe(debounceTime(300)).subscribe((newValue) => {
-      if (typeof (newValue) === 'string') {
-        that.sageIntacctCCCAccountOptions = that.sageIntacctCCCAccounts
-          .filter(sageIntacctAccount => new RegExp(newValue.toLowerCase(), 'g').test(sageIntacctAccount.value.toLowerCase()));
-      }
-    });
-  }
-
   setupSageIntacctExpenseTypeWatchers() {
     const that = this;
 
@@ -165,7 +136,6 @@ export class CategoryMappingsDialogComponent implements OnInit {
     that.setupFyleCateogryWatchers();
     that.setupSageIntacctAccountWatchers();
     that.setupSageIntacctExpenseTypeWatchers();
-    this.setupSageIntacctCCCAccountWatchers();
   }
 
   getAttributesFilteredByConfig() {
@@ -174,14 +144,11 @@ export class CategoryMappingsDialogComponent implements OnInit {
 
     if (that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT') {
       attributes.push('EXPENSE_TYPE');
-    } else if (that.configuration.reimbursable_expenses_object === 'BILL') {
+    }
+
+    if (that.configuration.reimbursable_expenses_object !== 'EXPENSE_REPORT' || (that.showSeparateCCCField() && that.configuration.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT')) {
       attributes.push('ACCOUNT');
     }
-
-    if (that.showSeparateCCCField()) {
-      attributes.push('CCC_ACCOUNT');
-    }
-
     return attributes;
   }
 
@@ -201,21 +168,16 @@ export class CategoryMappingsDialogComponent implements OnInit {
 
       that.fyleCategories = response[0];
       that.sageIntacctAccounts = response[1].ACCOUNT;
-      if (that.configuration.corporate_credit_card_expenses_object && that.configuration.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT') {
-        that.sageIntacctCCCAccounts = response[1].CCC_ACCOUNT;
-      }
       that.sageIntacctExpenseTypes = response[1].EXPENSE_TYPE;
 
-      const fyleCategory = that.editMapping ? that.fyleCategories.filter(category => category.value === that.data.rowElement.fyle_value)[0] : '';
-      const sageIntacctAccount = that.configuration.reimbursable_expenses_object === 'BILL' && that.editMapping ? that.sageIntacctAccounts.filter(siAccObj => siAccObj.value === that.data.rowElement.si_value)[0] : '';
-      const sageIntacctExpenseTypes = that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT' && that.editMapping ? that.sageIntacctExpenseTypes.filter(siExpTypeObj => siExpTypeObj.value === that.data.rowElement.si_value)[0] : '';
-      const sageIntacctCCCAccount = that.showSeparateCCCField() && that.editMapping ? that.sageIntacctCCCAccounts.filter(cccObj => cccObj.value === that.data.rowElement.ccc_value)[0] : '';
+      const fyleCategory = that.editMapping ? that.fyleCategories.filter(category => category.value === that.data.categoryMappingRow.source_category.value)[0] : '';
+      const sageIntacctAccount = that.editMapping ? that.sageIntacctAccounts.filter(siAccObj => that.data.categoryMappingRow.destination_account && siAccObj.value === that.data.categoryMappingRow.destination_account.value)[0] : '';
+      const sageIntacctExpenseType = that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT' && that.editMapping ? that.sageIntacctExpenseTypes.filter(siExpTypeObj => that.data.categoryMappingRow.destination_expense_head && siExpTypeObj.value === that.data.categoryMappingRow.destination_expense_head.value)[0] : '';
 
       that.form = that.formBuilder.group({
         fyleCategory: [fyleCategory, Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleCategories)])],
-        sageIntacctAccount: [sageIntacctAccount, that.configuration.reimbursable_expenses_object === 'BILL' ? that.forbiddenSelectionValidator(that.sageIntacctAccounts) : null],
-        sageIntacctExpenseTypes: [sageIntacctExpenseTypes, that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT' ? that.forbiddenSelectionValidator(that.sageIntacctExpenseTypes) : null],
-        sageIntacctCCCAccount: [sageIntacctCCCAccount, that.showSeparateCCCField() ? that.forbiddenSelectionValidator(that.sageIntacctCCCAccounts) : null],
+        sageIntacctAccount: [sageIntacctAccount],
+        sageIntacctExpenseTypes: [sageIntacctExpenseType],
       });
 
       if (that.editMapping) {
@@ -239,7 +201,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
   ngOnInit() {
     const that = this;
 
-    if (that.data.rowElement) {
+    if (that.data.categoryMappingRow) {
       that.editMapping = true;
     }
 

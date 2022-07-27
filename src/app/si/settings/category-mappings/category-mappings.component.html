@@ -36,8 +36,8 @@
       <ng-container matColumnDef="category">
         <th mat-header-cell *matHeaderCellDef> Category </th>
         <td mat-cell *matCellDef="let element">
-          {{element.fyle_value}}
-          <mat-icon class="auto-map" [inline]="true" matTooltip="Auto mapped row from Fyle and Sage Intacct" matTooltipPosition="after" *ngIf="element.auto_mapped">bolt</mat-icon>
+          {{element.source_category.value}}
+          <mat-icon class="auto-map" [inline]="true" matTooltip="Auto mapped row from Fyle and Sage Intacct" matTooltipPosition="after" *ngIf="element.source_category.auto_mapped && (generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' ? element.destination_expense_head : element.destination_account)">bolt</mat-icon>
         </td>
       </ng-container>
 
@@ -46,14 +46,14 @@
           {{ configuration.reimbursable_expenses_object === 'EXPENSE_REPORT' ? 'Expense Type' : 'Account' }}
         </th>
         <td mat-cell *matCellDef="let element">
-          {{element.si_value}}
+          {{ configuration?.reimbursable_expenses_object === 'EXPENSE_REPORT' ? element.destination_expense_head?.value : element.destination_account?.value }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="ccc">
         <th mat-header-cell *matHeaderCellDef> Credit Card Expense Account </th>
         <td mat-cell *matCellDef="let element" >
-          {{element.ccc_value}}
+          {{ element.destination_account?.value }}
         </td>
       </ng-container>
 
@@ -62,7 +62,7 @@
     </table>
   </div>
 </div>
-<app-paginator *ngIf="count" [hidden]="!categoryMappingRows.filteredData.length" [is3D]="configuration.corporate_credit_card_expenses_object" [pageNumber]="pageNumber" (getMappings)="reset($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
+<app-paginator *ngIf="count" [hidden]="!categoryMappingRows.filteredData.length" [is3D]="false" [pageNumber]="pageNumber" (getMappings)="reset($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
 
 <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
   <app-loader></app-loader>

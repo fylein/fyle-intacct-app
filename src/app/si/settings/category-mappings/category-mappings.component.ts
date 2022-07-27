@@ -7,9 +7,9 @@ import { StorageService } from 'src/app/core/services/storage.service';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { forkJoin, from } from 'rxjs';
 import { Configuration } from 'src/app/core/models/configuration.model';
-import { Mapping } from 'src/app/core/models/mappings.model';
-import { MappingRow } from 'src/app/core/models/mapping-row.model';
 import { MatTableDataSource } from '@angular/material';
+import { CategoryMapping } from 'src/app/core/models/category-mapping.model';
+import { CategoryMappingsResponse } from 'src/app/core/models/category-mapping-response.model';
 
 @Component({
   selector: 'app-category-mappings',
@@ -19,8 +19,8 @@ import { MatTableDataSource } from '@angular/material';
 export class CategoryMappingsComponent implements OnInit {
   isLoading = false;
   workspaceId: number;
-  categoryMappings: Mapping[];
-  categoryMappingRows: MatTableDataSource<MappingRow> = new MatTableDataSource([]);
+  categoryMappings: CategoryMapping[];
+  categoryMappingRows: MatTableDataSource<CategoryMapping> = new MatTableDataSource([]);
   count: number;
   pageNumber: number;
   configuration: Configuration;
@@ -34,23 +34,22 @@ export class CategoryMappingsComponent implements OnInit {
     private storageService: StorageService,
     private settingsService: SettingsService) { }
 
-  open(selectedItem: MappingRow = null) {
+  open(selectedItem: CategoryMapping = null) {
     const that = this;
     const dialogRef = that.dialog.open(CategoryMappingsDialogComponent, {
       width: '450px',
       data: {
         workspaceId: that.workspaceId,
-        rowElement: selectedItem
+        categoryMappingRow: selectedItem
       }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(() => {
       const onboarded = that.storageService.get('onboarded');
-      if (onboarded === true) {
+      if (onboarded) {
         const data = {
-          pageSize: (that.storageService.get('mappings.pageSize') || 50) * (that.showCCCOption() ? 2 : 1),
-          pageNumber: 0,
-          tableDimension: that.showCCCOption() ? 3 : 2
+          pageSize: that.storageService.get('mappings.pageSize') || 50,
+          pageNumber: 0
         };
         that.reset(data);
       } else {
@@ -95,52 +94,36 @@ export class CategoryMappingsComponent implements OnInit {
     that.categoryMappingRows.filter = filterValue.trim().toLowerCase();
   }
 
-
-  createCategoryMappingsRows() {
-    const that = this;
-    const categoryMappings = that.categoryMappings.filter(mapping => mapping.destination_type !== 'CCC_ACCOUNT');
-    const mappings = [];
-    categoryMappings.forEach(categoryMapping => {
-      mappings.push({
-        fyle_value: categoryMapping.source.value,
-        si_value: categoryMapping.destination.value,
-        auto_mapped: categoryMapping.source.auto_mapped,
-        ccc_value: that.getCCCAccount(that.categoryMappings, categoryMapping)
-      });
-    });
-
-    that.categoryMappingRows = new MatTableDataSource(mappings);
-    that.categoryMappingRows.filterPredicate = that.searchByText;
-  }
-
-  getCCCAccount(categoryMappings, categoryMapping) {
-    const categMapping = categoryMappings.filter(mapping => mapping.destination_type === 'CCC_ACCOUNT' && mapping.source.value === categoryMapping.source.value);
-
-    return categMapping.length ? categMapping[0].destination.value : null;
-  }
-
-  searchByText(data: MappingRow, filterText: string) {
-    return data.fyle_value.toLowerCase().includes(filterText) ||
-    data.si_value.toLowerCase().includes(filterText) ||
-    (data.ccc_value ? data.ccc_value.toLowerCase().includes(filterText) : false);
+  searchByText(data: CategoryMapping, filterText: string) {
+    return data.source_category.value.toLowerCase().includes(filterText) ||
+    (data.destination_account ? data.destination_account.value.toLowerCase().includes(filterText) : false) ||
+    (data.destination_expense_head ? data.destination_expense_head.value.toLowerCase().includes(filterText) : false);
   }
 
   reset(data) {
     const that = this;
     that.isLoading = true;
-    that.mappingsService.getMappings('CATEGORY', null, data.pageSize, data.pageSize * data.pageNumber, data.tableDimension).subscribe(response => {
-      that.isLoading = false;
-      if (that.showCCCOption()) {
-        that.columnsToDisplay = ['category', 'sageIntacct', 'ccc'];
-      }
-      that.categoryMappings = response.results;
-      that.count = that.configuration.corporate_credit_card_expenses_object ?  response.count / 2 : response.count;
-      that.pageNumber = data.pageNumber;
-      that.createCategoryMappingsRows();
 
+    that.mappingsService.getCategoryMappings(data.pageSize, data.pageSize * data.pageNumber).subscribe((response: CategoryMappingsResponse) => {
+      that.categoryMappings = response.results;
+      that.count = response.count;
+      that.pageNumber = data.pageNumber;
+      that.categoryMappingRows = new MatTableDataSource(that.categoryMappings);
+      that.categoryMappingRows.filterPredicate = that.searchByText;
+      that.isLoading = false;
     }, (err) => {
       that.isLoading = false;
     });
+  }
+
+  showSeparateCCCField() {
+    const that = this;
+    const settings = that.configuration;
+    if (settings.corporate_credit_card_expenses_object && settings.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT' && settings.reimbursable_expenses_object === 'EXPENSE_REPORT') {
+      return true;
+    }
+
+    return false;
   }
 
   ngOnInit() {
@@ -151,10 +134,13 @@ export class CategoryMappingsComponent implements OnInit {
       that.configuration = settings;
       this.isLoading = false;
 
+      if (that.showSeparateCCCField()) {
+        that.columnsToDisplay.push('ccc');
+      }
+
       const data = {
-        pageSize: (that.showCCCOption() ? 2 : 1) * (that.storageService.get('mappings.pageSize') || 50),
-        pageNumber: 0,
-        tableDimension: that.showCCCOption() ? 3 : 2
+        pageSize: that.storageService.get('mappings.pageSize') || 50,
+        pageNumber: 0
       };
       that.reset(data);
     });
