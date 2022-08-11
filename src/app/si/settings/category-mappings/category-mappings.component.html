@@ -26,7 +26,8 @@
     <zero-state message="You have no category mappings yet"></zero-state>
   </div>
 
-  <zero-state *ngIf="categoryMappings.length && !categoryMappingRows.filteredData.length && count && !isLoading" message="Looks like your search term doesn't match any of Category mappings"></zero-state>
+  <div *ngIf="count && !categoryMappingRows.filteredData.length">
+    <zero-state *ngIf="categoryMappings.length && !categoryMappingRows.filteredData.length && count && !isLoading" message="Looks like your search term doesn't match any of Category mappings"></zero-state>
     <zero-state message="Looks like your search term doesn't match any of Category mappings"></zero-state>
   </div>
 
