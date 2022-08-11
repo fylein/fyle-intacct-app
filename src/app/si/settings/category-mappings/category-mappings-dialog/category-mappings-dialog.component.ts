@@ -180,7 +180,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
       that.form = that.formBuilder.group({
         fyleCategory: [fyleCategory, Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleCategories)])],
         sageIntacctAccount: [sageIntacctAccount],
-        sageIntacctExpenseTypes: [sageIntacctExpenseType],
+        sageIntacctExpenseTypes: [sageIntacctExpenseType]
       });
 
       if (that.editMapping) {

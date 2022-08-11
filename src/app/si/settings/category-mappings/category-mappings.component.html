@@ -28,7 +28,6 @@
 
   <div *ngIf="count && !categoryMappingRows.filteredData.length">
     <zero-state *ngIf="categoryMappings.length && !categoryMappingRows.filteredData.length && count && !isLoading" message="Looks like your search term doesn't match any of Category mappings"></zero-state>
-    <zero-state message="Looks like your search term doesn't match any of Category mappings"></zero-state>
   </div>
 
   <div *ngIf="count && categoryMappingRows.filteredData.length" [hidden]="isLoading">
@@ -38,7 +37,7 @@
         <th mat-header-cell *matHeaderCellDef> Category </th>
         <td mat-cell *matCellDef="let element">
           {{element.source_category.value}}
-          <mat-icon class="auto-map" [inline]="true" matTooltip="Auto mapped row from Fyle and Sage Intacct" matTooltipPosition="after" *ngIf="element.source_category.auto_mapped && (generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' ? element.destination_expense_head : element.destination_account)">bolt</mat-icon>
+          <mat-icon class="auto-map" [inline]="true" matTooltip="Auto mapped row from Fyle and Sage Intacct" matTooltipPosition="after" *ngIf="element.source_category.auto_mapped && (configuration.reimbursable_expenses_object === 'EXPENSE_REPORT' ? element.destination_expense_head : element.destination_account)">bolt</mat-icon>
         </td>
       </ng-container>
 
