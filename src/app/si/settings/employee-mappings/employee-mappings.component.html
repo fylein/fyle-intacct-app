@@ -48,7 +48,7 @@
           <span *ngIf="configuration.reimbursable_expenses_object === 'EXPENSE_REPORT'">Sage Intacct Employee</span>
         </th>
         <td mat-cell *matCellDef="let element">
-          {{generalSettings?.employee_field_mapping == 'VENDOR' ? element.destination_vendor?.value : element.destination_employee?.value}}
+          {{configuration?.employee_field_mapping === 'VENDOR' ? element.destination_vendor?.value : element.destination_employee?.value}}
         </td>
       </ng-container>
 
