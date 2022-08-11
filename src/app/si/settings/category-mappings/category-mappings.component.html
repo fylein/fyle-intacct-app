@@ -12,7 +12,7 @@
     <button class="page-info--primary-action" mat-flat-button color="primary" type="button" (click)="open()">
       Create Category Mapping
     </button>
-    <mat-form-field  class="simple-search" appearance="outline" *ngIf="count">
+    <mat-form-field  class="simple-search" appearance="outline" *ngIf="count && categoryMappings.length">
       <mat-label>Search</mat-label>
       <input matInput (keyup)="applyFilter($event)">
       <span matPrefix>
@@ -22,12 +22,12 @@
   </div>
 
 
-  <div *ngIf="!count && !isLoading">
+  <div *ngIf="(!count || !categoryMappings.length) && !isLoading">
     <zero-state message="You have no category mappings yet"></zero-state>
   </div>
 
   <div *ngIf="count && !categoryMappingRows.filteredData.length">
-    <zero-state message="Looks like your search term doesn't match any of Category mappings"></zero-state>
+    <zero-state *ngIf="categoryMappings.length && !categoryMappingRows.filteredData.length && count && !isLoading" message="Looks like your search term doesn't match any of Category mappings"></zero-state>
   </div>
 
   <div *ngIf="count && categoryMappingRows.filteredData.length" [hidden]="isLoading">
@@ -37,7 +37,7 @@
         <th mat-header-cell *matHeaderCellDef> Category </th>
         <td mat-cell *matCellDef="let element">
           {{element.source_category.value}}
-          <mat-icon class="auto-map" [inline]="true" matTooltip="Auto mapped row from Fyle and Sage Intacct" matTooltipPosition="after" *ngIf="element.source_category.auto_mapped && (generalSettings.reimbursable_expenses_object === 'EXPENSE_REPORT' ? element.destination_expense_head : element.destination_account)">bolt</mat-icon>
+          <mat-icon class="auto-map" [inline]="true" matTooltip="Auto mapped row from Fyle and Sage Intacct" matTooltipPosition="after" *ngIf="element.source_category.auto_mapped && (configuration.reimbursable_expenses_object === 'EXPENSE_REPORT' ? element.destination_expense_head : element.destination_account)">bolt</mat-icon>
         </td>
       </ng-container>
 
@@ -62,7 +62,7 @@
     </table>
   </div>
 </div>
-<app-paginator *ngIf="count" [hidden]="!categoryMappingRows.filteredData.length" [is3D]="false" [pageNumber]="pageNumber" (getMappings)="reset($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
+<app-paginator *ngIf="count && categoryMappings.length" [hidden]="!categoryMappingRows.filteredData.length" [is3D]="false" [pageNumber]="pageNumber" (getMappings)="reset($event)" [count]="count" [isLoading]="isLoading"></app-paginator>
 
 <div class="internal-loader" fxLayoutAlign="center start" *ngIf="isLoading" fxFlexFill>
   <app-loader></app-loader>

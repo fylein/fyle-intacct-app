@@ -55,7 +55,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
   forbiddenSelectionValidator(options: (MappingSource|MappingDestination)[]): ValidatorFn {
     return (control: AbstractControl): { [key: string]: object } | null => {
       const forbidden = !options.some((option) => {
-        return option && control.value && control.value.id && option.id === control.value.id;
+        return control.value && control.value.id && option && option.id === control.value.id;
       });
       return forbidden ? {
         forbiddenOption: {
@@ -92,6 +92,9 @@ export class CategoryMappingsDialogComponent implements OnInit {
         that.snackBar.open('Category Mapping saved successfully');
         that.isLoading = false;
         that.dialogRef.close();
+      }, () => {
+        that.isLoading = false;
+        that.snackBar.open('Error saving Category Mapping');
       });
     } else {
       that.snackBar.open('Form has invalid fields');
@@ -177,7 +180,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
       that.form = that.formBuilder.group({
         fyleCategory: [fyleCategory, Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleCategories)])],
         sageIntacctAccount: [sageIntacctAccount],
-        sageIntacctExpenseTypes: [sageIntacctExpenseType],
+        sageIntacctExpenseTypes: [sageIntacctExpenseType]
       });
 
       if (that.editMapping) {
