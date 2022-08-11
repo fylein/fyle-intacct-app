@@ -58,10 +58,10 @@ export class EmployeeMappingsDialogComponent implements OnInit {
 
   submit() {
     const that = this;
-    const fyleEmployee = that.form.controls.fyleEmployee.value;
-    const sageIntacctVendor = that.configuration.reimbursable_expenses_object === 'BILL' ? that.form.value.sageIntacctVendor : '';
-    const sageIntacctEmployee = that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT' ? that.form.value.sageIntacctEmployee : '';
-    const creditCardAccount = that.form.value.creditCardAccount ? that.form.value.creditCardAccount.value : null;
+    const fyleEmployee = that.form.getRawValue().fyleEmployee;
+    const sageIntacctVendor = that.form.getRawValue().sageIntacctVendor;
+    const sageIntacctEmployee = that.form.getRawValue().sageIntacctEmployee;
+    const creditCardAccount = that.form.getRawValue().creditCardAccount;
 
     if (that.form.valid && (sageIntacctVendor || sageIntacctEmployee || creditCardAccount)) {
       const employeeMapping: EmployeeMapping = {
