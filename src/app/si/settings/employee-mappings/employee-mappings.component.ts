@@ -56,6 +56,14 @@ export class EmployeeMappingsComponent implements OnInit {
         pageSize: that.storageService.get('mappings.pageSize') || 50,
         pageNumber: 0
       };
+      const onboarded = that.storageService.get('onboarded');
+
+      if (onboarded) {
+        that.createEmployeeMappingsRows();
+      } else {
+        that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
+      }
+
       that.reset(data);
     });
   }
