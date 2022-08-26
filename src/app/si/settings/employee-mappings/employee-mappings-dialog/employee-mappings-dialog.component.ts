@@ -12,6 +12,7 @@ import { MappingDestination } from 'src/app/core/models/mapping-destination.mode
 import { Configuration } from 'src/app/core/models/configuration.model';
 import { GeneralMapping } from 'src/app/core/models/general-mapping.model';
 import { MappingModal } from 'src/app/core/models/mapping-modal.model';
+import { EmployeeMapping } from 'src/app/core/models/employee-mapping.model';
 
 export class MappingErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -57,44 +58,37 @@ export class EmployeeMappingsDialogComponent implements OnInit {
 
   submit() {
     const that = this;
-    const fyleEmployee = that.form.controls.fyleEmployee.value;
-    const sageIntacctVendor = that.configuration.reimbursable_expenses_object === 'BILL' ? that.form.value.sageIntacctVendor : '';
-    const sageIntacctEmployee = that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT' ? that.form.value.sageIntacctEmployee : '';
-    const creditCardAccount = that.form.value.creditCardAccount ? that.form.value.creditCardAccount.value : null;
-    const creditCardAccountId = that.form.value.creditCardAccount ? that.form.value.creditCardAccount.destination_id : null;
-    if (that.form.valid && (sageIntacctVendor || sageIntacctEmployee)) {
-      const employeeMapping = [
-      that.mappingsService.postMappings({
-        source_type: 'EMPLOYEE',
-        destination_type: that.configuration.reimbursable_expenses_object === 'BILL' ? 'VENDOR' : 'EMPLOYEE',
-        source_value: fyleEmployee.value,
-        destination_value: that.configuration.reimbursable_expenses_object === 'BILL' ? sageIntacctVendor.value : sageIntacctEmployee.value,
-        destination_id: that.configuration.reimbursable_expenses_object === 'BILL' ? sageIntacctVendor.destination_id : sageIntacctEmployee.destination_id
-      })
-    ];
+    const fyleEmployee = that.form.getRawValue().fyleEmployee;
+    const sageIntacctVendor = that.form.getRawValue().sageIntacctVendor;
+    const sageIntacctEmployee = that.form.getRawValue().sageIntacctEmployee;
+    const creditCardAccount = that.form.getRawValue().creditCardAccount;
 
-      if (creditCardAccount) {
-        employeeMapping.push(
-          that.mappingsService.postMappings({
-            source_type: 'EMPLOYEE',
-            destination_type: 'CHARGE_CARD_NUMBER',
-            source_value: fyleEmployee.value,
-            destination_value: creditCardAccount,
-            destination_id: creditCardAccountId
-          })
-        );
-      }
+    if (that.form.valid && (sageIntacctVendor || sageIntacctEmployee || creditCardAccount)) {
+      const employeeMapping: EmployeeMapping = {
+        source_employee: {
+          id: fyleEmployee.id
+        },
+        destination_vendor: {
+          id: sageIntacctVendor ? sageIntacctVendor.id : null
+        },
+        destination_employee: {
+          id: sageIntacctEmployee ? sageIntacctEmployee.id : null
+        },
+        destination_card_account: {
+          id: creditCardAccount ? creditCardAccount.id : null
+        },
+        workspace: that.workSpaceId
+      };
 
       that.isLoading = true;
-      forkJoin(employeeMapping).subscribe(responses => {
-        that.snackBar.open('Mapping saved successfully');
+      that.mappingsService.postEmployeeMappings(employeeMapping).subscribe(() => {
+        that.snackBar.open('Employee Mapping saved successfully');
         that.isLoading = false;
         that.dialogRef.close();
       }, err => {
         that.snackBar.open('Something went wrong');
         that.isLoading = false;
       });
-
     } else {
       that.snackBar.open('Form has invalid fields');
       that.form.markAllAsTouched();
@@ -103,14 +97,18 @@ export class EmployeeMappingsDialogComponent implements OnInit {
 
   forbiddenSelectionValidator(options: (MappingSource|MappingDestination)[]): ValidatorFn {
     return (control: AbstractControl): { [key: string]: object } | null => {
-      const forbidden = !options.some((option) => {
-        return control.value.id && option.id === control.value.id;
-      });
-      return forbidden ? {
-        forbiddenOption: {
-          value: control.value
-        }
-      } : null;
+      if (control.value) {
+        const forbidden = !options.some((option) => {
+          return control.value && control.value.id && option && option.id === control.value.id;
+        });
+        return forbidden ? {
+          forbiddenOption: {
+            value: control.value
+          }
+        } : null;
+      }
+
+      return null;
     };
   }
 
@@ -168,7 +166,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
   getDefaultCCCObj() {
     const that = this;
     if (that.configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
-      that.defaultCCCObj =  that.editMapping ? that.creditCardValue.filter(cccObj => cccObj.value === that.data.rowElement.ccc_value)[0] : that.creditCardValue.filter(cccObj => cccObj.value === that.generalMappings.default_charge_card_name)[0];
+      that.defaultCCCObj =  that.editMapping ? that.creditCardValue.filter(cccObj => that.data.employeeMappingRow.destination_card_account && cccObj.value === that.data.employeeMappingRow.destination_card_account.value)[0] : that.creditCardValue.filter(cccObj => cccObj.value === that.generalMappings.default_charge_card_name)[0];
     }
   }
 
@@ -216,9 +214,9 @@ export class EmployeeMappingsDialogComponent implements OnInit {
 
       that.getDefaultCCCObj();
 
-      const fyleEmployee = that.editMapping ? that.fyleEmployees.filter(employee => employee.value === that.data.rowElement.fyle_value)[0] : '';
-      const sageIntacctVendor = that.editMapping ? that.sageIntacctVendors.filter(vendor => vendor.value === that.data.rowElement.si_value)[0] : '';
-      const sageIntacctEmployee = that.editMapping ? that.sageIntacctEmployees.filter(employee => employee.value === that.data.rowElement.si_value)[0] : '';
+      const fyleEmployee = that.editMapping ? that.fyleEmployees.filter(employee => employee.value === that.data.employeeMappingRow.source_employee.value)[0] : '';
+      const sageIntacctVendor = that.editMapping ? that.sageIntacctVendors.filter(vendor => that.data.employeeMappingRow.destination_vendor && vendor.value === that.data.employeeMappingRow.destination_vendor.value)[0] : '';
+      const sageIntacctEmployee = that.editMapping ? that.sageIntacctEmployees.filter(employee => that.data.employeeMappingRow.destination_employee && employee.value === that.data.employeeMappingRow.destination_employee.value)[0] : '';
 
       that.form = that.formBuilder.group({
         fyleEmployee: [fyleEmployee, Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleEmployees)])],
@@ -238,7 +236,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
   ngOnInit() {
     const that = this;
 
-    if (that.data.rowElement) {
+    if (that.data.employeeMappingRow) {
       that.editMapping = true;
     }
 

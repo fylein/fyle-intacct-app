@@ -273,14 +273,6 @@ export class ConfigurationComponent implements OnInit {
       }
     }
 
-    // TODO: remove this when employee mapping is migrated
-    if (cccExpensesObject === 'CHARGE_CARD_TRANSACTION') {
-      mappingsSettingsPayload.push({
-        source_field: 'EMPLOYEE',
-        destination_field: 'CHARGE_CARD_NUMBER'
-      });
-    }
-
     if (that.configurationForm.controls.paymentsSync.value) {
       fyleToSageIntacct = that.configurationForm.value.paymentsSync === 'sync_fyle_to_sage_intacct_payments' ? true : false;
       sageIntacctToFyle = that.configurationForm.value.paymentsSync === 'sync_sage_intacct_to_fyle_payments' ? true : false;
