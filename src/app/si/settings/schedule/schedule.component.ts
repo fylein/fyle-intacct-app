@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SettingsService } from 'src/app/core/services/settings.service';
-import { ActivatedRoute } from '@angular/router';
+import { MappingsService } from 'src/app/core/services/mappings.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { distinctUntilChanged } from 'rxjs/internal/operators/distinctUntilChanged';
 import { pairwise } from 'rxjs/internal/operators/pairwise';
@@ -26,8 +27,10 @@ export class ScheduleComponent implements OnInit {
     private formBuilder: FormBuilder,
     private settingsService: SettingsService,
     private workspaceService: WorkspaceService,
+    private mappingsService: MappingsService,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
+    private router: Router,
     public dialog: MatDialog) { }
 
   getSettings() {
@@ -103,9 +106,20 @@ export class ScheduleComponent implements OnInit {
     });
   }
 
+  mappingsCheck() {
+    this.mappingsService.getGeneralMappings().subscribe(res => {
+    }, () => {
+      this.snackBar.open('You cannot access this page yet. Please follow the onboarding steps in the dashboard or refresh your page');
+      this.router.navigateByUrl(`workspaces/${this.workspaceId}/dashboard`);
+    });
+  }
+
   ngOnInit() {
     const that = this;
+    this.isLoading = true;
     that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
+    that.mappingsCheck()
+    this.isLoading = false;
     that.form = that.formBuilder.group({
       hours: ['', Validators.required],
       scheduleEnabled: [false],
