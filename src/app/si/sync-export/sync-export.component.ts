@@ -41,7 +41,7 @@ export class SyncExportComponent implements OnInit {
     this.isLoading = true;
     this.state = this.route.snapshot.firstChild.routeConfig.path.toUpperCase() || 'SYNC';
     this.workspaceId = +this.route.snapshot.params.workspace_id;
-    this.mappingsCheck()
+    this.mappingsCheck();
     this.isLoading = false;
   }
 

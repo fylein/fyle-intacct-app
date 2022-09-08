@@ -118,7 +118,7 @@ export class ScheduleComponent implements OnInit {
     const that = this;
     this.isLoading = true;
     that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
-    that.mappingsCheck()
+    that.mappingsCheck();
     this.isLoading = false;
     that.form = that.formBuilder.group({
       hours: ['', Validators.required],
