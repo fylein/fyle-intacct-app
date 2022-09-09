@@ -10,12 +10,8 @@ export class SyncExportComponent implements OnInit {
 
   state: string;
   workspaceId: number;
-  isLoading = true;
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    ) { }
+  constructor(private route: ActivatedRoute, private router: Router) { }
 
   changeState(state) {
     const that = this;
