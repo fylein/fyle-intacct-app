@@ -315,7 +315,7 @@ export class ConfigurationComponent implements OnInit {
 
     return updatedConfiguration;
   }
-  
+
   postConfigurationsAndMappingSettings(configurationPayload: Configuration, mappingSettingsPayload: MappingSetting[], redirectToGeneralMappings: boolean = false, redirectToEmployeeMappings: boolean = false) {
     const that = this;
 
