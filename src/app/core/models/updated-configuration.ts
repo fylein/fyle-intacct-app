@@ -14,4 +14,3 @@ export type UpdatedConfiguration = {
     },
     autoCreateDestinationEntity: boolean
   };
-  
