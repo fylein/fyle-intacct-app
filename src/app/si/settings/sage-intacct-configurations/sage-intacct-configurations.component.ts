@@ -15,31 +15,17 @@ export class SageIntacctConfigurationsComponent implements OnInit {
 
   state: string;
   workspaceId: number;
-  isParentLoading: boolean;
+  isParentLoading = true;
   fyleFields: ExpenseField[];
   configuration: Configuration;
   sageIntacctConnectionDone: boolean;
 
   constructor(private route: ActivatedRoute, private router: Router, private mappingsService: MappingsService, private settingsService: SettingsService) { }
 
-  changeState(state) {
+  changeState(state: string) {
     const that = this;
-    if (that.state === 'GENERAL') {
-      that.state = state;
-      that.router.navigate([`workspaces/${that.workspaceId}/settings/configurations/${that.state.toLowerCase()}`]);
-    }
-    if (that.state === 'EXPENSE_FIELDS') {
-      that.state = state;
-      that.router.navigate([`workspaces/${that.workspaceId}/settings/configurations/${that.state.toLowerCase()}`]);
-    }
-    if (that.state === 'MEMO_STRUCTURE') {
-      that.state = state;
-      that.router.navigate([`workspaces/${that.workspaceId}/settings/configurations/${that.state.toLowerCase()}`]);
-    }
-    if (that.state === 'LOCATION_ENTITY') {
-      that.state = state;
-      that.router.navigate([`workspaces/${that.workspaceId}/settings/configurations/${that.state.toLowerCase()}`]);
-    }
+    that.state = state;
+    that.router.navigate([`workspaces/${that.workspaceId}/settings/configurations/${that.state.toLowerCase()}`]);
   }
 
   showExpenseFields() {
@@ -52,28 +38,36 @@ export class SageIntacctConfigurationsComponent implements OnInit {
     return false;
   }
 
-  ngOnInit() {
+  reset() {
     const that = this;
-    that.isParentLoading = true;
-
-    that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
-    that.state = that.route.snapshot.firstChild.routeConfig.path.toUpperCase() || 'LOCATION_ENTITY';
-
-    that.settingsService.getSageIntacctCredentials(that.workspaceId).subscribe(() => {
-      that.sageIntacctConnectionDone = true;
+    that.mappingsService.getLocationEntityMapping().subscribe(() => {
+      that.state = that.route.snapshot.firstChild ? that.route.snapshot.firstChild.routeConfig.path.toUpperCase() || 'GENERAL' : 'GENERAL';
       forkJoin(
         [
           that.mappingsService.getFyleFields(),
-          that.settingsService.getConfiguration(that.workspaceId),
+          that.settingsService.getConfiguration(that.workspaceId)
         ]
-      ).subscribe(response => {
-        that.fyleFields = response[0];
-        that.configuration = response[1];
+      ).subscribe(result => {
+        that.fyleFields = result[0];
+        that.configuration = result[1];
+        that.changeState(that.state);
         that.isParentLoading = false;
       }, () => {
+        that.changeState(that.state);
         that.isParentLoading = false;
       });
 
+    }, () => {
+      that.state = that.route.snapshot.firstChild ? that.route.snapshot.firstChild.routeConfig.path.toUpperCase() || 'LOCATION_ENTITY' : 'LOCATION_ENTITY';
+      that.changeState(that.state);
+      that.isParentLoading = false;
     });
+  }
+
+  ngOnInit() {
+    const that = this;
+    that.workspaceId = +that.route.parent.snapshot.params.workspace_id;
+
+    that.reset();
   }
 }

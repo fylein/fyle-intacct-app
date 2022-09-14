@@ -1,0 +1,63 @@
+::ng-deep .configurations-dialog {
+    font-size: 14px;
+    font-style: normal;
+    line-height: 20px;
+    letter-spacing: 0.02em;
+  
+    &--label {
+      margin-bottom: 15px;
+    }
+  
+    &--heading {
+      font-weight: bold;
+      margin: 15px 0px;
+    }
+  
+    &--side-heading {
+      font-size: 16px;
+      font-weight: normal;
+      color: #252841;
+    }
+  
+    &--map {
+      margin-bottom: 20px;
+      margin-top: 20px;
+    }
+  
+    &--btn {
+      font-weight: normal;
+      color: #A9ACBC;
+      background-color: #F5F5F5 !important;;
+      cursor: no-drop !important;
+    }
+  
+    &--btn-update {
+      font-weight: normal;
+      color: #414562;
+      background-color: #EAEAEB !important;;
+      cursor: default !important;
+    }
+  
+    &--info-icon {
+      cursor: default;
+      color: #5C98E5;
+      font-size: 19px !important;
+      margin-bottom: 18px !important;
+    }
+  
+    &--update-text {
+      margin-top: 10px;
+    }
+  
+    &--info-box {
+      padding: 8px 12px;
+      background: rgba(0, 98, 255, 0.02);
+      border: 1px solid rgba(0, 98, 255, 0.04);
+      margin-bottom: 15px;
+    }
+  }
+  
+  /* Remove auto focus on button */
+  ::ng-deep .mat-button-focus-overlay {
+    display: none !important;
+  }

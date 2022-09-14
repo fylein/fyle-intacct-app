@@ -68,7 +68,7 @@
         <mat-form-field floatLabel="always" appearance="outline" fxFlex="100">
           <mat-select placeholder="Choose how to auto map employees between Fyle and Sage Intacct"
             formControlName="autoMapEmployees">
-            <mat-option>
+            <mat-option [value]="null">
               None
             </mat-option>
             <mat-option [value]="'EMAIL'">
@@ -85,12 +85,30 @@
       </div>
 
       <mat-slide-toggle color="primary" class="schedule" *ngIf="showAutoCreate" formControlName="autoCreateDestinationEntity">
-        <div class="schedule--toggle-text">Auto Create Vendor / Employee on Sage Intacct</div>
+        <div class="schedule--toggle-text">
+          Auto Create Vendor / Employee on Sage Intacct
+          <mat-icon
+            [inline]="true"
+            class="info-icon"
+            matTooltip="While exporting reimbursable expenses, Fyle will automatically create a Vendor / Employee in Sage Intacct if a match does not exist already"
+            matTooltipPosition="after">
+              info
+          </mat-icon>
+        </div>
       </mat-slide-toggle>
-      
-      <mat-slide-toggle color="primary" class="schedule" formControlName="importCategories">
-        <div class="schedule--toggle-text">Import Sage Intacct Expense Types / GL Accounts into Fyle</div>
-      </mat-slide-toggle>
+
+      <!-- <mat-slide-toggle color="primary" class="schedule" *ngIf="showImportCategories" formControlName="importCategories">
+        <div class="schedule--toggle-text">
+          Import NetSuite Expense {{generalSettingsForm.value.reimbursableExpense === 'EXPENSE REPORT' ? 'Categories' : 'Accounts'}} into Fyle
+          <mat-icon
+            [inline]="true"
+            class="info-icon"
+            [matTooltip]="'Import Expense ' + (generalSettingsForm.value.reimbursableExpense === 'EXPENSE_REPORT' ? 'types' : 'accounts') + ' from Sage Intacct ' + (generalSettingsForm.value.reimbursableExpense !== 'EXPENSE_REPORT' ? 'GL ' : '') + 'as categories in Fyle'"
+            matTooltipPosition="after">
+              info
+          </mat-icon>
+        </div>
+      </mat-slide-toggle> -->
 
       <mat-slide-toggle color="primary" class="schedule" formControlName="importProjects">
         <div class="schedule--toggle-text">

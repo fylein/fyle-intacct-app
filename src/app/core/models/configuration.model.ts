@@ -1,6 +1,6 @@
 /* tslint:disable */
 export type Configuration = {
-  id: number;
+  id?: number;
   employee_field_mapping: string;
   reimbursable_expenses_object: string;
   corporate_credit_card_expenses_object: string;
@@ -14,7 +14,7 @@ export type Configuration = {
   import_tax_codes: boolean;
   change_accounting_period: boolean;
   import_vendors_as_merchants?: boolean;
-  created_at: Date;
-  updated_at: Date;
+  created_at?: Date;
+  updated_at?: Date;
   workspace: number;
 };
