@@ -130,24 +130,6 @@ export class ConfigurationComponent implements OnInit {
     }
   }
 
-  // setupEmployeeFieldWatcher() {
-  //   const that = this;
-
-  //   that.configurationForm.controls.employees.valueChanges.subscribe((employeeMappedTo) => {
-  //     that.configurationForm.controls.reimburExpense.reset();
-  //     that.showImportCategories = false;
-  //     that.configurationForm.controls.cccExpense.reset();
-
-  //     if (that.configuration) {
-  //       that.configurationForm.controls.reimburExpense.markAsTouched();
-
-  //       if (that.configuration.auto_create_destination_entity && !that.showAutoCreate) {
-  //         that.configurationForm.controls.autoCreateDestinationEntity.setValue(false);
-  //       }
-  //     }
-  //   });
-  // }
-
   setupReimbursableFieldWatcher() {
     const that = this;
 
@@ -183,9 +165,6 @@ export class ConfigurationComponent implements OnInit {
     that.configurationForm.controls.autoMapEmployees.valueChanges.subscribe((employeeMappingPreference) => {
       that.showAutoCreateOption(employeeMappingPreference);
     });
-
-    // Employee field Mapping
-    // that.setupEmployeeFieldWatcher();
 
     // Reimbursable Expense Mapping
     that.setupReimbursableFieldWatcher();
