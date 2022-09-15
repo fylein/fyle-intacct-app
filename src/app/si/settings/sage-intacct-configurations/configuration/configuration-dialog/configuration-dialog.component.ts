@@ -43,7 +43,7 @@ export class ConfigurationDialogComponent implements OnInit {
     if (that.updatedConfiguration.reimburseExpense && that.updatedConfiguration.reimburseExpense.oldValue === 'EXPENSE_REPORT' && that.updatedConfiguration.reimburseExpense.newValue !== 'EXPENSE_REPORT') {
       let exportType = that.updatedConfiguration.reimburseExpense.newValue;
       exportType = exportType.charAt(0).toUpperCase() + exportType.substr(1).toLowerCase();
-      that.additionalWarning = `${exportType} would require an Expense account for successful export. You can import this by enabling the toggle below or creating a manual map from the Category Mapping section.`;
+      that.additionalWarning = `${exportType} would require an GL account for successful export. You can import this by enabling the toggle below or creating a manual map from the Category Mapping section.`;
     }
   }
 

@@ -236,13 +236,10 @@ export class GeneralMappingsComponent implements OnInit {
       that.sageIntacctClasses = response.CLASS;
       that.taxCodes = response.TAX_DETAIL;
 
-      // if CCC export is updated to Credit Card Charge, we limit the CCC account choices with CHARGE_CARD account type
-      const defaultCCCAccount = that.sageIntacctDefaultChargeCard.filter(cccAccount => cccAccount.destination_id === this.generalMappings.default_charge_card_id);
-
       that.form = that.formBuilder.group({
         locationEntity: [that.generalMappings ? that.generalMappings.location_entity_id : null],
         location: [that.generalMappings ? that.generalMappings.default_location_id : null],
-        chargeCard: [that.generalMappings && defaultCCCAccount.length ? that.generalMappings.default_charge_card_id : null],
+        chargeCard: [that.generalMappings && that.generalMappings.default_charge_card_id ? that.generalMappings.default_charge_card_id : null],
         defaultVendor: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : null],
         defaultItem: [that.generalMappings ? that.generalMappings.default_item_id : null],
         department: [that.generalMappings ? that.generalMappings.default_department_id : null],

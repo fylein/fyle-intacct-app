@@ -12,7 +12,6 @@ import { MappingsService } from 'src/app/core/services/mappings.service';
 import { MatDialog } from '@angular/material/dialog';
 import { UpdatedConfiguration } from 'src/app/core/models/updated-configuration';
 import { ConfigurationDialogComponent } from './configuration-dialog/configuration-dialog.component';
-import { Config } from 'protractor';
 
 @Component({
   selector: 'app-configuration',
@@ -146,10 +145,6 @@ export class ConfigurationComponent implements OnInit {
           // turn off the import categories toggle when the user switches from EXPENSE REPORT to something else
           that.configurationForm.controls.importCategories.setValue(false);
         }
-      }
-
-      if (that.configuration && that.configuration.sync_fyle_to_sage_intacct_payments) {
-        that.configurationForm.controls.paymentsSync.setValue(false);
       }
     });
   }
