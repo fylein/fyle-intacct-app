@@ -61,6 +61,7 @@ import { MemoStructureComponent } from './settings/sage-intacct-configurations/m
 import { CdkDrag, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { LocationEntityComponent } from './settings/sage-intacct-configurations/location-entity/location-entity.component';
 import { AddEmailDialogComponent } from './settings/schedule/add-email-dialog/add-email-dialog.component';
+import { ConfigurationDialogComponent } from './settings/sage-intacct-configurations/configuration/configuration-dialog/configuration-dialog.component';
 
 @NgModule({
   declarations: [
@@ -92,14 +93,16 @@ import { AddEmailDialogComponent } from './settings/schedule/add-email-dialog/ad
     PaginatorComponent,
     MemoStructureComponent,
     LocationEntityComponent,
-    AddEmailDialogComponent
+    AddEmailDialogComponent,
+    ConfigurationDialogComponent
   ],
   entryComponents: [
     EmployeeMappingsDialogComponent,
     CategoryMappingsDialogComponent,
     GenericMappingsDialogComponent,
     ExpenseGroupSettingsDialogComponent,
-    AddEmailDialogComponent
+    AddEmailDialogComponent,
+    ConfigurationDialogComponent
   ],
   imports: [
     CommonModule,

@@ -5,11 +5,10 @@ import { MappingsService } from '../../../core/services/mappings.service';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SettingsService } from 'src/app/core/services/settings.service';
+import { StorageService } from 'src/app/core/services/storage.service';
 import { GeneralMapping } from 'src/app/core/models/general-mapping.model';
 import { MappingDestination } from 'src/app/core/models/mapping-destination.model';
-import { GroupedDestinationAttributes } from 'src/app/core/models/grouped-destination-attributes';
 import { Configuration } from 'src/app/core/models/configuration.model';
-import { TouchSequence } from 'selenium-webdriver';
 import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
 
 @Component({
@@ -48,7 +47,31 @@ export class GeneralMappingsComponent implements OnInit {
     private settingsService: SettingsService,
     private formBuilder: FormBuilder,
     private router: Router,
+    private storageService: StorageService,
     private snackBar: MatSnackBar) {
+  }
+
+  redirectHandler() {
+    const that = this;
+
+    that.route.queryParams.subscribe(params => {
+      if (params.redirect_to_employee_mappings) {
+        setTimeout(() => {
+          const destination = that.configuration.employee_field_mapping.toLowerCase().replace(/\b(\w)/g, s => s.toUpperCase());
+          that.snackBar.open(`To ensure successful export, map Fyle Employees to ${destination}s in SageIntacct`, '', {
+            duration: 7000
+          });
+          return that.router.navigateByUrl(`workspaces/${that.workspaceId}/settings/employee/mappings`);
+        }, 1000);
+      } else {
+        const onboarded = that.storageService.get('onboarded');
+        if (!onboarded) {
+          that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
+        } else {
+          that.isLoading = false;
+        }
+      }
+    });
   }
 
   submit() {
@@ -105,7 +128,7 @@ export class GeneralMappingsComponent implements OnInit {
     that.mappingsService.postGeneralMappings(mapping).subscribe(() => {
       that.isLoading = false;
       that.snackBar.open('General mappings saved successfully');
-      that.router.navigateByUrl(`workspaces/${that.workspaceId}/dashboard`);
+      that.redirectHandler();
     }, () => {
       that.isLoading = false;
       that.snackBar.open('Please fill all required fields');
@@ -139,6 +162,9 @@ export class GeneralMappingsComponent implements OnInit {
         that.form.controls.sageIntacctTaxCodes.setValidators(Validators.required);
       }
 
+      if (that.generalMappings) {
+        that.form.markAllAsTouched();
+      }
   }
 
   isFieldMandatory(controlName: string) {
@@ -213,7 +239,7 @@ export class GeneralMappingsComponent implements OnInit {
       that.form = that.formBuilder.group({
         locationEntity: [that.generalMappings ? that.generalMappings.location_entity_id : null],
         location: [that.generalMappings ? that.generalMappings.default_location_id : null],
-        chargeCard: [that.generalMappings ? that.generalMappings.default_charge_card_id : null],
+        chargeCard: [that.generalMappings && that.generalMappings.default_charge_card_id ? that.generalMappings.default_charge_card_id : null],
         defaultVendor: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : null],
         defaultItem: [that.generalMappings ? that.generalMappings.default_item_id : null],
         department: [that.generalMappings ? that.generalMappings.default_department_id : null],

@@ -68,7 +68,7 @@
         <mat-form-field floatLabel="always" appearance="outline" fxFlex="100">
           <mat-select placeholder="Choose how to auto map employees between Fyle and Sage Intacct"
             formControlName="autoMapEmployees">
-            <mat-option>
+            <mat-option [value]="null">
               None
             </mat-option>
             <mat-option [value]="'EMAIL'">
@@ -85,7 +85,16 @@
       </div>
 
       <mat-slide-toggle color="primary" class="schedule" *ngIf="showAutoCreate" formControlName="autoCreateDestinationEntity">
-        <div class="schedule--toggle-text">Auto Create Vendor / Employee on Sage Intacct</div>
+        <div class="schedule--toggle-text">
+          Auto Create Vendor / Employee on Sage Intacct
+          <mat-icon
+            [inline]="true"
+            class="info-icon"
+            matTooltip="While exporting reimbursable expenses, Fyle will automatically create a Vendor / Employee in Sage Intacct if a match does not exist already"
+            matTooltipPosition="after">
+              info
+          </mat-icon>
+        </div>
       </mat-slide-toggle>
       
       <mat-slide-toggle color="primary" class="schedule" formControlName="importCategories">
