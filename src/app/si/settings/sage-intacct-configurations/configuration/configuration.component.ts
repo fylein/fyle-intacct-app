@@ -276,7 +276,9 @@ export class ConfigurationComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(data => {
+      if (data.accpetedChanges) {
         that.postConfigurationsAndMappingSettings(configurationPayload, mappingSettingsPayload, true, data.redirectToEmployeeMappings);
+      }
     });
   }
 
@@ -443,7 +445,7 @@ export class ConfigurationComponent implements OnInit {
     const mappingSettingsPayload: MappingSetting[] = that.constructMappingSettingsPayload();
 
         // Open dialog conditionally
-    if (that.configuration && (that.configuration.employee_field_mapping !== configurationPayload.employee_field_mapping || that.configuration.reimbursable_expenses_object !== this.configuration.reimbursable_expenses_object || that.configuration.corporate_credit_card_expenses_object !== configurationPayload.corporate_credit_card_expenses_object)) {
+    if (that.configuration && (that.configuration.employee_field_mapping !== configurationPayload.employee_field_mapping || that.configuration.reimbursable_expenses_object !== configurationPayload.reimbursable_expenses_object || that.configuration.corporate_credit_card_expenses_object !== configurationPayload.corporate_credit_card_expenses_object)) {
       const updatedConfigurations = that.constructUpdatedConfigurationsPayload(configurationPayload);
       that.openDialog(updatedConfigurations, configurationPayload, mappingSettingsPayload);
     } else {
