@@ -351,7 +351,7 @@ export class ConfigurationComponent implements OnInit {
     const that = this;
 
     const reimbursableExpensesObject = that.configurationForm.getRawValue().reimburExpense;
-    const cccExpensesObject = that.configurationForm.getRawValue().cccExpense;
+    const cccExpensesObject = that.configurationForm.getRawValue().cccExpense ? that.configurationForm.getRawValue().cccExpense : null;
     const categoryMappingObject = that.getCategory(reimbursableExpensesObject)[0].value;
     const employeeMappingsObject = that.getEmployee(reimbursableExpensesObject)[0].value;
     const importProjects = that.configurationForm.value.importProjects;
