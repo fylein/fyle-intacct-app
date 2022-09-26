@@ -55,12 +55,12 @@ export class ConfigurationDialogComponent implements OnInit {
     const that = this;
     if (that.data.cccExpense) {
       that.data.cccExpense.oldValue = that.getTitle(that.data.cccExpense.oldValue);
-      that.data.cccExpense.newValue = that.getTitle(that.data.cccExpense.newValue);  
+      that.data.cccExpense.newValue = that.getTitle(that.data.cccExpense.newValue);
     }
 
     if (that.data.reimburseExpense) {
       that.data.reimburseExpense.oldValue = that.getTitle(that.data.reimburseExpense.oldValue);
-      that.data.reimburseExpense.newValue = that.getTitle(that.data.reimburseExpense.newValue);  
+      that.data.reimburseExpense.newValue = that.getTitle(that.data.reimburseExpense.newValue);
     }
 
     that.updatedConfiguration = that.data;
