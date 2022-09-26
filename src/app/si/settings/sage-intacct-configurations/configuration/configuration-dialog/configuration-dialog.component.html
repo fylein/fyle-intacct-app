@@ -27,23 +27,6 @@
         </div>
       </div>
   
-      <div *ngIf="updatedConfiguration.employee">
-        <div fxLayout="row" fxLayoutAlign="space-between center" class="configurations-dialog--map">
-          <div fxFlex="40" class="configurations-dialog--side-heading">
-            Employees
-          </div>
-          <div fxFlex="60">
-            <div fxFlex="45">
-              <button mat-stroked-button [autofocus]="false" [disableRipple]="true" class="configurations-dialog--btn">{{updatedConfiguration.employee.oldValue | titlecase}}</button>
-            </div>
-            <div fxFlex="10" class="configurations-dialog--update-text" [ngStyle]="customStyle">to</div>
-            <div fxFlex="45">
-              <button mat-stroked-button [autofocus]="false" [disableRipple]="true" class="configurations-dialog--btn-update">{{updatedConfiguration.employee.newValue | titlecase}}</button>
-            </div>
-          </div>
-        </div>
-      </div>
-  
       <div *ngIf="updatedConfiguration.reimburseExpense">
         <div fxLayout="row" fxLayoutAlign="space-between center" class="configurations-dialog--map">
           <div fxFlex="40" class="configurations-dialog--side-heading">
