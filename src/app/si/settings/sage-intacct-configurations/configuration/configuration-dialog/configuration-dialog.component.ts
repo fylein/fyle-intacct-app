@@ -53,11 +53,15 @@ export class ConfigurationDialogComponent implements OnInit {
 
   ngOnInit() {
     const that = this;
-    that.data.cccExpense.oldValue = that.getTitle(that.data.cccExpense.oldValue);
-    that.data.cccExpense.newValue = that.getTitle(that.data.cccExpense.newValue);
+    if (that.data.cccExpense) {
+      that.data.cccExpense.oldValue = that.getTitle(that.data.cccExpense.oldValue);
+      that.data.cccExpense.newValue = that.getTitle(that.data.cccExpense.newValue);  
+    }
 
-    that.data.reimburseExpense.oldValue = that.getTitle(that.data.reimburseExpense.oldValue);
-    that.data.reimburseExpense.newValue = that.getTitle(that.data.reimburseExpense.newValue);
+    if (that.data.reimburseExpense) {
+      that.data.reimburseExpense.oldValue = that.getTitle(that.data.reimburseExpense.oldValue);
+      that.data.reimburseExpense.newValue = that.getTitle(that.data.reimburseExpense.newValue);  
+    }
 
     that.updatedConfiguration = that.data;
     that.setup();
