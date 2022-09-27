@@ -9,7 +9,6 @@ import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { Subscription } from 'rxjs';
 import { Task } from 'src/app/core/models/task.model';
-import { TaskResponse } from 'src/app/core/models/task-reponse.model';
 
 @Component({
   selector: 'app-expense-groups',
@@ -28,7 +27,6 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
   columnsToDisplay = ['employee', 'expense-type'];
   windowReference: Window;
   routerEventSubscription: Subscription;
-  allTasks: TaskResponse;
 
   constructor(
     private route: ActivatedRoute,
@@ -83,19 +81,9 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     }
   }
 
-  getTitle(name: string) {
-    return name.replace('CREATING_', '').replace(/_/g, ' ').slice(0, -1);
-  }
-
   getPaginatedExpenseGroups() {
     return this.expenseGroupService.getExpenseGroups(this.pageSize, this.pageNumber * this.pageSize, this.state).subscribe(expenseGroups => {
       this.count = expenseGroups.count;
-      expenseGroups.results.forEach(expenseGroup => {
-        if (expenseGroup.exported_at != null) {
-          const exportType = this.allTasks.results.filter((element) => element.expense_group === expenseGroup.id)[0];
-          expenseGroup.export_type = this.getTitle(exportType.type);
-        }
-      });
       this.expenseGroups = new MatTableDataSource(expenseGroups.results);
       this.expenseGroups.filterPredicate = this.searchByText;
       this.isLoading = false;
@@ -183,9 +171,6 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.reset();
     this.expenseGroups.filterPredicate = this.searchByText;
-    this.taskService.getAllTasks('COMPLETE').subscribe(response => {
-      this.allTasks = response;
-    });
   }
 
   ngOnDestroy() {
