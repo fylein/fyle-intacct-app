@@ -45,8 +45,10 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     this.expenseGroups.filter = filterValue.trim().toLowerCase();
   }
 
-  getSetting(name: string) {
-    return name.replace(/_/g, ' ');
+  getTitle(name: string) {
+    if (name) {
+      return name.replace(/_/g, ' ');
+    }
   }
 
   onPageChange(event) {
