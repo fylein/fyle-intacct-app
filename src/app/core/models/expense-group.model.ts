@@ -7,6 +7,8 @@ export type ExpenseGroup = {
   fyle_group_id: string;
   fund_source: string;
   description: ExpenseGroupDescription;
+  export_type?: string;
+  exported_at?: Date;
   created_at: Date;
   updated_at: Date;
   workspace: number;
