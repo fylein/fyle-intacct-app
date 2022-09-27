@@ -52,7 +52,7 @@
       <th mat-header-cell *matHeaderCellDef> Exported to Sage Intacct as </th>
       <td mat-cell *matCellDef="let element">
         <div>
-          {{element.export_type | titlecase}}
+          {{ getTitle(element.export_type) | titlecase }}
         </div>
       </td>
     </ng-container>
