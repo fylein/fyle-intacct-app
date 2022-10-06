@@ -81,14 +81,14 @@
         </mat-select>
       </mat-form-field>
 
-      <div class="mat-body-strong" *ngIf="configuration.corporate_credit_card_expenses_object && configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION'">
+      <div class="mat-body-strong" *ngIf="configuration.corporate_credit_card_expenses_object && (configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION' || configuration.corporate_credit_card_expenses_object === 'JOURNAL_ENTRY')">
         <strong class="mappings-dialog--label">
           Default Charge Card
           <mandatory-field *ngIf="isFieldMandatory('chargeCard')"></mandatory-field>
         </strong>
       </div>
       <mat-form-field class="mappings-dialog--form-element" appearance="outline" required 
-      *ngIf="configuration.corporate_credit_card_expenses_object && configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION'">
+      *ngIf="configuration.corporate_credit_card_expenses_object && (configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION' || configuration.corporate_credit_card_expenses_object === 'JOURNAL_ENTRY')">
         <mat-select placeholder="Default Charge Card" formControlName="chargeCard">
           <mat-option *ngFor="let option of sageIntacctDefaultChargeCard" [value]="option.destination_id">
             {{option.value}}

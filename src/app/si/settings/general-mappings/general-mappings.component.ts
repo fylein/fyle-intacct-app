@@ -138,7 +138,7 @@ export class GeneralMappingsComponent implements OnInit {
   setMandatoryFields() {
       const that = this;
 
-      if (that.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
+      if (that.configuration.corporate_credit_card_expenses_object && (this.configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION' || this.configuration.corporate_credit_card_expenses_object === 'JOURNAL_ENTRY')) {
         that.form.controls.chargeCard.setValidators(Validators.required);
       }
 
@@ -192,6 +192,10 @@ export class GeneralMappingsComponent implements OnInit {
         attributes.push('CHARGE_CARD_NUMBER');
     }
 
+    if (this.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'JOURNAL_ENTRY') {
+      attributes.push('BALANCESHEET_GL_ACCOUNT');
+    }
+
     if (this.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'BILL') {
         attributes.push('VENDOR');
     }
@@ -227,7 +231,12 @@ export class GeneralMappingsComponent implements OnInit {
       that.sageIntacctDepartments = response.DEPARTMENT;
       that.sageIntacctProjects = response.PROJECT;
       that.sageIntacctDefaultVendor = response.VENDOR;
-      that.sageIntacctDefaultChargeCard = response.CHARGE_CARD_NUMBER;
+      if (this.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
+        that.sageIntacctDefaultChargeCard = response.CHARGE_CARD_NUMBER;
+      }
+      else if (this.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'JOURNAL_ENTRY') {
+        that.sageIntacctDefaultChargeCard = response.ACCOUNT;
+      }
       that.sageIntacctDefaultItem = response.ITEM;
       that.sageIntacctPaymentAccounts = response.PAYMENT_ACCOUNT;
       that.sageIntacctReimbursableExpensePaymentType = response.EXPENSE_PAYMENT_TYPE.filter(expensePaymentType => expensePaymentType.detail.is_reimbursable);
