@@ -183,6 +183,7 @@ export class GeneralMappingsComponent implements OnInit {
     const attributes = [
       'LOCATION', 'DEPARTMENT', 'PROJECT', 'LOCATION_ENTITY', 'CLASS',
     ];
+    let accountType = ''
 
     if (this.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT') {
         attributes.push('EXPENSE_PAYMENT_TYPE');
@@ -193,7 +194,8 @@ export class GeneralMappingsComponent implements OnInit {
     }
 
     if (this.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'JOURNAL_ENTRY') {
-      attributes.push('BALANCESHEET_GL_ACCOUNT');
+      attributes.push('ACCOUNT');
+      accountType = 'balancesheet';
     }
 
     if (this.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'BILL') {
@@ -216,16 +218,16 @@ export class GeneralMappingsComponent implements OnInit {
       attributes.push('TAX_DETAIL');
     }
 
-    return attributes;
+    return [attributes, accountType] as const;
   }
 
   reset() {
     const that = this;
     that.isLoading = true;
 
-    const attributes = this.getAttributesFilteredByConfig();
+    const [attributes, accountType] = this.getAttributesFilteredByConfig();
 
-    that.mappingsService.getGroupedSageIntacctDestinationAttributes(attributes).subscribe(response => {
+    that.mappingsService.getGroupedSageIntacctDestinationAttributes(attributes, accountType).subscribe(response => {
       that.isLoading = false;
       that.sageIntacctLocations = response.LOCATION;
       that.sageIntacctDepartments = response.DEPARTMENT;
@@ -233,8 +235,7 @@ export class GeneralMappingsComponent implements OnInit {
       that.sageIntacctDefaultVendor = response.VENDOR;
       if (this.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
         that.sageIntacctDefaultChargeCard = response.CHARGE_CARD_NUMBER;
-      }
-      else if (this.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'JOURNAL_ENTRY') {
+      } else if (this.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'JOURNAL_ENTRY') {
         that.sageIntacctDefaultChargeCard = response.ACCOUNT;
       }
       that.sageIntacctDefaultItem = response.ITEM;
