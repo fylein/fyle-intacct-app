@@ -183,7 +183,7 @@ export class GeneralMappingsComponent implements OnInit {
     const attributes = [
       'LOCATION', 'DEPARTMENT', 'PROJECT', 'LOCATION_ENTITY', 'CLASS',
     ];
-    let accountType = ''
+    let accountType = '';
 
     if (this.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT') {
         attributes.push('EXPENSE_PAYMENT_TYPE');
