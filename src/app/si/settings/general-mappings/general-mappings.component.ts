@@ -233,8 +233,7 @@ export class GeneralMappingsComponent implements OnInit {
       that.sageIntacctDefaultVendor = response.VENDOR;
       if (this.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
         that.sageIntacctDefaultChargeCard = response.CHARGE_CARD_NUMBER;
-      }
-      else if (this.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'JOURNAL_ENTRY') {
+      } else if (this.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'JOURNAL_ENTRY') {
         that.sageIntacctDefaultChargeCard = response.ACCOUNT;
       }
       that.sageIntacctDefaultItem = response.ITEM;
