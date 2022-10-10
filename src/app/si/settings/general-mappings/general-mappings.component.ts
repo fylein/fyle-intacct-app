@@ -27,6 +27,7 @@ export class GeneralMappingsComponent implements OnInit {
   sageIntacctProjects: MappingDestination[];
   sageIntacctDefaultVendor: MappingDestination[];
   sageIntacctDefaultChargeCard: MappingDestination[];
+  sageIntacctDefaultCreditCard: MappingDestination[];
   sageIntacctDefaultItem: MappingDestination[];
   sageIntacctPaymentAccounts: MappingDestination[];
   defaultVendor: MappingDestination[];
@@ -84,6 +85,7 @@ export class GeneralMappingsComponent implements OnInit {
     const defaultVendor: MappingDestination[] = that.sageIntacctDefaultVendor.filter((element) => element.destination_id === that.form.value.defaultVendor);
     const defaultClass: MappingDestination[] = that.sageIntacctClasses.filter((element) => element.destination_id === that.form.value.defaultClass);
     const defaultChargeCard: MappingDestination[] = that.sageIntacctDefaultChargeCard.filter((element) => element.destination_id === that.form.value.chargeCard);
+    const defaultCreditCard: MappingDestination[] = that.sageIntacctDefaultCreditCard.filter((element) => element.destination_id === that.form.value.creditCard);
     const defaultItem: MappingDestination[] = that.sageIntacctDefaultItem.filter((element) => element.destination_id === that.form.value.defaultItem);
     const paymentAccount: MappingDestination[] = that.sageIntacctPaymentAccounts.filter((element) => element.destination_id === that.form.value.paymentAccount);
     const defaultReimbursableExpensePaymentType: MappingDestination[] = that.sageIntacctReimbursableExpensePaymentType.filter((element) => element.destination_id === that.form.value.defaultReimbursableExpensePaymentType);
@@ -109,6 +111,8 @@ export class GeneralMappingsComponent implements OnInit {
       default_class_id: that.form.value.defaultClass ? that.form.value.defaultClass : '',
       default_charge_card_name: defaultChargeCard[0] ? defaultChargeCard[0].value : '',
       default_charge_card_id: that.form.value.chargeCard ? that.form.value.chargeCard : '',
+      default_credit_card_name: defaultCreditCard[0] ? defaultCreditCard[0].value : '',
+      default_credit_card_id: that.form.value.creditCard ? that.form.value.creditCard : '',
       default_item_id: that.form.value.defaultItem ? that.form.value.defaultItem : '',
       default_item_name: defaultItem[0] ? defaultItem[0].value : '',
       payment_account_name: paymentAccount[0] ? paymentAccount[0].value : '',
@@ -140,6 +144,10 @@ export class GeneralMappingsComponent implements OnInit {
 
       if (that.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
         that.form.controls.chargeCard.setValidators(Validators.required);
+      }
+
+      if (that.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'JOURNAL_ENTRY') {
+        that.form.controls.creditCard.setValidators(Validators.required);
       }
 
       if (that.configuration.corporate_credit_card_expenses_object && that.configuration.corporate_credit_card_expenses_object === 'BILL') {
@@ -183,6 +191,7 @@ export class GeneralMappingsComponent implements OnInit {
     const attributes = [
       'LOCATION', 'DEPARTMENT', 'PROJECT', 'LOCATION_ENTITY', 'CLASS',
     ];
+    let accountType = '';
 
     if (this.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT') {
         attributes.push('EXPENSE_PAYMENT_TYPE');
@@ -190,6 +199,11 @@ export class GeneralMappingsComponent implements OnInit {
 
     if (this.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
         attributes.push('CHARGE_CARD_NUMBER');
+    }
+
+    if (this.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'JOURNAL_ENTRY') {
+      attributes.push('ACCOUNT');
+      accountType = 'incomestatement';  // account type that needs to be excluded while fetching data
     }
 
     if (this.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'BILL') {
@@ -212,22 +226,23 @@ export class GeneralMappingsComponent implements OnInit {
       attributes.push('TAX_DETAIL');
     }
 
-    return attributes;
+    return [attributes, accountType] as const;
   }
 
   reset() {
     const that = this;
     that.isLoading = true;
 
-    const attributes = this.getAttributesFilteredByConfig();
+    const [attributes, accountType] = this.getAttributesFilteredByConfig();
 
-    that.mappingsService.getGroupedSageIntacctDestinationAttributes(attributes).subscribe(response => {
+    that.mappingsService.getGroupedSageIntacctDestinationAttributes(attributes, accountType).subscribe(response => {
       that.isLoading = false;
       that.sageIntacctLocations = response.LOCATION;
       that.sageIntacctDepartments = response.DEPARTMENT;
       that.sageIntacctProjects = response.PROJECT;
       that.sageIntacctDefaultVendor = response.VENDOR;
       that.sageIntacctDefaultChargeCard = response.CHARGE_CARD_NUMBER;
+      that.sageIntacctDefaultCreditCard = response.ACCOUNT;
       that.sageIntacctDefaultItem = response.ITEM;
       that.sageIntacctPaymentAccounts = response.PAYMENT_ACCOUNT;
       that.sageIntacctReimbursableExpensePaymentType = response.EXPENSE_PAYMENT_TYPE.filter(expensePaymentType => expensePaymentType.detail.is_reimbursable);
@@ -240,6 +255,7 @@ export class GeneralMappingsComponent implements OnInit {
         locationEntity: [that.generalMappings ? that.generalMappings.location_entity_id : null],
         location: [that.generalMappings ? that.generalMappings.default_location_id : null],
         chargeCard: [that.generalMappings && that.generalMappings.default_charge_card_id ? that.generalMappings.default_charge_card_id : null],
+        creditCard: [that.generalMappings && that.generalMappings.default_credit_card_id ? that.generalMappings.default_credit_card_id : null],
         defaultVendor: [that.generalMappings ? that.generalMappings.default_ccc_vendor_id : null],
         defaultItem: [that.generalMappings ? that.generalMappings.default_item_id : null],
         department: [that.generalMappings ? that.generalMappings.default_department_id : null],

@@ -100,12 +100,17 @@ export class MappingsService {
     );
   }
 
-  getSageIntacctDestinationAttributes(attributeTypes: string | string[]): Observable<MappingDestination[]> {
+  getSageIntacctDestinationAttributes(attributeTypes: string | string[], accountType?: string): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/destination_attributes/`, {
+    const params: {attribute_types: string | string[], account_type?: string} = {
       attribute_types: attributeTypes
-    });
+    };
+
+    if (accountType) {
+      params.account_type = accountType;
+    }
+
+    return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/destination_attributes/`, params);
   }
 
   getSageIntacctAttributeCount(attributeType: string): Observable<AttributeCount> {
@@ -145,8 +150,8 @@ export class MappingsService {
   }
 
 
-  getGroupedSageIntacctDestinationAttributes(attributeTypes: string[]): Observable<GroupedDestinationAttributes> {
-    return from(this.getSageIntacctDestinationAttributes(attributeTypes).toPromise().then((response: MappingDestination[]) => {
+  getGroupedSageIntacctDestinationAttributes(attributeTypes: string[], accountType?: string): Observable<GroupedDestinationAttributes> {
+    return from(this.getSageIntacctDestinationAttributes(attributeTypes, accountType).toPromise().then((response: MappingDestination[]) => {
       return response.reduce((groupedAttributes: GroupedDestinationAttributes, attribute: MappingDestination) => {
         const group: MappingDestination[] = groupedAttributes[attribute.attribute_type] || [];
         group.push(attribute);
