@@ -51,11 +51,8 @@
     <ng-container matColumnDef="export">
       <th mat-header-cell *matHeaderCellDef> Exported to Sage Intacct as </th>
       <td mat-cell *matCellDef="let element">
-        <div *ngIf="element.fund_source === 'PERSONAL'">
-          {{ getSetting(settings.reimbursable_expenses_object) | titlecase }}
-        </div>
-        <div *ngIf="element.fund_source === 'CCC'">
-          {{ getSetting(settings.corporate_credit_card_expenses_object) | titlecase }}
+        <div>
+          {{ getTitle(element.export_type) | titlecase }}
         </div>
       </td>
     </ng-container>

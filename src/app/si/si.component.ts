@@ -22,7 +22,12 @@ import * as Sentry from '@sentry/angular';
   styleUrls: ['./si.component.scss']
 })
 export class SiComponent implements OnInit {
-  user: UserProfile;
+  user: {
+    employee_email: string,
+    full_name: string,
+    org_id: string,
+    org_name: string
+  };
   orgsCount: number;
   workspace: Workspace;
   isLoading = true;
@@ -93,15 +98,6 @@ export class SiComponent implements OnInit {
     const pathName = that.windowReference.location.pathname;
 
     that.storageService.set('workspaceId', that.workspace.id);
-    if (that.workspace.cluster_domain) {
-      that.storageService.set('clusterDomain', that.workspace.cluster_domain);
-    } else {
-      that.workspaceService.getClusterDomain().subscribe(
-        response => {
-          that.storageService.set('clusterDomain', response);
-        }
-      );
-    }
 
     if (pathName === '/workspaces') {
       that.router.navigateByUrl(`/workspaces/${that.workspace.id}/dashboard`);

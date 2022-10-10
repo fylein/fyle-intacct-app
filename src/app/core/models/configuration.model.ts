@@ -1,6 +1,7 @@
 /* tslint:disable */
 export type Configuration = {
-  id: number;
+  id?: number;
+  employee_field_mapping: string;
   reimbursable_expenses_object: string;
   corporate_credit_card_expenses_object: string;
   import_projects?: boolean;
@@ -11,7 +12,9 @@ export type Configuration = {
   auto_create_destination_entity: boolean;
   memo_structure?: string[];
   import_tax_codes: boolean;
-  created_at: Date;
-  updated_at: Date;
+  change_accounting_period: boolean;
+  import_vendors_as_merchants?: boolean;
+  created_at?: Date;
+  updated_at?: Date;
   workspace: number;
 };

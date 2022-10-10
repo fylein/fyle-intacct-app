@@ -68,7 +68,7 @@
         <mat-form-field floatLabel="always" appearance="outline" fxFlex="100">
           <mat-select placeholder="Choose how to auto map employees between Fyle and Sage Intacct"
             formControlName="autoMapEmployees">
-            <mat-option>
+            <mat-option [value]="null">
               None
             </mat-option>
             <mat-option [value]="'EMAIL'">
@@ -85,7 +85,16 @@
       </div>
 
       <mat-slide-toggle color="primary" class="schedule" *ngIf="showAutoCreate" formControlName="autoCreateDestinationEntity">
-        <div class="schedule--toggle-text">Auto Create Vendor / Employee on Sage Intacct</div>
+        <div class="schedule--toggle-text">
+          Auto Create Vendor / Employee on Sage Intacct
+          <mat-icon
+            [inline]="true"
+            class="info-icon"
+            matTooltip="While exporting reimbursable expenses, Fyle will automatically create a Vendor / Employee in Sage Intacct if a match does not exist already"
+            matTooltipPosition="after">
+              info
+          </mat-icon>
+        </div>
       </mat-slide-toggle>
       
       <mat-slide-toggle color="primary" class="schedule" formControlName="importCategories">
@@ -107,6 +116,30 @@
 
       <mat-slide-toggle color="primary" class="schedule" *ngIf="(entityCountry && entityCountry !== 'United States')" formControlName="importTaxCodes">
         <div class="schedule--toggle-text">Import Sage Intacct Tax Codes to Fyle</div>
+      </mat-slide-toggle>
+
+      <mat-slide-toggle color="primary" class="schedule" formControlName="changeAccountingPeriod">
+        <div class="schedule--toggle-text">Export to next open period
+          <mat-icon
+            [inline]="true"
+            class="info-icon"
+            matTooltip="If the accounting period is closed, the report will be exported with the date as first of the Current month"
+            matTooltipPosition="after">
+              info
+          </mat-icon>
+        </div>
+      </mat-slide-toggle>
+
+      <mat-slide-toggle color="primary" class="schedule" formControlName="importVendorsAsMerchants">
+        <div class="schedule--toggle-text"> Import Sage Intacct Vendors as Merchants to Fyle
+          <mat-icon
+            [inline]="true"
+            class="info-icon"
+            matTooltip="Import Sage Intacct Vendors as Merchants to Fyle"
+            matTooltipPosition="after">
+              info
+          </mat-icon>
+        </div>
       </mat-slide-toggle>
 
       <button [disabled]="!configurationForm.valid" class="configurations--save-btn" mat-flat-button color="primary" (click)="save()" type="submit">

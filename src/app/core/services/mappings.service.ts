@@ -4,6 +4,10 @@ import { empty, Observable, Subject, from } from 'rxjs';
 import { concatMap, expand, map, publishReplay, refCount, reduce } from 'rxjs/operators';
 import { ApiService } from 'src/app/core/services/api.service';
 import { AttributeCount } from '../models/attribute-count.model';
+import { CategoryMappingsResponse } from '../models/category-mapping-response.model';
+import { CategoryMapping } from '../models/category-mapping.model';
+import { EmployeeMapping } from '../models/employee-mapping.model';
+import { EmployeeMappingsResponse } from '../models/employee-mapping-response.model';
 import { ExpenseField } from '../models/expense-field.model';
 import { GeneralMapping } from '../models/general-mapping.model';
 import { MappingDestination } from '../models/mapping-destination.model';
@@ -168,6 +172,31 @@ export class MappingsService {
     }));
   }
 
+  getCategoryMappings(pageLimit: number, pageOffset: number): Observable<CategoryMappingsResponse> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+    return this.apiService.get(
+      `/workspaces/${workspaceId}/mappings/category/`, {
+        limit: pageLimit,
+        offset: pageOffset
+      }
+    );
+  }
+
+  getEmployeeMappings(pageLimit: number, pageOffset: number): Observable<EmployeeMappingsResponse> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+    return this.apiService.get(
+      `/workspaces/${workspaceId}/mappings/employee/`, {
+        limit: pageLimit,
+        offset: pageOffset
+      }
+    );
+  }
+
+  postCategoryMappings(mapping: CategoryMapping): Observable<Mapping> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+    return this.apiService.post(`/workspaces/${workspaceId}/mappings/category/`, mapping);
+  }
+
   postLocationEntityMapping(locationEntityMappingPayload: LocationEntityMapping): Observable<any> {
     const workspaceId = this.workspaceService.getWorkspaceId();
 
@@ -201,5 +230,10 @@ export class MappingsService {
     return this.apiService.post(
       `/workspaces/${workspaceId}/mappings/general/`, mapping
     );
+  }
+
+  postEmployeeMappings(employeeMapping: EmployeeMapping): Observable<EmployeeMapping> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+    return this.apiService.post(`/workspaces/${workspaceId}/mappings/employee/`, employeeMapping);
   }
 }

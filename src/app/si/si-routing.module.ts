@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { SiComponent } from './si.component';
 import { AuthGuard } from '../core/guard/auth.guard';
 import { WorkspacesGuard } from '../core/guard/workspaces.guard';
+import { ExportGuard } from '../core/guard/export.guard';
 import { ExpenseGroupsComponent } from './expense-groups/expense-groups.component';
 import { ViewExpenseGroupComponent } from './expense-groups/view-expense-group/view-expense-group.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -43,7 +44,7 @@ const routes: Routes = [{
     {
       path: ':workspace_id/sync_export',
       component: SyncExportComponent,
-      canActivate: [WorkspacesGuard],
+      canActivate: [ExportGuard],
       children: [
         {
           path: 'sync',
@@ -131,7 +132,7 @@ const routes: Routes = [{
         {
           path: 'schedule',
           component: ScheduleComponent,
-          canActivate: [WorkspacesGuard]
+          canActivate: [ExportGuard]
         }
       ]
     },

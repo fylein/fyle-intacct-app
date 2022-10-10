@@ -77,14 +77,14 @@
         </strong>
       </div>
       <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="showSeparateCCCField()">
-        <input type="text" formControlName="sageIntacctCCCAccount" placeholder="Choose Sage Intacct account" matInput
-          [matAutocomplete]="sageIntacctCCCAcc" [errorStateMatcher]="matcher">
-        <mat-autocomplete #sageIntacctCCCAcc="matAutocomplete" [displayWith]="mappingDisplay">
-          <mat-option *ngFor="let option of sageIntacctCCCAccountOptions" [value]="option">
+        <input type="text" formControlName="sageIntacctAccount" placeholder="Choose Sage Intacct account" matInput
+          [matAutocomplete]="siAc" [errorStateMatcher]="matcher">
+        <mat-autocomplete #siAc="matAutocomplete" [displayWith]="mappingDisplay">
+          <mat-option *ngFor="let option of sageIntacctAccountOptions" [value]="option">
             {{option.value}}
           </mat-option>
         </mat-autocomplete>
-        <mat-error class="mappings-dialog--error" *ngIf="form.controls.sageIntacctCCCAccount.hasError('forbiddenOption')">
+        <mat-error class="mappings-dialog--error" *ngIf="form.controls.sageIntacctAccount.hasError('forbiddenOption')">
           Please enter a valid value
         </mat-error>
       </mat-form-field>
