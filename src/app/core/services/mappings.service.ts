@@ -107,7 +107,7 @@ export class MappingsService {
     };
 
     if (accountType) {
-      params.account_type = accountType
+      params.account_type = accountType;
     }
 
     return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/destination_attributes/`, params);
