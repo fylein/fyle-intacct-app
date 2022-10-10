@@ -106,7 +106,7 @@ export class MappingsService {
       attribute_types: attributeTypes
     };
 
-    if (accountType){
+    if (accountType) {
       params['account_type'] = accountType;
     }
 
