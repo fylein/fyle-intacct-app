@@ -102,12 +102,12 @@ export class MappingsService {
 
   getSageIntacctDestinationAttributes(attributeTypes: string | string[], accountType?: string): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
+    const params = {
+      attribute_types: attributeTypes
+    };
 
-    let params = {
-      attribute_types: attributeTypes,
-    }
     if (accountType){
-      params['account_type'] = accountType
+      params['account_type'] = accountType;
     }
 
     return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/destination_attributes/`, params);

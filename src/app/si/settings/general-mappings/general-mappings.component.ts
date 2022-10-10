@@ -203,7 +203,7 @@ export class GeneralMappingsComponent implements OnInit {
 
     if (this.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'JOURNAL_ENTRY') {
       attributes.push('ACCOUNT');
-      accountType = 'balancesheet';
+      accountType = 'incomestatement';  // account type that needs to be excluded while fetching data
     }
 
     if (this.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'BILL') {
