@@ -100,20 +100,20 @@
 
       <div class="mat-body-strong" *ngIf="configuration.corporate_credit_card_expenses_object && configuration.corporate_credit_card_expenses_object === 'JOURNAL_ENTRY'">
         <strong class="mappings-dialog--label">
-          Default Credit Card
+          Default Credit Account
           <mandatory-field *ngIf="isFieldMandatory('creditCard')"></mandatory-field>
-          <mat-icon [inline]="true" class="info-icon" matTooltip="Credit Card expenses will be credited to the GL Account selected here." matTooltipPosition="after">info</mat-icon>
+          <mat-icon [inline]="true" class="info-icon" matTooltip="The Integration will credit the account selected here for Credit Card Expenses exported as Journal Entries." matTooltipPosition="after">info</mat-icon>
         </strong>
       </div>
       <mat-form-field class="mappings-dialog--form-element" appearance="outline" required
       *ngIf="configuration.corporate_credit_card_expenses_object && configuration.corporate_credit_card_expenses_object === 'JOURNAL_ENTRY'">
-        <mat-select placeholder="Default Credit Card" formControlName="creditCard">
+        <mat-select placeholder="Default Credit Account" formControlName="creditCard">
           <mat-option *ngFor="let option of sageIntacctDefaultCreditCard" [value]="option.destination_id">
             {{option.value}}
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <mandatory-error-message listName="default credit card account" *ngIf="form.controls.creditCard.touched && !form.controls.creditCard.valid"></mandatory-error-message>
+      <mandatory-error-message listName="default credit account" *ngIf="form.controls.creditCard.touched && !form.controls.creditCard.valid"></mandatory-error-message>
 
       <div class="mat-body-strong" *ngIf="configuration.corporate_credit_card_expenses_object && configuration.corporate_credit_card_expenses_object === 'BILL'">
         <strong class="mappings-dialog--label">
