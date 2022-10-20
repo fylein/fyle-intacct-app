@@ -117,17 +117,17 @@ const routes: Routes = [{
         {
           path: 'employee/mappings',
           component: EmployeeMappingsComponent,
-          canActivate: [WorkspacesGuard]
+          canActivate:[ExportGuard]
         },
         {
           path: 'category/mappings',
           component: CategoryMappingsComponent,
-          canActivate: [WorkspacesGuard]
+          canActivate:[ExportGuard]
         },
         {
           path: ':source_field/mappings',
           component: GenericMappingsComponent,
-          canActivate: [WorkspacesGuard]
+          canActivate: [ExportGuard]
         },
         {
           path: 'schedule',
