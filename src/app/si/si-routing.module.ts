@@ -117,12 +117,12 @@ const routes: Routes = [{
         {
           path: 'employee/mappings',
           component: EmployeeMappingsComponent,
-          canActivate:[ExportGuard]
+          canActivate: [ExportGuard]
         },
         {
           path: 'category/mappings',
           component: CategoryMappingsComponent,
-          canActivate:[ExportGuard]
+          canActivate: [ExportGuard]
         },
         {
           path: ':source_field/mappings',
