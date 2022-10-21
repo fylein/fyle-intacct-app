@@ -8,7 +8,6 @@ interface Env {
   CALLBACK_URI: string;
   API_URL: string;
   APP_URL: string;
-  HOTJAR_ID: string;
   SENTRY_DSN: string;
   RELEASE: string;
 }

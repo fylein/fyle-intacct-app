@@ -15,7 +15,6 @@ do
     sed -i $SED_EXTRA_ARGS "s?{{FYLE_CLIENT_ID}}?${FYLE_CLIENT_ID}?g" $f;
     sed -i $SED_EXTRA_ARGS "s?{{FYLE_URL}}?${FYLE_URL}?g" $f;
     sed -i $SED_EXTRA_ARGS "s?{{PRODUCTION}}?${PRODUCTION}?g" $f;
-    sed -i $SED_EXTRA_ARGS "s?{{HOTJAR_ID}}?${HOTJAR_ID}?g" $f;
     sed -i $SED_EXTRA_ARGS "s?{{SEGMENT_ID}}?${SEGMENT_ID}?g" $f;
     sed -i $SED_EXTRA_ARGS "s?{{SENTRY_DSN}}?${SENTRY_DSN}?g" $f;
     sed -i $SED_EXTRA_ARGS "s?{{RELEASE}}?${RELEASE}?g" $f;
