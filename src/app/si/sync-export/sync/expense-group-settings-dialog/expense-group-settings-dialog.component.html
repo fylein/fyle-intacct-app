@@ -67,6 +67,7 @@
             </mat-form-field>
     
             <mat-form-field floatLabel="always" class="dialog--group-field-right" appearance="outline" *ngIf="showCCCGroups()">
+
               <mat-select placeholder="Choose Date when Exporting Expenses" formControlName="cccExportDate">
                 <mat-option *ngFor="let option of exportDateOptions" [value]="option.value">
                   {{option.label}}
@@ -76,9 +77,18 @@
           </div>
 
         <div class="dialog--label">
-          Import Expenses in State:
+          Import Expenses in state
         </div>
+          <div>
+            <div class="dialog--group-label-left" *ngIf="showCCCGroups()">
+              Reimbursable Expenses
+            </div>
+            <div class="dialog--group-label-right" *ngIf="showCCCGroups()">
+              Credit Card Expenses
+            </div>
+          </div>
         <div>
+          
           <mat-form-field floatLabel="always" appearance="outline" required [ngClass]="showCCCGroups() ? 'dialog--group-field-left' : 'dialog--group-field'">
             <mat-select placeholder="Choose State of Reimbursable Expenses to be fetched" formControlName="expenseState">
               <mat-option *ngFor="let option of reimbursableOptions" [value]="option.value">
