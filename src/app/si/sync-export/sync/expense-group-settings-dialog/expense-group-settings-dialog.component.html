@@ -78,19 +78,29 @@
         <div class="dialog--label">
           Import Expenses in State:
         </div>
-        <mat-form-field floatLabel="always" appearance="outline" required [ngClass]="showCCCGroups() ? 'dialog--group-field-left' : 'dialog--group-field'">
-          <mat-select placeholder="Choose State of Expenses to be fetched" formControlName="expenseState">
-            <mat-option value="PAYMENT_PROCESSING">
-              Payment Processing
-            </mat-option>
-            <mat-option value="PAID">
-              Paid
-            </mat-option>
-          </mat-select>
-          <mat-error class="dialog--error" *ngIf="importExpensesForm.controls.expenseState.errors?.required">
-            Please select atleast 1 state
-          </mat-error>
-        </mat-form-field>
+        <div>
+          <mat-form-field floatLabel="always" appearance="outline" required [ngClass]="showCCCGroups() ? 'dialog--group-field-left' : 'dialog--group-field'">
+            <mat-select placeholder="Choose State of Reimbursable Expenses to be fetched" formControlName="expenseState">
+              <mat-option *ngFor="let option of reimbursableOptions" [value]="option.value">
+                {{option.label}}
+              </mat-option>
+            </mat-select>
+            <mat-error class="dialog--error" *ngIf="importExpensesForm.controls.expenseState.errors?.required">
+              Please select atleast 1 state
+            </mat-error>
+          </mat-form-field>
+  
+          <mat-form-field floatLabel="always" appearance="outline" class="dialog--group-field-right" required *ngIf="showCCCGroups()">
+            <mat-select placeholder="Choose State of Credit Card Expenses to be fetched" formControlName="cccExpenseState">
+              <mat-option *ngFor="let option of cccOptions" [value]="option.value">
+                {{option.label}}
+              </mat-option>
+            </mat-select>
+            <mat-error class="dialog--error" *ngIf="importExpensesForm.controls.cccExpenseState.errors?.required">
+              Please select atleast 1 state
+            </mat-error>
+          </mat-form-field>
+        </div>
       </div>
   </form>
 </mat-dialog-content>
