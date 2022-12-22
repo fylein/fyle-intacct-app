@@ -373,7 +373,7 @@ export class ConfigurationComponent implements OnInit {
     }
 
     return {
-      is_simplify_report_closure_enabled: isSimplifyReportClosureEnabled, 
+      is_simplify_report_closure_enabled: isSimplifyReportClosureEnabled,
       employee_field_mapping: employeeMappingsObject,
       reimbursable_expenses_object: reimbursableExpensesObject,
       corporate_credit_card_expenses_object: cccExpensesObject,
