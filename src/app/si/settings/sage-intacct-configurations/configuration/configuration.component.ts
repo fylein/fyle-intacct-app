@@ -363,7 +363,7 @@ export class ConfigurationComponent implements OnInit {
     const importTaxCodes = that.configurationForm.value.importTaxCodes ? that.configurationForm.value.importTaxCodes : null;
     const changeAccountingPeriod = that.configurationForm.value.changeAccountingPeriod ? that.configurationForm.value.changeAccountingPeriod : false;
     const importVendorAsMerchants = that.configurationForm.value.importVendorsAsMerchants ? that.configurationForm.value.importVendorsAsMerchants : false;
-
+    const isSimplifyReportClosureEnabled = that.configurationForm.value.is_simplify_report_closure_enabled ? that.configurationForm.value.is_simplify_report_closure_enabled : false;
     let fyleToSageIntacct = false;
     let sageIntacctToFyle = false;
 
@@ -373,6 +373,7 @@ export class ConfigurationComponent implements OnInit {
     }
 
     return {
+      is_simplify_report_closure_enabled: isSimplifyReportClosureEnabled, 
       employee_field_mapping: employeeMappingsObject,
       reimbursable_expenses_object: reimbursableExpensesObject,
       corporate_credit_card_expenses_object: cccExpensesObject,

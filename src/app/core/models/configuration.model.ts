@@ -10,7 +10,7 @@ export type Configuration = {
   sync_sage_intacct_to_fyle_payments: boolean;
   auto_map_employees: string;
   auto_create_destination_entity: boolean;
-  is_simplify_report_closure_enabled?: boolean;
+  is_simplify_report_closure_enabled: boolean;
   memo_structure?: string[];
   import_tax_codes: boolean;
   change_accounting_period: boolean;
