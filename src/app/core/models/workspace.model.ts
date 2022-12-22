@@ -7,6 +7,7 @@ export type Workspace = {
   user: User[];
   fyle_org_id: string;
   last_synced_at?: Date;
+  ccc_last_synced_at?: Date;
   source_synced_at: Date;
   cluster_domain: string;
   destination_synced_at: Date;
