@@ -3,62 +3,26 @@ Frontend Repository for Fyle &lt;> Sage Intacct Integration
 
 ### Setup
 
-* Download and install Docker desktop for Mac from [here.](https://www.docker.com/products/docker-desktop)
+## Local development setup
 
-* If you're using a linux machine, please download docker according to the distrubution you're on.
+### Setup - 1 (Recommended)
+Follow instructions mentioned in [Integrations Central](https://github.com/fylein/fyle-integrations-central/)
 
-* Navigate into the root folder 
+### Setup - 2
+* Install dependencies
 
-* Copy docker-compose.yml.template as docker-compose.yml and add environment variables
-
-    ```
-    $ cp docker-compose.yml.template docker-compose.yml
-    ```
-  
-* Setup environment variables in docker_compose.yml
-
-    ```yaml
-    environment: 
-      production: "False"
-      FYLE_URL: 
-      FYLE_CLIENT_ID: 
-      CALLBACK_URI: 
-      API_URL: http://localhost:8000/api
-      APP_URL: http://localhost:4200
-   ```
-  
-* Build docker images
-
-    ```
-    docker-compose build 
+    ```bash
+    npm install
     ```
 
-* Run docker containers
+* Copy `environment.json` from integrations-central/ and add it to `src/environments`
 
-    ```
-    docker-compose up -d app
-    ```
-
-* To tail the logs a service you can do
-    
-    ```
-    docker-compose logs -f app
+    ```bash
+    cp ../fyle-integrations-central/app-secrets/intacct-app/environment.json src/environments/environment.json
     ```
 
-* To stop the containers
+* Run app
 
-    ```
-    docker-compose stop app
-    ```
-
-* To restart any containers -
-
-    ```
-    docker-compose restart app
-    ```
-
-* To run bash inside any container for purpose of debugging or for creating new components,services etc
-
-    ```
-    docker-compose exec app /bin/bash
+    ```bash
+    npm start
     ```
