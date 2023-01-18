@@ -162,10 +162,6 @@ export class GeneralMappingsComponent implements OnInit {
         that.form.controls.defaultCCCExpensePaymentType.setValidators(Validators.required);
       }
 
-      if (that.projectMappingSetting.length) {
-        that.form.controls.defaultItem.setValidators(Validators.required);
-      }
-
       if (that.configuration.import_tax_codes) {
         that.form.controls.sageIntacctTaxCodes.setValidators(Validators.required);
       }
