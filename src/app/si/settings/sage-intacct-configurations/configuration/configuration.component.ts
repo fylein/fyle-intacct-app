@@ -360,7 +360,7 @@ export class ConfigurationComponent implements OnInit {
     const importCategories = that.configurationForm.value.importCategories;
     const autoMapEmployees = that.configurationForm.value.autoMapEmployees ? that.configurationForm.value.autoMapEmployees : null;
     const autoCreateDestinationEntity = that.configurationForm.value.autoCreateDestinationEntity;
-    const importTaxCodes = that.configurationForm.value.importTaxCodes ? that.configurationForm.value.importTaxCodes : null;
+    const importTaxCodes = that.configurationForm.value.importTaxCodes ? that.configurationForm.value.importTaxCodes : false;
     const changeAccountingPeriod = that.configurationForm.value.changeAccountingPeriod ? that.configurationForm.value.changeAccountingPeriod : false;
     const importVendorAsMerchants = that.configurationForm.value.importVendorsAsMerchants ? that.configurationForm.value.importVendorsAsMerchants : false;
     const isSimplifyReportClosureEnabled = that.configurationForm.value.is_simplify_report_closure_enabled ? that.configurationForm.value.is_simplify_report_closure_enabled : false;
