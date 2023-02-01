@@ -116,11 +116,12 @@ export class GenericMappingsDialogComponent implements OnInit {
 
   reset() {
     const that = this;
+    const active: boolean = that.setting.source_field === 'PROJECT' && that.setting.destination_field === 'PROJECT' ? true : null;
 
     that.isLoading = true;
     forkJoin([
-      that.mappingsService.getFyleExpenseAttributes(that.setting.source_field),
-      that.mappingsService.getSageIntacctDestinationAttributes(that.setting.destination_field)
+      that.mappingsService.getFyleExpenseAttributes(that.setting.source_field, active),
+      that.mappingsService.getSageIntacctDestinationAttributes(that.setting.destination_field, '', active)
     ]).subscribe(response => {
       that.isLoading = false;
 

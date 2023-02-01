@@ -163,8 +163,8 @@ export class CategoryMappingsDialogComponent implements OnInit {
     that.isLoading = true;
 
     forkJoin([
-      that.mappingsService.getFyleExpenseAttributes('CATEGORY'),
-      that.mappingsService.getGroupedSageIntacctDestinationAttributes(attributes)
+      that.mappingsService.getFyleExpenseAttributes('CATEGORY', true),
+      that.mappingsService.getGroupedSageIntacctDestinationAttributes(attributes, '', true)
 
     ]).subscribe(response => {
       that.isLoading = false;
