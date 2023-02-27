@@ -8,7 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "setup:env": "node scripts/setup_env.js"
+    "setup:env": "node scripts/setup_env.js",
+    "stop": "kill $(lsof -t -i:4200) || true"
   },
   "private": true,
   "dependencies": {
