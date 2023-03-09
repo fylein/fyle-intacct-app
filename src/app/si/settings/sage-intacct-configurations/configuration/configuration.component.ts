@@ -360,10 +360,10 @@ export class ConfigurationComponent implements OnInit {
     const importCategories = that.configurationForm.value.importCategories;
     const autoMapEmployees = that.configurationForm.value.autoMapEmployees ? that.configurationForm.value.autoMapEmployees : null;
     const autoCreateDestinationEntity = that.configurationForm.value.autoCreateDestinationEntity;
-    const importTaxCodes = that.configurationForm.value.importTaxCodes ? that.configurationForm.value.importTaxCodes : null;
+    const importTaxCodes = that.configurationForm.value.importTaxCodes ? that.configurationForm.value.importTaxCodes : false;
     const changeAccountingPeriod = that.configurationForm.value.changeAccountingPeriod ? that.configurationForm.value.changeAccountingPeriod : false;
     const importVendorAsMerchants = that.configurationForm.value.importVendorsAsMerchants ? that.configurationForm.value.importVendorsAsMerchants : false;
-
+    const isSimplifyReportClosureEnabled = that.configurationForm.value.is_simplify_report_closure_enabled ? that.configurationForm.value.is_simplify_report_closure_enabled : false;
     let fyleToSageIntacct = false;
     let sageIntacctToFyle = false;
 
@@ -373,6 +373,7 @@ export class ConfigurationComponent implements OnInit {
     }
 
     return {
+      is_simplify_report_closure_enabled: isSimplifyReportClosureEnabled,
       employee_field_mapping: employeeMappingsObject,
       reimbursable_expenses_object: reimbursableExpensesObject,
       corporate_credit_card_expenses_object: cccExpensesObject,
@@ -402,7 +403,7 @@ export class ConfigurationComponent implements OnInit {
     }];
 
     const importProjects = that.configurationForm.value.importProjects ? that.configurationForm.value.importProjects : false;
-    const importTaxCodes = that.configurationForm.value.importTaxDetails ? that.configurationForm.value.importTaxDetails : false;
+    const importTaxCodes = that.configurationForm.value.importTaxCodes ? that.configurationForm.value.importTaxCodes : false;
 
     if (importTaxCodes) {
       mappingsSettingsPayload.push({

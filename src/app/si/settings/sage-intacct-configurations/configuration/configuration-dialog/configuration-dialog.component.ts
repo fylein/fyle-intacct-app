@@ -48,7 +48,11 @@ export class ConfigurationDialogComponent implements OnInit {
   }
 
   getTitle(name: string) {
-    return name.replace(/_/g, ' ');
+    if (name) {
+      return name.replace(/_/g, ' ');
+    }
+
+    return name;
   }
 
   ngOnInit() {

@@ -40,12 +40,6 @@
           },
           "configurations": {
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -67,14 +61,6 @@
                   "maximumError": "10kb"
                 }
               ]
-            },
-            "dev": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.dev.ts"
-                }
-              ]
             }
           }
         },
@@ -86,9 +72,6 @@
           "configurations": {
             "production": {
               "browserTarget": "fyle-intacct-app:build:production"
-            },
-            "dev": {
-              "browserTarget": "fyle-intacct-app:build:dev"
             }
           }
         },

@@ -44,6 +44,7 @@ export class SyncComponent implements OnInit {
   checkSyncStatus() {
     const that = this;
     const lastSyncedAt = that.workspace.last_synced_at;
+    const cccLastSyncedAt = that.workspace.ccc_last_synced_at;
 
     interval(3000).pipe(
       switchMap(() => from(that.taskService.getAllTasks('ALL'))),
@@ -51,7 +52,7 @@ export class SyncComponent implements OnInit {
     ).subscribe((res) => {
       if (res.results.filter(task => task.status === 'COMPLETE'  && task.type === 'FETCHING_EXPENSES').length === 1) {
         that.updateLastSyncStatus().subscribe((result) => {
-          if (result[0].last_synced_at !== lastSyncedAt) {
+          if (result[0].last_synced_at !== lastSyncedAt || result[0].ccc_last_synced_at !== cccLastSyncedAt ) {
             that.snackBar.open('Import Complete');
           } else {
             const expenseState = that.expenseGroupSettings.expense_state.toLowerCase().replace('_', ' ');

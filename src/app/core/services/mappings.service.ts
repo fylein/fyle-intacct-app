@@ -79,12 +79,17 @@ export class MappingsService {
     this.apiService.post(`/workspaces/${workspaceId}/fyle/refresh_dimensions/`, {}).subscribe();
   }
 
-  getFyleExpenseAttributes(attributeType: string): Observable<MappingSource[]> {
+  getFyleExpenseAttributes(attributeType: string, active?: boolean): Observable<MappingSource[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_attributes/`, {
+    const params: {attribute_type: string, active?: boolean} = {
       attribute_type: attributeType
-    });
+    };
+
+    if (active) {
+      params.active = active;
+    }
+
+    return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_attributes/`, params);
   }
 
   getSageIntacctFields(): Observable<ExpenseField[]> {
@@ -100,12 +105,20 @@ export class MappingsService {
     );
   }
 
-  getSageIntacctDestinationAttributes(attributeTypes: string | string[]): Observable<MappingDestination[]> {
+  getSageIntacctDestinationAttributes(attributeTypes: string | string[], accountType?: string, active?: boolean): Observable<MappingDestination[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
-
-    return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/destination_attributes/`, {
+    const params: {attribute_types: string | string[], account_type?: string, active?: boolean} = {
       attribute_types: attributeTypes
-    });
+    };
+
+    if (accountType) {
+      params.account_type = accountType;
+    }
+    if (active) {
+      params.active = active;
+    }
+
+    return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/destination_attributes/`, params);
   }
 
   getSageIntacctAttributeCount(attributeType: string): Observable<AttributeCount> {
@@ -116,10 +129,19 @@ export class MappingsService {
     });
   }
 
-  getMappings(sourceType: string, uri: string = null, limit: number = 500, offset: number = 0, tableDimension: number = 2): Observable<MappingsResponse> {
+  getMappings(sourceType: string, uri: string = null, limit: number = 500, offset: number = 0, tableDimension: number = 2, sourceActive?: boolean): Observable<MappingsResponse> {
     const workspaceId = this.workspaceService.getWorkspaceId();
-    const url = uri ? uri.split('/api')[1] : `/workspaces/${workspaceId}/mappings/?limit=${limit}&offset=${offset}&source_type=${sourceType}&table_dimension=${tableDimension}`;
-    return this.apiService.get(url, {});
+    const params: {source_type: string, limit: number, offset: number, table_dimension: number, source_active?: boolean} = {
+      source_type: sourceType,
+      limit,
+      offset,
+      table_dimension: tableDimension
+    };
+    if (sourceActive) {
+      params.source_active = sourceActive;
+    }
+    const url = uri ? uri.split('/api')[1] : `/workspaces/${workspaceId}/mappings/`;
+    return this.apiService.get(url, params);
   }
 
   getAllMappings(sourceType: string): Observable<Mapping[]> {
@@ -145,8 +167,8 @@ export class MappingsService {
   }
 
 
-  getGroupedSageIntacctDestinationAttributes(attributeTypes: string[]): Observable<GroupedDestinationAttributes> {
-    return from(this.getSageIntacctDestinationAttributes(attributeTypes).toPromise().then((response: MappingDestination[]) => {
+  getGroupedSageIntacctDestinationAttributes(attributeTypes: string[], accountType?: string, active?: boolean): Observable<GroupedDestinationAttributes> {
+    return from(this.getSageIntacctDestinationAttributes(attributeTypes, accountType, active).toPromise().then((response: MappingDestination[]) => {
       return response.reduce((groupedAttributes: GroupedDestinationAttributes, attribute: MappingDestination) => {
         const group: MappingDestination[] = groupedAttributes[attribute.attribute_type] || [];
         group.push(attribute);
@@ -177,7 +199,8 @@ export class MappingsService {
     return this.apiService.get(
       `/workspaces/${workspaceId}/mappings/category/`, {
         limit: pageLimit,
-        offset: pageOffset
+        offset: pageOffset,
+        source_active : true
       }
     );
   }
