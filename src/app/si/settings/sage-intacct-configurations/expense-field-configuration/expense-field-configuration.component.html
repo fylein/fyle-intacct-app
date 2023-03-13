@@ -182,11 +182,11 @@
                   [(value)]="fyleExpenseField.attribute_type">
                   {{ fyleExpenseField.display_name | titlecase }}
                 </mat-option>
-                <mat-option (click)="showDependentCustomField(dependentExpenseField)" [value]="dependentExpenseField.source_field">
+                <mat-option (click)="showCustomField(dependentExpenseField, true)" [value]="dependentExpenseField.source_field">
                   <div class="expense-fields--custom-option">
                     <img class="expense-fields--add-custom-icon" src="assets/images/pngs/add.png"
-                      (click)="showDependentCustomField(dependentExpenseField)">
-                    <div class="expense-fields--custom-option-text">Create Fyle Expense field</div>
+                      (click)="showCustomField(dependentExpenseField, true)">
+                    <div class="expense-fields--custom-option-text">Create Fyle Dependent Expense field</div>
                   </div>
                 </mat-option>
               </mat-select>
@@ -205,7 +205,7 @@
   
             <div fxFlex="5" *ngIf="i !== 0 && dependentExpenseField.controls.destination_field.status !== 'DISABLED'">
               <img class="expense-fields--delete-icon" src="assets/images/pngs/delete.png"
-              (click)="removeDependentExpenseField(i, dependentExpenseField.controls.source_field.value)">
+              (click)="removeExpenseField(i, dependentExpenseField.controls.source_field.value, true)">
             </div>
             <div fxFlex="5" *ngIf="!(i !== 0 && dependentExpenseField.controls.destination_field.status !== 'DISABLED')">
             </div>
@@ -216,7 +216,7 @@
           </div>
   
           <div class="expense-fields--errors" md-colors="{color:'warning'}"
-            *ngIf="dependentExpenseField.status === 'INVALID' && dependentExpenseField.value.source_field && dependentExpenseField.value.destination_field">
+            *ngIf="dependentExpenseField.status === 'INVALID' && dependentExpenseField.value.source_field && dependentExpenseField.value.destination_field && dependentExpenseField.value.parent">
             Fyle, Sage Intacct and Dependent Fyle fields should be unique
           </div>
         </div>
@@ -228,8 +228,8 @@
             <mat-list role="list">
               Add a custom field
               <mat-form-field class="custom-field-name" appearance="outline">
-                <input autocomplete="off" type="text" formControlName="dependentCustomFieldName" placeholder="Enter Custom Field"
-                  (input)="updateDependentCustomFieldName($event.target.value)" matInput>
+                <input autocomplete="off" type="text" formControlName="customFieldName" placeholder="Enter Custom Field"
+                  (input)="updateCustomFieldName($event.target.value, true)" matInput>
               </mat-form-field>
   
               <p *ngIf="isSystemField" class="existing-field-warning">
@@ -240,12 +240,12 @@
               <div class="custom-field-grp" fxLayoutAlign="start stretch">
                 <div fxFlex="10"></div>
                 <a fxLayout="row" fxLayoutAlign="start center" class="custom-field-btn" mat-raised-button
-                  color="basic" (click)="hideDependentCustomField($event.target.innerText)">
+                  color="basic" (click)="hideCustomField($event.target.innerText, true)">
                   <span>Cancel</span>
                 </a>
                 <div fxFlex="10"></div>
                 <button fxLayout="row" fxLayoutAlign="start center" data-dismiss="modal" class="custom-field-btn" mat-flat-button
-                  color="primary" (click)="hideDependentCustomField($event.target.innerText)" [disabled]="isSystemField">
+                  color="primary" (click)="hideCustomField($event.target.innerText, true)" [disabled]="isSystemField">
                   <span>Done</span>
                 </button>
               </div>
@@ -256,13 +256,13 @@
   
       <div fxLayoutAlign="start stretch" *ngIf="showDependentAddButton">
         <img class="expense-fields--add-icon" src="assets/images/pngs/add.png">
-        <a class="add-row-text" (click)="addDependentExpenseField()">
+        <a class="add-row-text" (click)="addExpenseField(true)">
           Add another field
         </a>
       </div>
   
       <button class="expense-fields--save-btn" mat-flat-button color="primary" [disabled]="!dependentExpenseFieldsForm.valid"
-        (click)="saveExpenseFields()" type="submit">
+        (click)="saveExpenseFields(true)" type="submit">
         Save
       </button>
     </form>

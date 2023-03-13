@@ -62,7 +62,6 @@ import { CdkDrag, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop
 import { LocationEntityComponent } from './settings/sage-intacct-configurations/location-entity/location-entity.component';
 import { AddEmailDialogComponent } from './settings/schedule/add-email-dialog/add-email-dialog.component';
 import { ConfigurationDialogComponent } from './settings/sage-intacct-configurations/configuration/configuration-dialog/configuration-dialog.component';
-import { DependentExpenseFieldConfigurationComponent } from './settings/sage-intacct-configurations/expense-field-configuration/dependent-expense-field-configuration/dependent-expense-field-configuration.component';
 
 @NgModule({
   declarations: [
@@ -96,7 +95,6 @@ import { DependentExpenseFieldConfigurationComponent } from './settings/sage-int
     LocationEntityComponent,
     AddEmailDialogComponent,
     ConfigurationDialogComponent,
-    DependentExpenseFieldConfigurationComponent
   ],
   entryComponents: [
     EmployeeMappingsDialogComponent,
