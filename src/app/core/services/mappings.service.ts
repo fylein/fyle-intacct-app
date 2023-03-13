@@ -97,11 +97,11 @@ export class MappingsService {
 
     return this.apiService.get(`/workspaces/${workspaceId}/sage_intacct/sage_intacct_fields/`, {});
   }
-  
+
   getParentFields(): Observable<ExpenseField[]> {
     const workspaceId = this.workspaceService.getWorkspaceId();
-    
-    return this.apiService.get(`/workspaces/${workspaceId}/mappings/expense_fields/`, {})
+
+    return this.apiService.get(`/workspaces/${workspaceId}/mappings/expense_fields/`, {});
   }
 
   getFyleFields(): Observable<ExpenseField[]> {
