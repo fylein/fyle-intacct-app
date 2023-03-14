@@ -178,9 +178,9 @@
             
             <mat-form-field floatLabel="always" appearance="outline" fxFlex="38" required>
               <mat-select [placeholder]="dependentCustomFieldName || 'Choose Fyle Dependent Expense field'" formControlName="source_field">
-                <mat-option *ngFor="let fyleExpenseField of fyleExpenseFields"
+                <mat-option *ngFor="let fyleExpenseField of fyleDependentExpenseFields"
                   [(value)]="fyleExpenseField.attribute_type">
-                  {{ fyleExpenseField.display_name | titlecase }}
+                  {{ fyleExpenseField.attribute_type.replaceAll('_', ' ') | titlecase }}
                 </mat-option>
                 <mat-option (click)="showCustomField(dependentExpenseField, true)" [value]="dependentExpenseField.source_field">
                   <div class="expense-fields--custom-option">
@@ -214,14 +214,13 @@
               formControlName="import_to_fyle">
             </mat-slide-toggle>
           </div>
-  
           <div class="expense-fields--errors" md-colors="{color:'warning'}"
-            *ngIf="dependentExpenseField.status === 'INVALID' && dependentExpenseField.value.source_field && dependentExpenseField.value.destination_field && dependentExpenseField.value.parent">
-            Fyle, Sage Intacct and Dependent Fyle fields should be unique
+            *ngIf="dependentExpenseField.status === 'INVALID' && dependentExpenseField.value.source_field && dependentExpenseField.value.destination_field && dependentExpenseField.value.parent_field">
+            Dependent Field, Sage Intacct and Parent field should be unique
           </div>
         </div>
       </div>
-  
+
       <div fxLayout="row" fxLayoutAlign="center center">
         <div fxFlex="35" fxLayout="row" fxLayoutAlign="center" *ngIf="showDependentCustomFieldName" [formGroup]="dependentCustomFieldForm">
           <mat-card class="custom-field-box">
