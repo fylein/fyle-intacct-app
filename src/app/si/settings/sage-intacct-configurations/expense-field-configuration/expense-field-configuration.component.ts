@@ -280,7 +280,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     that.mappingSettings = mappingSetting.filter(
       setting => setting.source_field !== 'EMPLOYEE' && setting.source_field !== 'CATEGORY' && setting.expense_field === null
     );
-    
+
     let expenseFieldFormArray;
     if (that.mappingSettings.length) {
       expenseFieldFormArray = that.mappingSettings.map(
