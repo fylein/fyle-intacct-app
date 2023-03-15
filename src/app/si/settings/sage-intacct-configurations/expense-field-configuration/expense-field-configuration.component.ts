@@ -39,6 +39,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
   isSystemField: boolean;
   showAddButton: boolean;
   showDependentAddButton: boolean;
+  isTaskImported: boolean;
 
   constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private settingsService: SettingsService, private mappingsService: MappingsService, private snackBar: MatSnackBar, private si: SiComponent, private windowReferenceService: WindowReferenceService) {
     this.windowReference = this.windowReferenceService.nativeWindow;
@@ -265,12 +266,21 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     that.saveExpenseFields();
   }
 
+  checkIfTaskSelected(mappingSetting: MappingSetting[]) {
+    const that = this;
+    const taskSettings = mappingSetting.filter(setting => setting.expense_field !== null && setting.destination_field === 'TASK').length;
+
+    that.isTaskImported = taskSettings ? true : false;
+  }
+
   createFormFields(mappingSetting: MappingSetting[]) {
     const that = this;
+    this.checkIfTaskSelected(mappingSetting);
+
     that.mappingSettings = mappingSetting.filter(
       setting => setting.source_field !== 'EMPLOYEE' && setting.source_field !== 'CATEGORY' && setting.expense_field === null
     );
-
+    
     let expenseFieldFormArray;
     if (that.mappingSettings.length) {
       expenseFieldFormArray = that.mappingSettings.map(

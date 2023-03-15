@@ -28,6 +28,8 @@
     <div class="expense-fields--form">
       <div class="expense-fields--heading">Select Type Field Mapping</div>
     </div>
+    <hr class="expense-fields--divider-line" />
+
     <form class="expense-fields--form" [formGroup]="expenseFieldsForm" fxLayout="column" fxLayoutAlign="start stretch">
       <div formArrayName="expenseFields">
         <div fxLayout="row" fxLayoutAlign="start center">
@@ -143,7 +145,7 @@
     <div class="expense-fields--form">
       <div class="expense-fields--heading">Dependent Type Field Mapping</div>
     </div>
-
+    <hr class="expense-fields--divider-line" />
     <form class="expense-fields--form" [formGroup]="dependentExpenseFieldsForm" fxLayout="column" fxLayoutAlign="start stretch">
       <div formArrayName="dependentExpenseFields">
         <div fxLayout="row" fxLayoutAlign="start center">
@@ -167,8 +169,11 @@
           <div fxLayout="row" fxLayoutAlign="start center">
             <mat-form-field floatLabel="always" fxFlex="38" appearance="outline">
               <mat-select placeholder="Choose Sage Intacct field" formControlName="destination_field">
-                <mat-option *ngFor="let sageIntacctField of sageIntacctFormFieldList" [(value)]="sageIntacctField.attribute_type">
-                  {{ sageIntacctField.display_name | titlecase }}
+                <mat-option [value]="'TASK'">
+                  Task
+                </mat-option>
+                <mat-option *ngIf="isTaskImported" [value]="'COST_TYPE'">
+                  Cost Type
                 </mat-option>
               </mat-select>
             </mat-form-field>
