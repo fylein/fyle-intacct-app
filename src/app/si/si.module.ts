@@ -94,7 +94,7 @@ import { ConfigurationDialogComponent } from './settings/sage-intacct-configurat
     MemoStructureComponent,
     LocationEntityComponent,
     AddEmailDialogComponent,
-    ConfigurationDialogComponent
+    ConfigurationDialogComponent,
   ],
   entryComponents: [
     EmployeeMappingsDialogComponent,
