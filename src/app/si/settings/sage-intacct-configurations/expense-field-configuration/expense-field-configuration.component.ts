@@ -45,39 +45,32 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     this.windowReference = this.windowReferenceService.nativeWindow;
   }
 
-  createExpenseField(isDependent: boolean = false, sourceField: string = '', destinationField: string = '', isCustom = false, importToFyle: boolean = false, parentField: string = '') {
+  createExpenseField(isDependent: boolean = false, sourceField: string = '', destinationField: string = '', isCustom: boolean = false, importToFyle: boolean = false, parentField: string = '') {
     const that = this;
+    const fieldName = 'parent_field';
+    const formControllers = {
+      source_field: [sourceField ? sourceField : '', [Validators.required, RxwebValidators.unique()]],
+      destination_field: [destinationField ? destinationField : '', [Validators.required, RxwebValidators.unique()]],
+      import_to_fyle: [importToFyle],
+      is_custom: [isCustom]
+    };
 
     if (isDependent) {
-      const group = that.formBuilder.group({
-        source_field: [sourceField ? sourceField : '', [Validators.required, RxwebValidators.unique()]],
-        destination_field: [destinationField ? destinationField : '', [Validators.required, RxwebValidators.unique()]],
-        parent_field: [parentField ? parentField : '', [Validators.required, RxwebValidators.unique()]],
-        import_to_fyle: [importToFyle],
-        is_custom: [true]
-      });
-
-      if (sourceField && destinationField && parentField) {
-        group.controls.source_field.disable();
-        group.controls.destination_field.disable();
-        group.controls.parent_field.disable();
-      }
-      return group;
-
-    } else {
-      const group = that.formBuilder.group({
-        source_field: [sourceField ? sourceField : '', [Validators.required, RxwebValidators.unique()]],
-        destination_field: [destinationField ? destinationField : '', [Validators.required, RxwebValidators.unique()]],
-        import_to_fyle: [importToFyle],
-        is_custom: [isCustom],
-      });
-
-      if (sourceField && destinationField) {
-        group.controls.source_field.disable();
-        group.controls.destination_field.disable();
-      }
-      return group;
+      formControllers[fieldName] = [parentField ? parentField : '', [Validators.required, RxwebValidators.unique()]];
     }
+
+    const group = that.formBuilder.group(formControllers);
+
+    if (sourceField && destinationField) {
+      group.controls.source_field.disable();
+      group.controls.destination_field.disable();
+    }
+
+    if (parentField) {
+      group.controls.parent_field.disable();
+    }
+
+    return group;
   }
 
   showOrHideAddButton(isDependent: boolean = false) {
@@ -342,10 +335,10 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
 
   getExpenseField() {
     const that = this;
-    return that.mappingsService.getParentFields().toPromise().then((parentFields: any) => {
-      that.parentFields = parentFields.results;
+    return that.mappingsService.getParentExpenseFields().toPromise().then((parentExpenseFields: any) => {
+      that.parentFields = parentExpenseFields.results;
       that.fyleDependentExpenseFields = that.parentFields.filter(field => field.attribute_type !== 'PROJECT');
-      return parentFields;
+      return parentExpenseFields;
     });
   }
 
