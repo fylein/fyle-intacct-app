@@ -77,12 +77,12 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     const that = this;
 
     if (isDependent) {
-      if (that.expenseFieldsForm.controls.expenseFields.value.length === that.sageIntacctFields.length || that.showCustomFieldName) {
+      if (that.dependentExpenseFieldsForm.controls.dependentExpenseFields.value.length === 2 || that.showDependentCustomFieldName) {
         return false;
       }
       return true;
     } else {
-      if (that.dependentExpenseFieldsForm.controls.dependentExpenseFields.value.length === that.sageIntacctFields.length || that.showDependentCustomFieldName) {
+      if (that.expenseFieldsForm.controls.expenseFields.value.length === that.sageIntacctFields.length || that.showCustomFieldName) {
         return false;
       }
       return true;
