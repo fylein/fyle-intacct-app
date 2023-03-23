@@ -315,19 +315,21 @@ export class ConfigurationComponent implements OnInit {
 
   postConfigurationsAndMappingSettings(configurationPayload: Configuration, mappingSettingsPayload: MappingSetting[], redirectToGeneralMappings: boolean = false, redirectToEmployeeMappings: boolean = false) {
     const that = this;
-
     that.isLoading = true;
-    const postSettings = [];
 
-    postSettings.push(that.settingsService.postConfiguration(that.workspaceId, configurationPayload));
-    if (mappingSettingsPayload.length) {
-      postSettings.push(that.settingsService.postMappingSettings(that.workspaceId, mappingSettingsPayload));
-    }
+    that.settingsService.postConfiguration(that.workspaceId, configurationPayload).subscribe(() => {
+      if (mappingSettingsPayload.length) {
+        that.settingsService.postMappingSettings(that.workspaceId, mappingSettingsPayload).subscribe(() => {
+          that.isLoading = false;
+          that.snackBar.open('Configuration saved successfully');
+          that.si.getGeneralSettings();
+        });
+      } else {
+        that.isLoading = false;
+        that.snackBar.open('Configuration saved successfully');
+        that.si.getGeneralSettings();
+      }
 
-    forkJoin(postSettings).subscribe(() => {
-      that.isLoading = false;
-      that.snackBar.open('Configuration saved successfully');
-      that.si.getGeneralSettings();
       if (redirectToGeneralMappings) {
         if (redirectToEmployeeMappings) {
           // add redirect_to_employee_mappings query param
