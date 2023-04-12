@@ -32,6 +32,7 @@ export class ConfigurationComponent implements OnInit {
   entityCountry: string;
   isTaxesEnabled = false;
   showImportCategories: boolean;
+  jeMapping: boolean = false;
 
   constructor(private formBuilder: FormBuilder,
               private settingsService: SettingsService,
@@ -56,6 +57,11 @@ export class ConfigurationComponent implements OnInit {
         {
           value: 'VENDOR'
         },
+      ],
+      JOURNAL_ENTRY: [
+        {
+          value: 'EMPLOYEE'
+        }
       ]
     }[reimburExpenseMappedTo];
   }
@@ -71,7 +77,12 @@ export class ConfigurationComponent implements OnInit {
         {
           value: 'ACCOUNT'
         }
-      ]
+      ],
+      JOURNAL_ENTRY: [
+        {
+        value: 'ACCOUNT'
+      }
+    ]
     }[reimburExpenseMappedTo];
   }
 
@@ -133,6 +144,7 @@ export class ConfigurationComponent implements OnInit {
     const that = this;
 
     that.configurationForm.controls.reimburExpense.valueChanges.subscribe((reimbursableExpenseMappedTo) => {
+      // console.log('reimbursableExpenseMappedTo', reimbursableExpenseMappedTo);
       that.configurationForm.controls.cccExpense.reset();
       that.cccExpenseOptions = that.getCCCExpenseOptions(reimbursableExpenseMappedTo);
 
@@ -141,11 +153,39 @@ export class ConfigurationComponent implements OnInit {
           that.showImportCategories = true;
         }
 
+        if (reimbursableExpenseMappedTo === 'JOURNAL_ENTRY') {
+          that.jeMapping = true;
+        
+          // Add validators for the 'employees' form control
+          that.configurationForm.controls.employees.setValidators([Validators.required]);
+        
+          // Update the form control's value and validation state
+          that.configurationForm.controls.employees.updateValueAndValidity();
+        
+        } else {
+          that.jeMapping = false;
+          that.configurationForm.controls.employees.reset();
+        
+          // Clear validators for the 'employees' form control
+          that.configurationForm.controls.employees.clearValidators();
+        
+          // Update the form control's value and validation state
+          that.configurationForm.controls.employees.updateValueAndValidity();
+        }
+
         if (that.configuration && that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT' && reimbursableExpenseMappedTo !== 'EXPENSE_REPORT') {
           // turn off the import categories toggle when the user switches from EXPENSE REPORT to something else
           that.configurationForm.controls.importCategories.setValue(false);
         }
       }
+    });
+  }
+
+  setupEmployeesFieldWatcher() {
+    const that = this;
+
+    that.configurationForm.controls.employees.valueChanges.subscribe((employeesMappedTo) => {
+      // console.log(employeesMappedTo);
     });
   }
 
@@ -163,6 +203,9 @@ export class ConfigurationComponent implements OnInit {
 
     // Reimbursable Expense Mapping
     that.setupReimbursableFieldWatcher();
+
+    // Employees Mapping
+    that.setupEmployeesFieldWatcher();
 
     // Auto Create Merchant
     that.configurationForm.controls.cccExpense.valueChanges.subscribe((cccExpenseMappedTo) => {
@@ -201,6 +244,10 @@ export class ConfigurationComponent implements OnInit {
         value: 'EXPENSE_REPORT'
       },
       {
+        label: 'Journal Entry',
+        value: 'JOURNAL_ENTRY'
+      },
+      {
         label: 'Bill',
         value: 'BILL'
       }];
@@ -214,8 +261,17 @@ export class ConfigurationComponent implements OnInit {
         paymentsSyncOption = 'sync_sage_intacct_to_fyle_payments';
       }
 
-      that.configurationForm = that.formBuilder.group({
+      if(that.configuration) {
+          if(that.configuration.reimbursable_expenses_object === 'JOURNAL_ENTRY'){
+            that.jeMapping = true;
+        } else {
+          that.jeMapping = false;
+        }
+      }
+
+      that.configurationForm = that.formBuilder.group({     
         reimburExpense: [that.configuration ? that.configuration.reimbursable_expenses_object : '', Validators.required],
+        employees: [that.configuration ? that.configuration.employee_field_mapping : '', Validators.required],
         cccExpense: [that.configuration ? that.configuration.corporate_credit_card_expenses_object : ''],
         importProjects: [importProjects],
         importCategories: [that.configuration.import_categories],
@@ -238,6 +294,7 @@ export class ConfigurationComponent implements OnInit {
       that.mappingSettings = [];
       that.configurationForm = that.formBuilder.group({
         reimburExpense: ['', Validators.required],
+        employees: ['', Validators.required],
         cccExpense: [null],
         importProjects: [false],
         importCategories: [false],
@@ -258,6 +315,10 @@ export class ConfigurationComponent implements OnInit {
       that.expenseOptions = [{
         label: 'Expense Report',
         value: 'EXPENSE_REPORT'
+      },
+      {
+        label: 'Journal Entry',
+        value: 'JOURNAL_ENTRY'
       },
       {
         label: 'Bill',
@@ -355,6 +416,7 @@ export class ConfigurationComponent implements OnInit {
     const that = this;
 
     const reimbursableExpensesObject = that.configurationForm.getRawValue().reimburExpense;
+    console.log('reimbursableExpensesObject', reimbursableExpensesObject);
     const cccExpensesObject = that.configurationForm.getRawValue().cccExpense ? that.configurationForm.getRawValue().cccExpense : null;
     const categoryMappingObject = that.getCategory(reimbursableExpensesObject)[0].value;
     const employeeMappingsObject = that.getEmployee(reimbursableExpensesObject)[0].value;
