@@ -32,7 +32,7 @@ export class ConfigurationComponent implements OnInit {
   entityCountry: string;
   isTaxesEnabled = false;
   showImportCategories: boolean;
-  jeMapping: boolean = false;
+  journalEntry: boolean = false;
 
   constructor(private formBuilder: FormBuilder,
               private settingsService: SettingsService,
@@ -154,7 +154,7 @@ export class ConfigurationComponent implements OnInit {
         }
 
         if (reimbursableExpenseMappedTo === 'JOURNAL_ENTRY') {
-          that.jeMapping = true;
+          that.journalEntry = true;
         
           // Add validators for the 'employees' form control
           that.configurationForm.controls.employees.setValidators([Validators.required]);
@@ -163,7 +163,7 @@ export class ConfigurationComponent implements OnInit {
           that.configurationForm.controls.employees.updateValueAndValidity();
         
         } else {
-          that.jeMapping = false;
+          that.journalEntry = false;
           that.configurationForm.controls.employees.reset();
         
           // Clear validators for the 'employees' form control
@@ -263,9 +263,9 @@ export class ConfigurationComponent implements OnInit {
 
       if(that.configuration) {
           if(that.configuration.reimbursable_expenses_object === 'JOURNAL_ENTRY'){
-            that.jeMapping = true;
+            that.journalEntry = true;
         } else {
-          that.jeMapping = false;
+          that.journalEntry = false;
         }
       }
 
