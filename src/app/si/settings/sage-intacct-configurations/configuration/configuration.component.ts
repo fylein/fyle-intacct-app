@@ -410,7 +410,6 @@ export class ConfigurationComponent implements OnInit {
     const cccExpensesObject = that.configurationForm.getRawValue().cccExpense ? that.configurationForm.getRawValue().cccExpense : null;
     const categoryMappingObject = that.getCategory(reimbursableExpensesObject)[0].value;
     const employeeMappingsObject = that.getEmployee(reimbursableExpensesObject)[0].value;
-    
     const importProjects = that.configurationForm.value.importProjects;
     const importCategories = that.configurationForm.value.importCategories;
     const autoMapEmployees = that.configurationForm.value.autoMapEmployees ? that.configurationForm.value.autoMapEmployees : null;
