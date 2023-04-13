@@ -32,7 +32,6 @@ export class ConfigurationComponent implements OnInit {
   entityCountry: string;
   isTaxesEnabled = false;
   showImportCategories: boolean;
-  journalEntry = false;
 
   constructor(private formBuilder: FormBuilder,
               private settingsService: SettingsService,
