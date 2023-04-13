@@ -26,11 +26,11 @@
       </mat-form-field>
       <mandatory-error-message listName="export type" *ngIf="configurationForm.controls.reimburExpense.touched && !configurationForm.controls.reimburExpense.valid"></mandatory-error-message>
 
-      <div class="configurations--label" *ngIf="jeMapping">
+      <div class="configurations--label" *ngIf="journalEntry">
         Map Employees from Fyle to
         <mandatory-field></mandatory-field>
       </div>
-      <mat-form-field floatLabel="always" appearance="outline" required *ngIf="jeMapping">
+      <mat-form-field floatLabel="always" appearance="outline" required *ngIf="journalEntry">
         <mat-select placeholder="Choose Sage Intacct equivalent of Employees" formControlName="employees">
           <mat-option value="VENDOR">
             Vendor
