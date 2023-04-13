@@ -152,7 +152,6 @@ export class ConfigurationComponent implements OnInit {
         }
 
         if (reimbursableExpenseMappedTo === 'JOURNAL_ENTRY') {
-          that.journalEntry = true;
           that.configurationForm.controls.employeeFieldMapping.reset();
           // Add validators for the 'employeeFieldMapping' form control
           that.configurationForm.controls.employeeFieldMapping.setValidators([Validators.required]);
@@ -164,7 +163,6 @@ export class ConfigurationComponent implements OnInit {
           that.setupEmployeesFieldWatcher(reimbursableExpenseMappedTo);
 
         } else {
-          that.journalEntry = false;
           that.configurationForm.controls.employeeFieldMapping.reset();
 
           // Clear validators for the 'employeeFieldMapping' form control
