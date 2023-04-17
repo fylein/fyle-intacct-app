@@ -17,7 +17,7 @@ export type GeneralMapping = {
   default_credit_card_name: string;
   default_credit_card_id: string;
   default_gl_account_name: string;
-  default_gl_account: string;
+  default_gl_account_id: string;
   default_ccc_vendor_id: string;
   default_ccc_vendor_name: string;
   default_item_name: string;
