@@ -406,6 +406,7 @@ export class ConfigurationComponent implements OnInit {
 
     const importProjects = that.configurationForm.value.importProjects ? that.configurationForm.value.importProjects : false;
     const importTaxCodes = that.configurationForm.value.importTaxCodes ? that.configurationForm.value.importTaxCodes : false;
+    const chargeCard = that.configurationForm.value.cccExpense === 'CHARGE_CARD_TRANSACTION' ? true : false; 
 
     if (importTaxCodes) {
       mappingsSettingsPayload.push({
@@ -437,6 +438,13 @@ export class ConfigurationComponent implements OnInit {
           import_to_fyle: false
         });
       }
+    }
+
+    if(chargeCard) {
+      mappingsSettingsPayload.push({
+        source_field: 'CORPORATE_CARD',
+        destination_field: 'CHARGE_CARD_NUMBER'  
+      })
     }
     return mappingsSettingsPayload;
   }
