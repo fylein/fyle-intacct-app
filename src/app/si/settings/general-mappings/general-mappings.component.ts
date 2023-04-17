@@ -212,7 +212,7 @@ export class GeneralMappingsComponent implements OnInit {
       attributes.push('ACCOUNT');
       accountType = 'incomestatement'; // account type that needs to be excluded while fetching data
     }
-    
+
 
     if (this.configuration.corporate_credit_card_expenses_object && this.configuration.corporate_credit_card_expenses_object === 'BILL') {
         attributes.push('VENDOR');
