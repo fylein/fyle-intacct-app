@@ -181,6 +181,23 @@
       </mat-form-field>
       <mandatory-error-message listName="default reimbursable expense payment type" *ngIf="form.controls.defaultReimbursableExpensePaymentType.touched && !form.controls.defaultReimbursableExpensePaymentType.valid"></mandatory-error-message>
 
+      <div class="mat-body-strong" *ngIf="configuration.reimbursable_expenses_object && configuration.reimbursable_expenses_object === 'JOURNAL_ENTRY'">
+        <strong class="mappings-dialog--label">
+          Reimbursable Credit Account
+          <mandatory-field *ngIf="isFieldMandatory('glAccount')"></mandatory-field>
+          <mat-icon [inline]="true" class="info-icon" matTooltip="The Integration will credit the account selected here for Credit Card Expenses exported as Journal Entries." matTooltipPosition="after">info</mat-icon>
+        </strong>
+      </div>
+      <mat-form-field class="mappings-dialog--form-element" appearance="outline" required
+      *ngIf="configuration.reimbursable_expenses_object && configuration.reimbursable_expenses_object === 'JOURNAL_ENTRY'">
+        <mat-select placeholder="Reimbursable Credit Account" formControlName="glAccount">
+          <mat-option *ngFor="let option of sageIntacctDefaultGLAccounts" [value]="option.destination_id">
+            {{option.value}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mandatory-error-message listName="default credit account" *ngIf="form.controls.glAccount.touched && !form.controls.glAccount.valid"></mandatory-error-message>
+
       <div class="mat-body-strong"
       *ngIf="configuration.corporate_credit_card_expenses_object === 'EXPENSE_REPORT'">
         <strong class="mappings-dialog--label">
