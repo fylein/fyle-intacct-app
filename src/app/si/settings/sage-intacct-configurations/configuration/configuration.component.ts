@@ -406,7 +406,7 @@ export class ConfigurationComponent implements OnInit {
 
     const importProjects = that.configurationForm.value.importProjects ? that.configurationForm.value.importProjects : false;
     const importTaxCodes = that.configurationForm.value.importTaxCodes ? that.configurationForm.value.importTaxCodes : false;
-    const chargeCard = that.configurationForm.value.cccExpense === 'CHARGE_CARD_TRANSACTION' ? true : false;
+    const isCCTExportEnabled = that.configurationForm.value.cccExpense === 'CHARGE_CARD_TRANSACTION' ? true : false;
 
     if (importTaxCodes) {
       mappingsSettingsPayload.push({
@@ -440,7 +440,7 @@ export class ConfigurationComponent implements OnInit {
       }
     }
 
-    if (chargeCard) {
+    if (isCCTExportEnabled) {
       mappingsSettingsPayload.push({
         source_field: 'CORPORATE_CARD',
         destination_field: 'CHARGE_CARD_NUMBER'
