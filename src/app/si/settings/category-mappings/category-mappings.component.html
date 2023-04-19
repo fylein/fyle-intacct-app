@@ -50,15 +50,6 @@
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="sageIntacctExpenseType">
-        <th mat-header-cell *matHeaderCellDef>
-          {{ 'Expense Type' }}
-        </th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.destination_expense_head?.value }}
-        </td>
-      </ng-container>
-
       <ng-container matColumnDef="ccc">
         <th mat-header-cell *matHeaderCellDef>
           {{ configuration.corporate_credit_card_expenses_object === 'EXPENSE_REPORT' ? 'Expense Type' : 'Credit Card Expense Account' }}

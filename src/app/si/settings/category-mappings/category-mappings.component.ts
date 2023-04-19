@@ -151,12 +151,8 @@ export class CategoryMappingsComponent implements OnInit {
       that.configuration = settings;
       this.isLoading = false;
 
-      if (that.showSeparateCCCField()) {
+      if (that.showSeparateCCCField() || that.showExpenseTypeField()) {
         that.columnsToDisplay.push('ccc');
-      }
-
-      if (that.showExpenseTypeField()) {
-        that.columnsToDisplay.push('sageIntacctExpenseType');
       }
 
       const data = {
