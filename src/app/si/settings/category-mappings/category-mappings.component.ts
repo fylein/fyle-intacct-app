@@ -76,6 +76,13 @@ export class CategoryMappingsComponent implements OnInit {
    *
    * BILL - JE - No
    *
+   * JE - ER - YES
+   * 
+   * JE - BILL - NO
+   * 
+   * JE - JE - NO
+   * 
+   * JE - CCT - NO
    * @returns a boolean flag to show / hide ccc category mappings column.
    */
   showCCCOption() {
@@ -126,6 +133,16 @@ export class CategoryMappingsComponent implements OnInit {
     return false;
   }
 
+  showExpenseTypeField() {
+    const that = this;
+    const settings = that.configuration;
+    if (settings.corporate_credit_card_expenses_object && settings.corporate_credit_card_expenses_object === 'EXPENSE_REPORT' && settings.reimbursable_expenses_object === 'JOURNAL_ENTRY') {
+      return true;
+    }
+
+    return false;
+  }
+
   ngOnInit() {
     const that = this;
     that.isLoading = true;
@@ -136,6 +153,10 @@ export class CategoryMappingsComponent implements OnInit {
 
       if (that.showSeparateCCCField()) {
         that.columnsToDisplay.push('ccc');
+      }
+
+      if (that.showExpenseTypeField()) {
+        that.columnsToDisplay.push('sageIntacctExpenseType');
       }
 
       const data = {
