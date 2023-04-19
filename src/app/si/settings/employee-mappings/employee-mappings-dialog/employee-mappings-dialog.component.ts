@@ -73,6 +73,9 @@ export class EmployeeMappingsDialogComponent implements OnInit {
         destination_employee: {
           id: sageIntacctEmployee ? sageIntacctEmployee.id : null
         },
+        destination_card_account: {
+          id: null
+        },
         workspace: that.workSpaceId
       };
 
