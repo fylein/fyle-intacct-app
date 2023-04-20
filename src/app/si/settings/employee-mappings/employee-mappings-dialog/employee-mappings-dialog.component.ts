@@ -156,7 +156,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
 
     if (that.configuration.reimbursable_expenses_object === 'BILL' || that.configuration.employee_field_mapping === 'VENDOR') {
       attributes.push('VENDOR');
-    } else if (that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT') {
+    } else if (that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT' || that.configuration.employee_field_mapping === 'EMPLOYEE') {
       attributes.push('EMPLOYEE');
     }
 
