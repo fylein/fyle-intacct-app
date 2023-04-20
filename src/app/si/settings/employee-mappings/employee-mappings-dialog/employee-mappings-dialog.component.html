@@ -34,12 +34,12 @@
           Please enter a valid value
         </mat-error>
       </mat-form-field>
-      <div class="mat-body-strong" *ngIf="configuration.reimbursable_expenses_object === 'BILL'">
+      <div class="mat-body-strong" *ngIf="configuration.reimbursable_expenses_object === 'BILL' || configuration.employee_field_mapping === 'VENDOR'">
         <strong class="mappings-dialog--label">
           Choose Vendor
         </strong>
       </div>
-      <mat-form-field class="mappings-dialog--form-element" appearance="outline" *ngIf="configuration.reimbursable_expenses_object === 'BILL'">
+      <mat-form-field class="mappings-dialog--form-element" appearance="outline" *ngIf="configuration.reimbursable_expenses_object === 'BILL' || configuration.employee_field_mapping === 'VENDOR'">
         <input type="text" formControlName="sageIntacctVendor" placeholder="Choose Vendor" matInput [matAutocomplete]="fyEmp">
         <mat-autocomplete #fyEmp="matAutocomplete" [displayWith]="mappingDisplay">
           <mat-option *ngFor="let option of sageIntacctVendorOptions" [value]="option">
