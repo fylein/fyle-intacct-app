@@ -44,8 +44,8 @@
 
       <ng-container matColumnDef="si">
         <th mat-header-cell *matHeaderCellDef>
-          <span *ngIf="configuration.reimbursable_expenses_object === 'BILL' || configuration.employee_field_mapping === 'VENDOR'">Sage Intacct Vendor</span>
-          <span *ngIf="configuration.reimbursable_expenses_object === 'EXPENSE_REPORT' || configuration.employee_field_mapping === 'EMPLOYEE'">Sage Intacct Employee</span>
+          <span *ngIf="configuration.employee_field_mapping === 'VENDOR'">Sage Intacct Vendor</span>
+          <span *ngIf="configuration.employee_field_mapping === 'EMPLOYEE'">Sage Intacct Employee</span>
         </th>
         <td mat-cell *matCellDef="let element">
           {{configuration?.employee_field_mapping === 'VENDOR' ? element.destination_vendor?.value : element.destination_employee?.value}}

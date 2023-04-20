@@ -96,7 +96,7 @@ export class ConfigurationComponent implements OnInit {
     },
   ];
 
-    if (employeesMappedTo !== 'EMPLOYEE') {
+    if (employeesMappedTo === 'VENDOR') {
       cccExpenseOptions.push({
         label: 'Bill',
         value: 'BILL'
