@@ -128,9 +128,6 @@ export class EmployeeMappingsComponent implements OnInit {
     that.settingsService.getConfiguration(that.workspaceId).subscribe(settings => {
       that.configuration = settings;
       that.isLoading = false;
-      if (that.configuration.corporate_credit_card_expenses_object && that.configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
-        that.columnsToDisplay.push('ccc');
-      }
       const data = {
         pageSize: that.storageService.get('mappings.pageSize') || 50,
         pageNumber: 0

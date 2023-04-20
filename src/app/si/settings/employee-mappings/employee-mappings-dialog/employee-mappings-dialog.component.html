@@ -66,22 +66,6 @@
           Please enter a valid value
         </mat-error>
       </mat-form-field>
-      <div class="mat-body-strong" *ngIf="configuration.corporate_credit_card_expenses_object && configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION'">
-        <strong class="mappings-dialog--label">
-          Choose Charge Card
-        </strong>
-      </div>
-      <mat-form-field class="mappings-dialog--form-element" appearance="outline" *ngIf="configuration.corporate_credit_card_expenses_object && configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION'">
-        <input type="text" formControlName="creditCardAccount" placeholder="Charge card" matInput [matAutocomplete]="fyEmp">
-        <mat-autocomplete #fyEmp="matAutocomplete" [displayWith]="mappingDisplay">
-          <mat-option *ngFor="let option of cccOptions" [value]="option">
-            {{option.value}}
-          </mat-option>
-        </mat-autocomplete>
-        <mat-error class="mappings-dialog--error" *ngIf="form.controls.creditCardAccount.hasError('forbiddenOption')">
-          Please enter a valid value
-        </mat-error>
-      </mat-form-field>
     </div>
   </form>
 </mat-dialog-content>

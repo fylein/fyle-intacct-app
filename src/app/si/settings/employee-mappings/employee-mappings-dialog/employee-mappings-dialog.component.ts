@@ -61,9 +61,8 @@ export class EmployeeMappingsDialogComponent implements OnInit {
     const fyleEmployee = that.form.getRawValue().fyleEmployee;
     const sageIntacctVendor = that.form.getRawValue().sageIntacctVendor;
     const sageIntacctEmployee = that.form.getRawValue().sageIntacctEmployee;
-    const creditCardAccount = that.form.getRawValue().creditCardAccount;
 
-    if (that.form.valid && (sageIntacctVendor || sageIntacctEmployee || creditCardAccount)) {
+    if (that.form.valid && (sageIntacctVendor || sageIntacctEmployee)) {
       const employeeMapping: EmployeeMapping = {
         source_employee: {
           id: fyleEmployee.id
@@ -75,7 +74,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
           id: sageIntacctEmployee ? sageIntacctEmployee.id : null
         },
         destination_card_account: {
-          id: creditCardAccount ? creditCardAccount.id : null
+          id: null
         },
         workspace: that.workSpaceId
       };
@@ -144,30 +143,11 @@ export class EmployeeMappingsDialogComponent implements OnInit {
     });
   }
 
-  setupCCCAutocompleteWatcher() {
-    const that = this;
-
-    that.form.controls.creditCardAccount.valueChanges.pipe(debounceTime(300)).subscribe((newValue) => {
-      if (typeof (newValue) === 'string') {
-        that.cccOptions = that.creditCardValue
-          .filter(cccObject => new RegExp(newValue.toLowerCase(), 'g').test(cccObject.value.toLowerCase()));
-      }
-    });
-  }
-
   setupAutocompleteWatchers() {
     const that = this;
     that.setupFyleEmployeeAutocompleteWatcher();
     that.setupSageIntacctVendorAutocompleteWatcher();
     that.setupSageIntacctEmployeesWatcher();
-    that.setupCCCAutocompleteWatcher();
-  }
-
-  getDefaultCCCObj() {
-    const that = this;
-    if (that.configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
-      that.defaultCCCObj =  that.editMapping ? that.creditCardValue.filter(cccObj => that.data.employeeMappingRow.destination_card_account && cccObj.value === that.data.employeeMappingRow.destination_card_account.value)[0] : that.creditCardValue.filter(cccObj => cccObj.value === that.generalMappings.default_charge_card_name)[0];
-    }
   }
 
   getAttributesFilteredByConfig() {
@@ -178,10 +158,6 @@ export class EmployeeMappingsDialogComponent implements OnInit {
       attributes.push('VENDOR');
     } else if (that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT') {
       attributes.push('EMPLOYEE');
-    }
-
-    if (that.configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
-      attributes.push('CHARGE_CARD_NUMBER');
     }
 
     return attributes;
@@ -207,12 +183,8 @@ export class EmployeeMappingsDialogComponent implements OnInit {
       that.sageIntacctVendors = response[1].VENDOR;
       if (settings.corporate_credit_card_expenses_object === 'BILL') {
         that.creditCardValue = response[1].VENDOR;
-      } else if (settings.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
-        that.creditCardValue = response[1].CHARGE_CARD_NUMBER;
       }
       that.generalMappings = response[2];
-
-      that.getDefaultCCCObj();
 
       const fyleEmployee = that.editMapping ? that.fyleEmployees.filter(employee => employee.value === that.data.employeeMappingRow.source_employee.value)[0] : '';
       const sageIntacctVendor = that.editMapping ? that.sageIntacctVendors.filter(vendor => that.data.employeeMappingRow.destination_vendor && vendor.value === that.data.employeeMappingRow.destination_vendor.value)[0] : '';
@@ -222,7 +194,6 @@ export class EmployeeMappingsDialogComponent implements OnInit {
         fyleEmployee: [fyleEmployee, Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleEmployees)])],
         sageIntacctVendor: [sageIntacctVendor, that.configuration.reimbursable_expenses_object === 'BILL' ? that.forbiddenSelectionValidator(that.sageIntacctVendors) : null],
         sageIntacctEmployee: [sageIntacctEmployee, that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT' ? that.forbiddenSelectionValidator(that.sageIntacctEmployees) : null],
-        creditCardAccount: [that.defaultCCCObj || '', (that.configuration.corporate_credit_card_expenses_object && that.configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') ? that.forbiddenSelectionValidator(that.creditCardValue) : null]
       });
 
       if (that.editMapping) {
