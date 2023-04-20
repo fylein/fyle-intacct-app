@@ -91,14 +91,17 @@ export class ConfigurationComponent implements OnInit {
       value: 'CHARGE_CARD_TRANSACTION'
     },
     {
-      label: 'Bill',
-      value: 'BILL'
-    },
-    {
       label: 'Journal Entry',
       value: 'JOURNAL_ENTRY'
     },
   ];
+
+    if (employeesMappedTo !== 'EMPLOYEE') {
+      cccExpenseOptions.push({
+        label: 'Bill',
+        value: 'BILL'
+    });
+    }
 
     if (reimburExpenseMappedTo === 'EXPENSE_REPORT' || (reimburExpenseMappedTo === 'JOURNAL_ENTRY' && employeesMappedTo === 'EMPLOYEE')) {
       cccExpenseOptions.push({
