@@ -91,14 +91,17 @@ export class ConfigurationComponent implements OnInit {
       value: 'CHARGE_CARD_TRANSACTION'
     },
     {
-      label: 'Bill',
-      value: 'BILL'
-    },
-    {
       label: 'Journal Entry',
       value: 'JOURNAL_ENTRY'
     },
   ];
+
+    if (employeesMappedTo === 'VENDOR') {
+      cccExpenseOptions.push({
+        label: 'Bill',
+        value: 'BILL'
+    });
+    }
 
     if (reimburExpenseMappedTo === 'EXPENSE_REPORT' || (reimburExpenseMappedTo === 'JOURNAL_ENTRY' && employeesMappedTo === 'EMPLOYEE')) {
       cccExpenseOptions.push({
@@ -506,8 +509,8 @@ export class ConfigurationComponent implements OnInit {
     const configurationPayload: Configuration = that.constructConfigurationsPayload();
     const mappingSettingsPayload: MappingSetting[] = that.constructMappingSettingsPayload();
 
-        // Open dialog conditionally
-    if (that.configuration && (that.configuration.employee_field_mapping !== configurationPayload.employee_field_mapping || that.configuration.reimbursable_expenses_object !== configurationPayload.reimbursable_expenses_object || that.configuration.corporate_credit_card_expenses_object !== configurationPayload.corporate_credit_card_expenses_object)) {
+    // Open dialog conditionally
+    if (that.configuration && (that.configuration.reimbursable_expenses_object !== configurationPayload.reimbursable_expenses_object || that.configuration.corporate_credit_card_expenses_object !== configurationPayload.corporate_credit_card_expenses_object)) {
       const updatedConfigurations = that.constructUpdatedConfigurationsPayload(configurationPayload);
       that.openDialog(updatedConfigurations, configurationPayload, mappingSettingsPayload);
     } else {

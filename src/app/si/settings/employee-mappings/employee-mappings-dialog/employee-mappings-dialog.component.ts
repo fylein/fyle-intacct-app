@@ -154,9 +154,9 @@ export class EmployeeMappingsDialogComponent implements OnInit {
     const that = this;
     const attributes = [];
 
-    if (that.configuration.reimbursable_expenses_object === 'BILL') {
+    if (that.configuration.employee_field_mapping === 'VENDOR') {
       attributes.push('VENDOR');
-    } else if (that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT') {
+    } else if (that.configuration.employee_field_mapping === 'EMPLOYEE') {
       attributes.push('EMPLOYEE');
     }
 
@@ -192,7 +192,7 @@ export class EmployeeMappingsDialogComponent implements OnInit {
 
       that.form = that.formBuilder.group({
         fyleEmployee: [fyleEmployee, Validators.compose([Validators.required, that.forbiddenSelectionValidator(that.fyleEmployees)])],
-        sageIntacctVendor: [sageIntacctVendor, that.configuration.reimbursable_expenses_object === 'BILL' ? that.forbiddenSelectionValidator(that.sageIntacctVendors) : null],
+        sageIntacctVendor: [sageIntacctVendor, that.configuration.reimbursable_expenses_object === 'BILL' || that.configuration.employee_field_mapping === 'VENDOR'  ? that.forbiddenSelectionValidator(that.sageIntacctVendors) : null],
         sageIntacctEmployee: [sageIntacctEmployee, that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT' ? that.forbiddenSelectionValidator(that.sageIntacctEmployees) : null],
       });
 
