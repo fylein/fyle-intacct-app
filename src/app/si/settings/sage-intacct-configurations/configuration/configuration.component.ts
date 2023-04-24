@@ -91,14 +91,17 @@ export class ConfigurationComponent implements OnInit {
       value: 'CHARGE_CARD_TRANSACTION'
     },
     {
-      label: 'Bill',
-      value: 'BILL'
-    },
-    {
       label: 'Journal Entry',
       value: 'JOURNAL_ENTRY'
     },
   ];
+
+    if (employeesMappedTo === 'VENDOR') {
+      cccExpenseOptions.push({
+        label: 'Bill',
+        value: 'BILL'
+    });
+    }
 
     if (reimburExpenseMappedTo === 'EXPENSE_REPORT' || (reimburExpenseMappedTo === 'JOURNAL_ENTRY' && employeesMappedTo === 'EMPLOYEE')) {
       cccExpenseOptions.push({
@@ -114,7 +117,7 @@ export class ConfigurationComponent implements OnInit {
     const that = this;
 
     that.showAutoCreateOption(that.configuration.auto_map_employees);
-    that.cccExpenseOptions = that.getCCCExpenseOptions(that.configuration.reimbursable_expenses_object);
+    that.cccExpenseOptions = that.getCCCExpenseOptions(that.configuration.reimbursable_expenses_object, that.configuration.employee_field_mapping);
     that.showImportCategories = true;
 
     if (that.configuration.corporate_credit_card_expenses_object && that.configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
@@ -141,12 +144,14 @@ export class ConfigurationComponent implements OnInit {
 
   setupReimbursableFieldWatcher() {
     const that = this;
-
     that.configurationForm.controls.reimburExpense.valueChanges.subscribe((reimbursableExpenseMappedTo) => {
       that.configurationForm.controls.cccExpense.reset();
       that.cccExpenseOptions = that.getCCCExpenseOptions(reimbursableExpenseMappedTo);
 
       if (reimbursableExpenseMappedTo) {
+        // employeeFieldMapping
+        that.setupEmployeesFieldWatcher(reimbursableExpenseMappedTo);
+
         if (!that.showImportCategories) {
           that.showImportCategories = true;
         }
@@ -158,10 +163,6 @@ export class ConfigurationComponent implements OnInit {
 
           // Update the form control's value and validation state
           that.configurationForm.controls.employeeFieldMapping.updateValueAndValidity();
-
-          // employeeFieldMapping
-          that.setupEmployeesFieldWatcher(reimbursableExpenseMappedTo);
-
         } else {
           that.configurationForm.controls.employeeFieldMapping.reset();
 
@@ -193,6 +194,9 @@ export class ConfigurationComponent implements OnInit {
 
     if (that.configuration) {
       that.setFormValues();
+      if (that.configuration.reimbursable_expenses_object === 'JOURNAL_ENTRY') {
+        that.setupEmployeesFieldWatcher('JOURNAL_ENTRY');
+      }
     }
 
     // Auto Create Destination Entity
@@ -248,7 +252,7 @@ export class ConfigurationComponent implements OnInit {
         value: 'BILL'
       }];
 
-      that.cccExpenseOptions = that.getCCCExpenseOptions(that.configuration.reimbursable_expenses_object);
+      that.cccExpenseOptions = that.getCCCExpenseOptions(that.configuration.reimbursable_expenses_object, that.configuration.employee_field_mapping);
 
       let paymentsSyncOption = '';
       if (that.configuration.sync_fyle_to_sage_intacct_payments) {
@@ -276,6 +280,7 @@ export class ConfigurationComponent implements OnInit {
       }
 
       that.setupFieldWatchers();
+
       that.isLoading = false;
     }, () => {
       that.isLoading = false;
@@ -504,8 +509,8 @@ export class ConfigurationComponent implements OnInit {
     const configurationPayload: Configuration = that.constructConfigurationsPayload();
     const mappingSettingsPayload: MappingSetting[] = that.constructMappingSettingsPayload();
 
-        // Open dialog conditionally
-    if (that.configuration && (that.configuration.employee_field_mapping !== configurationPayload.employee_field_mapping || that.configuration.reimbursable_expenses_object !== configurationPayload.reimbursable_expenses_object || that.configuration.corporate_credit_card_expenses_object !== configurationPayload.corporate_credit_card_expenses_object)) {
+    // Open dialog conditionally
+    if (that.configuration && (that.configuration.reimbursable_expenses_object !== configurationPayload.reimbursable_expenses_object || that.configuration.corporate_credit_card_expenses_object !== configurationPayload.corporate_credit_card_expenses_object)) {
       const updatedConfigurations = that.constructUpdatedConfigurationsPayload(configurationPayload);
       that.openDialog(updatedConfigurations, configurationPayload, mappingSettingsPayload);
     } else {
