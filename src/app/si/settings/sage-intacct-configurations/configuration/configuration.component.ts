@@ -207,13 +207,6 @@ export class ConfigurationComponent implements OnInit {
     // Reimbursable Expense Mapping
     that.setupReimbursableFieldWatcher();
 
-    // Auto Create Merchant
-    that.configurationForm.controls.cccExpense.valueChanges.subscribe((cccExpenseMappedTo) => {
-      if (cccExpenseMappedTo === 'CHARGE_CARD_TRANSACTION') {
-        that.showAutoCreate = true;
-      }
-    });
-
     that.setupProjectsField();
   }
 
