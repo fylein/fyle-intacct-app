@@ -61,13 +61,10 @@ export class SiComponent implements OnInit {
   refreshDashboardMappingSettings(mappingSettings: MappingSetting[]) {
     const that = this;
 
-    that.getConfigurations().subscribe((results) => {
-      this.configuration = results[0];
-      that.mappingSettings = mappingSettings.filter(
-        setting => (setting.source_field !== 'EMPLOYEE' && setting.source_field !== 'CATEGORY')
-      );
-      that.isLoading = false;
-    });
+    that.mappingSettings = mappingSettings.filter(
+      setting => (setting.source_field !== 'EMPLOYEE' && setting.source_field !== 'CATEGORY')
+    );
+    that.isLoading = false;
   }
 
 
