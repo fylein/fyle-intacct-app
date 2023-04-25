@@ -61,6 +61,11 @@ export class GenericMappingsComponent implements OnInit {
   }
 
   getTitle(name: string) {
+    if (name === 'CHARGE_CARD_NUMBER') {
+      let ccc = name.replace(/_/g, ' ');
+      ccc = ccc.slice(0, 11);
+      return ccc;
+    }
     return name.replace(/_/g, ' ');
   }
 

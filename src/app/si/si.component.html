@@ -46,7 +46,7 @@
         Category Mappings
       </a>
       <div *ngFor="let setting of mappingSettings">
-        <a class="mat-h3 si-sidenav--nav-sub-item" [ngClass]="{'si-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item routerLink="{{workspace.id}}/settings/{{setting.source_field.toLowerCase()}}/mappings/"
+        <a class="mat-h3 si-sidenav--nav-sub-item" *ngIf="setting.source_field === 'CORPORATE_CARD' && configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION'" [ngClass]="{'si-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item routerLink="{{workspace.id}}/settings/{{setting.source_field.toLowerCase()}}/mappings/"
         routerLinkActive="active">
           {{ getTitle(setting.source_field) | titlecase }} Mappings
        </a>
