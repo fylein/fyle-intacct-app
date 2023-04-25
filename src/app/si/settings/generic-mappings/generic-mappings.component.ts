@@ -62,7 +62,7 @@ export class GenericMappingsComponent implements OnInit {
 
   getTitle(name: string) {
     if (name === 'CHARGE_CARD_NUMBER') {
-      return 'CHARGE CARD'
+      return 'CHARGE CARD';
     }
     return name.replace(/_/g, ' ');
   }
