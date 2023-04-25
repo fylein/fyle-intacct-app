@@ -207,13 +207,6 @@ export class ConfigurationComponent implements OnInit {
     // Reimbursable Expense Mapping
     that.setupReimbursableFieldWatcher();
 
-    // Auto Create Merchant
-    that.configurationForm.controls.cccExpense.valueChanges.subscribe((cccExpenseMappedTo) => {
-      if (cccExpenseMappedTo === 'CHARGE_CARD_TRANSACTION') {
-        that.showAutoCreate = true;
-      }
-    });
-
     that.setupProjectsField();
   }
 
@@ -520,8 +513,15 @@ export class ConfigurationComponent implements OnInit {
 
   showAutoCreateOption(autoMapEmployees) {
     const that = this;
-    if (autoMapEmployees && autoMapEmployees !== 'EMPLOYEE_CODE') {
+    if (autoMapEmployees) {
+      that.configurationForm.controls.cccExpense.valueChanges.subscribe((cccExpenseMappedTo) => {
+        if (cccExpenseMappedTo === 'CHARGE_CARD_TRANSACTION') {
+          that.showAutoCreate = true;
+        }
+      });
+      if (autoMapEmployees !== 'EMPLOYEE_CODE') {
       that.showAutoCreate = true;
+      }
     } else {
       that.showAutoCreate = false;
       that.configurationForm.controls.autoCreateDestinationEntity.setValue(false);
