@@ -26,6 +26,7 @@ import { GenericMappingsComponent } from './settings/generic-mappings/generic-ma
 import { SageIntacctConfigurationsComponent } from './settings/sage-intacct-configurations/sage-intacct-configurations.component';
 import { MemoStructureComponent } from './settings/sage-intacct-configurations/memo-structure/memo-structure.component';
 import { LocationEntityComponent } from './settings/sage-intacct-configurations/location-entity/location-entity.component';
+import { SkipExportComponent } from './settings/sage-intacct-configurations/skip-export/skip-export.component';
 
 const routes: Routes = [{
   path: '',
@@ -102,6 +103,10 @@ const routes: Routes = [{
             {
               path: 'memo_structure',
               component: MemoStructureComponent
+            },
+            {
+              path: 'skip_export',
+              component: SkipExportComponent
             }
           ]
         },

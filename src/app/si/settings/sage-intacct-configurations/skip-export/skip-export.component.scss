@@ -1,0 +1,299 @@
+@import "variables.scss";
+
+$text-error: #ff6e40;
+$fy-info-dark: #2c304e;
+
+.skip-icon {
+  width: 18px !important;
+  height: 20px !important;
+  padding-left: 30px !important;
+  margin-right: 19px !important;
+}
+
+.info-box {
+  margin-top: 38px !important;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  color: #161528;
+}
+
+.info-box-text {
+  margin-top: 8px;
+  margin-left: 72px;
+  width: 530px;
+  height: 36px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  color: #5a5d72;
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+}
+
+.fields-header-1 {
+  margin-top: 40px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  color: #5a5d72;
+}
+
+.fields-header-2 {
+  margin-top: 40px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  color: #5a5d72;
+}
+
+.fields-header-3 {
+  margin-top: 40px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  color: #5a5d72;
+}
+
+.where-text {
+  padding-left: 72px;
+  width: 70px;
+  height: 18px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.internal-loader {
+  margin-top: 300px;
+}
+
+:host ::ng-deep .mat-standard-chip.mat-chip-with-trailing-icon {
+  font-size: 12px;
+}
+
+:host ::ng-deep .mat-standard-chip {
+  min-height: 22px;
+}
+
+:host ::ng-deep .mat-form-field-type-mat-select .mat-form-field-flex {
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+:host ::ng-deep .mat-form-field-type-mat-chip-list .mat-form-field-flex {
+  width: 306px;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 0.5em 0.5em 0.5em 0.5em;
+}
+
+:host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-infix {
+  padding: 2px;
+}
+
+:host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-flex {
+  max-height: 150px;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+:host ::ng-deep .join-by .mat-form-field-flex{
+  width: 70px !important;
+  height: 28px !important;
+}
+
+::ng-deep .skip-export {
+  &--form {
+    font-size: 14px;
+    max-width: 1000px;
+    color: $fy-nav-text;
+  }
+
+  &--form1 {
+    margin-top: 2em;
+    font-size: 14px;
+    max-width: 1000px;
+    color: $fy-nav-text;
+  }
+
+  &--add-icon {
+    text-align: center;
+    cursor: pointer;
+    padding-left: 30px;
+    padding-bottom: 25px;
+    max-width: 24px;
+    max-height: 24px;
+    margin-right: 10px;
+  }
+
+  &--delete-icon {
+    text-align: center;
+    cursor: pointer;
+    max-width: 20px;
+    max-height: 20px;
+    margin-left: 26.5px;
+    padding-bottom: 25px;
+  }
+
+  &--save-btn {
+    max-width: 32px;
+    text-align: center;
+    cursor: pointer;
+    padding-left: 30px;
+    padding-bottom: 25px;
+  }
+}
+
+.page-info {
+  &--sub-header {
+    font-size: 16px;
+    font-weight: 400;
+    color: $fy-info-dark;
+  }
+
+  &--sub-header-container {
+    min-height: 8px;
+  }
+
+  &--sub-header-items {
+    margin-top: 6px;
+  }
+
+  &--created-by {
+    font-size: 14px;
+  }
+}
+
+.divider-icon {
+  max-height: 22px;
+  max-width: 1px;
+}
+
+.cross-icon {
+  max-width: 7.75px;
+  max-height: 7.75px;
+}
+
+::ng-deep .mat-chip-list-wrapper .mat-standard-chip,
+.mat-chip-list-wrapper input.mat-input-element {
+  margin: 1px;
+}
+
+::ng-deep .mat-chip-list-wrapper {
+  max-height: 104px;
+  overflow-y: auto;
+}
+
+::ng-deep .mat-chip.mat-standard-chip {
+  background: #ffffff;
+  border: 1px solid #dfdfe2;
+  border-radius: 12px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 15px;
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+}
+
+::ng-deep .mat-chip.mat-standard-chip::after {
+  background: #ffffff;
+}
+
+.add-row-text {
+  cursor: pointer;
+  font-weight: 350;
+}
+
+:host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-flex {
+  padding: 0.5em 0.5em 0.5em 0.5em;
+  display: flex !important;
+  min-height: 40px !important;
+  max-height: 200px !important;
+}
+
+:host ::ng-deep .mat-chip-list-wrapper::-webkit-scrollbar {
+  -webkit-appearance: none;
+}
+
+:host ::ng-deep .mat-chip-list-wrapper::-webkit-scrollbar:vertical {
+  width: 4px !important;
+  background-color: transparent !important;
+}
+
+:host ::ng-deep .mat-chip-list-wrapper::-webkit-scrollbar:horizontal {
+  height: 4px !important;
+  background-color: transparent !important;
+}
+
+:host ::ng-deep .mat-chip-list-wrapper::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  border: 2px solid #D8D8D8 !important;
+  background-color: #D8D8D8;
+}
+
+.read-more {
+  position: absolute;
+  margin: 1px 4px 0px 5px;
+}
+
+.read-more-link {
+  text-decoration: none;
+  margin-left: 4px;
+  font-weight: 420 !important;
+  font-size: 15.5px !important;
+  &--icon {
+    font-size: 18px;
+    height: auto;
+    margin-left: 4px;
+  }
+}
+
+.add-condition-btn {
+  margin-top: 50px;
+}
+
+.validation-text {
+  padding-left: 70px !important;
+  padding-bottom: 15px !important;
+}
+
+.info-box-one {
+  margin: 16px 24px;
+}
+
+.info-box-one-text {
+  font-size: 13.25px;
+  border: 1px solid rgba(0, 98, 255, 4%);
+  padding: 2px;
+  background: rgba(0, 98, 255, 2%);
+  background-clip: padding-box;
+}
+
+.info-icon {
+  color: #68b9d4;
+  text-align: center;
+  cursor: default;
+  padding-left: 5px;
+  padding-bottom: 5px;
+  font-size: 20px;
+  max-height: 24px;
+  vertical-align: middle;
+}
+
+::ng-deep .mat-datepicker-toggle {
+  transform: scale(0.8);
+}
+
+:host .datePicker {
+  display: inline-flex;
+}
+
+:host ::ng-deep .date-field .mat-form-field-flex{
+  height: 44.75px !important;
+}
