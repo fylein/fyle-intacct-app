@@ -15,15 +15,15 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
   styleUrls: ['./skip-export.component.scss'],
 })
 export class SkipExportComponent implements OnInit {
-  isLoading: boolean = true;
-  tooltip: boolean = false;
+  isLoading = true;
+  tooltip = false;
   skippedCondition1: string;
   skippedCondition2: string;
-  isDisabledChip1: boolean = false;
-  isDisabledChip2: boolean = false;
+  isDisabledChip1 = false;
+  isDisabledChip2 = false;
   skipExportForm: FormGroup;
-  showAdditionalCondition: boolean = false;
-  showAddButton: boolean = true;
+  showAdditionalCondition = false;
+  showAddButton = true;
   workspaceId: number;
   conditionFieldOptions: Array<{
     field_name: string;
