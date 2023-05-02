@@ -22,7 +22,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
   expenseGroups: MatTableDataSource<ExpenseGroup> = new MatTableDataSource([]);
   skippedExpenses: MatTableDataSource<SkipExportLog> = new MatTableDataSource([]);
   isLoading = true;
-  isSkippedVisible: boolean = false;
+  isSkippedVisible = false;
   count: number;
   state: string;
   settings;
