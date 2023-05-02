@@ -47,7 +47,11 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.expenseGroups.filter = filterValue.trim().toLowerCase();
+    if (this.state === 'SKIP') {
+      this.skippedExpenses.filter = filterValue.trim().toLowerCase();
+    } else {
+      this.expenseGroups.filter = filterValue.trim().toLowerCase();
+    }
   }
 
   getTitle(name: string) {
@@ -124,15 +128,19 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     that.state = that.route.snapshot.queryParams.state || 'FAILED';
     that.settingsService.getConfiguration(that.workspaceId).subscribe((settings) => {
       if (that.state === 'COMPLETE') {
-        that.columnsToDisplay1 = ['export-date', 'employee', 'export', 'expensetype', 'openNetSuite'];
+        that.columnsToDisplay1 = ['export-date', 'employee', 'export', 'expense-type', 'openSageIntacct'];
       } else if (that.state === 'FAILED') {
-        that.columnsToDisplay1 = ['employee', 'expensetype'];
+        that.columnsToDisplay1 = ['employee', 'expense-type'];
       } else if (that.state === 'SKIP') {
         that.columnsToDisplay2 = ['export-skipped-on', 'skippedEmployee', 'reference-id', 'skippedExpenseType'];
       }
 
       that.settings = settings;
-      that.getPaginatedExpenseGroups();
+      if (that.state === 'SKIP') {
+        that.setSkipLog();
+      } else {
+        that.getPaginatedExpenseGroups();
+      }
     });
 
     that.routerEventSubscription = that.router.events.subscribe(event => {
@@ -148,9 +156,9 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
 
         if (that.pageNumber !== pageNumber || that.pageSize !== pageSize || that.state !== state) {
           if (state === 'COMPLETE') {
-            that.columnsToDisplay1 = ['export-date', 'employee', 'export', 'expensetype', 'openNetSuite'];
+            that.columnsToDisplay1 = ['export-date', 'employee', 'export', 'expense-type', 'openSageIntacct'];
           } else if (state === 'FAILED') {
-            that.columnsToDisplay1 = ['employee', 'expensetype'];
+            that.columnsToDisplay1 = ['employee', 'expense-type'];
           } else if (state === 'SKIP') {
             that.columnsToDisplay2 = ['export-skipped-on', 'skippedEmployee', 'reference-id', 'skippedExpenseType'];
           }
