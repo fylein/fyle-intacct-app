@@ -271,7 +271,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     this.checkIfTaskSelected(mappingSetting);
 
     that.mappingSettings = mappingSetting.filter(
-      setting => setting.source_field !== 'EMPLOYEE' && setting.source_field !== 'CATEGORY' && setting.expense_field === null
+      setting => setting.source_field !== 'EMPLOYEE' && setting.source_field !== 'CATEGORY' && setting.source_field !== 'CORPORATE_CARD' && setting.expense_field === null
     );
 
     let expenseFieldFormArray;
