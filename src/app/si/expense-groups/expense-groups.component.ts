@@ -9,6 +9,8 @@ import { WindowReferenceService } from 'src/app/core/services/window.service';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { Subscription } from 'rxjs';
 import { Task } from 'src/app/core/models/task.model';
+import { SkipExportLog } from 'src/app/core/models/skip-export-log.model';
+import { SkipExportLogResponse } from 'src/app/core/models/skip-export-log-response.model';
 
 @Component({
   selector: 'app-expense-groups',
@@ -18,13 +20,16 @@ import { Task } from 'src/app/core/models/task.model';
 export class ExpenseGroupsComponent implements OnInit, OnDestroy {
   workspaceId: number;
   expenseGroups: MatTableDataSource<ExpenseGroup> = new MatTableDataSource([]);
+  skippedExpenses: MatTableDataSource<SkipExportLog> = new MatTableDataSource([]);
   isLoading = true;
+  isSkippedVisible: boolean = false;
   count: number;
   state: string;
   settings;
   pageNumber = 0;
   pageSize: number;
-  columnsToDisplay = ['employee', 'expense-type'];
+  columnsToDisplay1 = [];
+  columnsToDisplay2 = [];
   windowReference: Window;
   routerEventSubscription: Subscription;
 
@@ -87,7 +92,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     return this.expenseGroupService.getExpenseGroups(this.pageSize, this.pageNumber * this.pageSize, this.state).subscribe(expenseGroups => {
       this.count = expenseGroups.count;
       this.expenseGroups = new MatTableDataSource(expenseGroups.results);
-      this.expenseGroups.filterPredicate = this.searchByText;
+      this.expenseGroups.filterPredicate = this.searchByText1;
       this.isLoading = false;
       return expenseGroups;
     });
@@ -95,6 +100,19 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
 
   goToExpenseGroup(id: number) {
     this.router.navigate([`workspaces/${this.workspaceId}/expense_groups/${id}/view`]);
+  }
+
+  setSkipLog() {
+    const that = this;
+
+    that.isSkippedVisible = true;
+    return that.expenseGroupService.getSkipExportLogs(that.pageSize, that.pageNumber * that.pageSize).subscribe((skippedExpenses: SkipExportLogResponse) => {
+      that.count = skippedExpenses.count;
+      that.skippedExpenses = new MatTableDataSource(skippedExpenses.results);
+      that.skippedExpenses.filterPredicate = that.searchByText2;
+      that.isLoading = false;
+      return skippedExpenses;
+    });
   }
 
   reset() {
@@ -106,9 +124,11 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     that.state = that.route.snapshot.queryParams.state || 'FAILED';
     that.settingsService.getConfiguration(that.workspaceId).subscribe((settings) => {
       if (that.state === 'COMPLETE') {
-        that.columnsToDisplay = ['export-date', 'employee', 'export', 'expense-type', 'openSageIntacct'];
-      } else {
-        that.columnsToDisplay = ['employee', 'expense-type'];
+        that.columnsToDisplay1 = ['export-date', 'employee', 'export', 'expensetype', 'openNetSuite'];
+      } else if (that.state === 'FAILED') {
+        that.columnsToDisplay1 = ['employee', 'expensetype'];
+      } else if (that.state === 'SKIP') {
+        that.columnsToDisplay2 = ['export-skipped-on', 'skippedEmployee', 'reference-id', 'skippedExpenseType'];
       }
 
       that.settings = settings;
@@ -128,9 +148,11 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
 
         if (that.pageNumber !== pageNumber || that.pageSize !== pageSize || that.state !== state) {
           if (state === 'COMPLETE') {
-            that.columnsToDisplay = ['export-date', 'employee', 'export', 'expense-type', 'openSageIntacct'];
-          } else {
-            that.columnsToDisplay = ['employee', 'expense-type'];
+            that.columnsToDisplay1 = ['export-date', 'employee', 'export', 'expensetype', 'openNetSuite'];
+          } else if (state === 'FAILED') {
+            that.columnsToDisplay1 = ['employee', 'expensetype'];
+          } else if (state === 'SKIP') {
+            that.columnsToDisplay2 = ['export-skipped-on', 'skippedEmployee', 'reference-id', 'skippedExpenseType'];
           }
 
           that.pageNumber = pageNumber;
@@ -163,16 +185,21 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
       });
   }
 
-  searchByText(data: ExpenseGroup, filterText: string) {
+  searchByText1(data: ExpenseGroup, filterText: string) {
     return data.description.employee_email.includes(filterText) ||
       ('Reimbursable'.toLowerCase().includes(filterText) && data.fund_source === 'PERSONAL') ||
       ('Corporate Credit Card'.toLowerCase().includes(filterText) && data.fund_source !== 'PERSONAL') ||
       data.description.claim_number.includes(filterText);
   }
 
+  searchByText2(data: SkipExportLog, filterText: string) {
+    return data.employee_email.includes(filterText);
+  }
+
   ngOnInit() {
     this.reset();
-    this.expenseGroups.filterPredicate = this.searchByText;
+    this.expenseGroups.filterPredicate = this.searchByText1;
+    this.skippedExpenses.filterPredicate = this.searchByText2;
   }
 
   ngOnDestroy() {

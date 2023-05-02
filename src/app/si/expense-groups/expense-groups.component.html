@@ -9,6 +9,9 @@
     <a mat-tab-link (click)="changeState('COMPLETE')" [active]="state==='COMPLETE'">
       Complete
     </a>
+    <a mat-tab-link (click)="changeState('SKIP')" [active]="state==='SKIP'">
+      Skipped
+    </a>
   </nav>
 </div>
 
@@ -30,7 +33,7 @@
   <zero-state message="You have no expense groups yet"></zero-state>
 </div>
 
-<div *ngIf="count && !expenseGroups.filteredData.length && !isLoading">
+<div *ngIf="count && !expenseGroups.filteredData.length && !isLoading || isSkippedVisible">
   <zero-state message="Looks like your search term doesn't match any of the Expense groups"></zero-state>
 </div>
 
@@ -75,11 +78,38 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-    <tr class="page-table--row page-table--row__pointer cursor-pointer" mat-row *matRowDef="let row; columns: columnsToDisplay;"
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay1"></tr>
+    <tr class="page-table--row page-table--row__pointer cursor-pointer" mat-row *matRowDef="let row; columns: columnsToDisplay1;"
       (click)="goToExpenseGroup(row.id)"></tr>
   </table>
 
   <mat-paginator [length]="count" [hidden]="!expenseGroups.filteredData.length" [pageSizeOptions]="[10, 50, 100, 200]" [pageSize]="pageSize" [pageIndex]="pageNumber"
     (page)="onPageChange($event)" showFirstLastButtons></mat-paginator>
 </div>
+
+<div *ngIf="!isLoading" [hidden]="!isSkippedVisible || !skippedExpenses.filteredData.length">
+  <table mat-table [dataSource]="skippedExpenses" class="page-table" matSort matSortActive="updated_at"
+    matSortDisableClear matSortDirection="desc">
+    <ng-container matColumnDef="export-skipped-on">
+       <th mat-header-cell *matHeaderCellDef> Export Skipped On </th>
+       <td mat-cell *matCellDef="let element"> {{element.updated_at | date}} </td>
+    </ng-container>
+    <ng-container matColumnDef="skippedEmployee">
+       <th mat-header-cell *matHeaderCellDef> Employee </th>
+       <td mat-cell *matCellDef="let element"> {{element.employee_email}} </td>
+    </ng-container>
+    <ng-container matColumnDef="reference-id">
+       <th mat-header-cell *matHeaderCellDef> Reference Id </th>
+       <td mat-cell *matCellDef="let element"> {{element.claim_number}} </td>
+    </ng-container>
+    <ng-container matColumnDef="skippedExpenseType">
+       <th mat-header-cell *matHeaderCellDef> Expense Type </th>
+       <td mat-cell *matCellDef="let element"> {{element.fund_source === 'PERSONAL' ? 'Reimbursable' : 'Corporate Credit Card'}} </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay2"></tr>
+    <tr class="page-table--row page-table--row__pointer cursor-pointer" mat-row *matRowDef="let row; columns: columnsToDisplay2;"></tr>
+  </table>
+  <!-- count assign -->
+  <mat-paginator *ngIf="state==='SKIP'" [length]="count" [pageSizeOptions]="[10, 50, 100, 200]" [pageSize]="pageSize" [pageIndex]="pageNumber"
+  (page)="onPageChange($event)" showFirstLastButtons></mat-paginator>
+  </div>
