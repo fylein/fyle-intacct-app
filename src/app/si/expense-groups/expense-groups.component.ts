@@ -93,6 +93,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
   }
 
   getPaginatedExpenseGroups() {
+    this.isSkippedVisible = false;
     return this.expenseGroupService.getExpenseGroups(this.pageSize, this.pageNumber * this.pageSize, this.state).subscribe(expenseGroups => {
       this.count = expenseGroups.count;
       this.expenseGroups = new MatTableDataSource(expenseGroups.results);
@@ -166,7 +167,11 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
           that.pageNumber = pageNumber;
           that.pageSize = pageSize;
           that.state = state;
-          that.getPaginatedExpenseGroups();
+          if (that.state === 'SKIP') {
+            that.setSkipLog();
+          } else {
+            that.getPaginatedExpenseGroups();
+          }
         }
       }
     });
