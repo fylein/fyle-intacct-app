@@ -40,7 +40,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
   showAddButton: boolean;
   showDependentAddButton: boolean;
   isTaskImported: boolean;
-  showTaskOption: boolean;
+  showDependentFieldMapping: boolean;
 
   constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private settingsService: SettingsService, private mappingsService: MappingsService, private snackBar: MatSnackBar, private si: SiComponent, private windowReferenceService: WindowReferenceService) {
     this.windowReference = this.windowReferenceService.nativeWindow;
@@ -336,8 +336,8 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
         }
       });
 
-      const dependentTask = that.sageIntacctFields.filter(setting => setting.attribute_type === 'TASK').length;
-      that.showTaskOption = (isProjectImported && dependentTask) ? true : false;
+      const isTasksPresent = that.sageIntacctFields.filter(setting => setting.attribute_type === 'TASK').length;
+      that.showDependentFieldMapping = (isProjectImported && isTasksPresent) ? true : false;
 
       return sageIntacctFields;
     });
