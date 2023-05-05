@@ -40,6 +40,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
   showAddButton: boolean;
   showDependentAddButton: boolean;
   isTaskImported: boolean;
+  showTaskOption: boolean;
 
   constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private settingsService: SettingsService, private mappingsService: MappingsService, private snackBar: MatSnackBar, private si: SiComponent, private windowReferenceService: WindowReferenceService) {
     this.windowReference = this.windowReferenceService.nativeWindow;
@@ -259,11 +260,12 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     that.saveExpenseFields();
   }
 
-  checkIfTaskSelected(mappingSetting: MappingSetting[]) {
+  checkIfTaskSelected(mappingSetting: MappingSetting[], sageIntacctFields: ExpenseField[] = null) {
     const that = this;
     const taskSettings = mappingSetting.filter(setting => setting.expense_field !== null && setting.destination_field === 'TASK').length;
 
-    that.isTaskImported = taskSettings ? true : false;
+    that.isTaskImported = (taskSettings) ? true : false;
+
   }
 
   createFormFields(mappingSetting: MappingSetting[]) {
@@ -328,6 +330,9 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     return that.mappingsService.getSageIntacctFields().toPromise().then((sageIntacctFields: ExpenseField[]) => {
       that.sageIntacctFields = sageIntacctFields;
       that.sageIntacctFormFieldList = sageIntacctFields;
+      
+      const dependentTask = that.sageIntacctFields.filter(setting => setting.attribute_type === 'TASK').length;  
+      that.showTaskOption = dependentTask ? true : false;
 
       return sageIntacctFields;
     });
