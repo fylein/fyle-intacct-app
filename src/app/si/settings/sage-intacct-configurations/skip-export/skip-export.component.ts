@@ -555,6 +555,15 @@ export class SkipExportComponent implements OnInit {
       value2: [valueFC2],
       customFieldType2: joinByFC ? [response.results[1].custom_field_type] : ['']
     });
+
+    if (response.count === 2 && joinByFC) {
+      this.showAdditionalCondition = true;
+      this.showAddButton = false;
+    } else {
+      this.showAdditionalCondition = false;
+      this.showAddButton = true;
+    }
+
     this.fieldWatcher();
     this.isLoading = false;
   }
