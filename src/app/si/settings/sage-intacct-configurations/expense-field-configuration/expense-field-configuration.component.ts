@@ -331,7 +331,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
 
       let isProjectImported = false;
       that.mappingSettings.filter(setting => {
-        if (setting.destination_field === 'PROJECT' && setting.import_to_fyle) {
+        if (setting.destination_field === 'PROJECT' && setting.source_field === 'PROJECT' && setting.import_to_fyle) {
           isProjectImported = true;
         }
       });
