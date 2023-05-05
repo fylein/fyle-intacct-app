@@ -260,12 +260,10 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     that.saveExpenseFields();
   }
 
-  checkIfTaskSelected(mappingSetting: MappingSetting[], sageIntacctFields: ExpenseField[] = null) {
+  checkIfTaskSelected(mappingSetting: MappingSetting[]) {
     const that = this;
     const taskSettings = mappingSetting.filter(setting => setting.expense_field !== null && setting.destination_field === 'TASK').length;
-
-    that.isTaskImported = (taskSettings) ? true : false;
-
+    that.isTaskImported = taskSettings ? true : false;
   }
 
   createFormFields(mappingSetting: MappingSetting[]) {
@@ -331,8 +329,15 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
       that.sageIntacctFields = sageIntacctFields;
       that.sageIntacctFormFieldList = sageIntacctFields;
 
+      let isProjectImported = false;
+      that.mappingSettings.filter(setting => {
+        if (setting.destination_field === 'PROJECT' && setting.import_to_fyle) {
+          isProjectImported = true;
+        }
+      });
+
       const dependentTask = that.sageIntacctFields.filter(setting => setting.attribute_type === 'TASK').length;
-      that.showTaskOption = dependentTask ? true : false;
+      that.showTaskOption = (isProjectImported && dependentTask) ? true : false;
 
       return sageIntacctFields;
     });
