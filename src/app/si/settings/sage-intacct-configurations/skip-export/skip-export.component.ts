@@ -449,7 +449,7 @@ export class SkipExportComponent implements OnInit {
   private setConditionFields(response: ExpenseFilterResponse, conditionArray: ConditionField[]) {
     response.results.forEach((element) => {
       const type = this.conditionFieldOptions.filter( (fieldOption) => fieldOption.field_name === element.condition);
-      const selectedConditionOption : ConditionField = type[0];
+      const selectedConditionOption: ConditionField = type[0];
       conditionArray.push(selectedConditionOption);
     });
   }
@@ -503,12 +503,12 @@ export class SkipExportComponent implements OnInit {
     } else if (condition.field_name === 'report_title') {
       return value[0];
     }
-      if (rank === 1) {
+    if (rank === 1) {
         this.valueOption1 = value;
       } else if (rank === 2) {
         this.valueOption2 = value;
       }
-        return '';
+    return '';
 
   }
 
