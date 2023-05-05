@@ -330,8 +330,8 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     return that.mappingsService.getSageIntacctFields().toPromise().then((sageIntacctFields: ExpenseField[]) => {
       that.sageIntacctFields = sageIntacctFields;
       that.sageIntacctFormFieldList = sageIntacctFields;
-      
-      const dependentTask = that.sageIntacctFields.filter(setting => setting.attribute_type === 'TASK').length;  
+
+      const dependentTask = that.sageIntacctFields.filter(setting => setting.attribute_type === 'TASK').length;
       that.showTaskOption = dependentTask ? true : false;
 
       return sageIntacctFields;
