@@ -168,7 +168,7 @@ export class SkipExportComponent implements OnInit {
   }
 
   checkValidationCondition() {
-    if (this.showAdditionalCondition)
+    if (this.showAdditionalCondition) {
     if (
       this.skipExportForm.get('condition1').valid &&
       this.skipExportForm.get('condition2').valid
@@ -179,6 +179,7 @@ export class SkipExportComponent implements OnInit {
       ) {
         return true;
       }
+    }
     }
     return false;
   }
