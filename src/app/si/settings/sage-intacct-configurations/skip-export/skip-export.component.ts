@@ -167,6 +167,74 @@ export class SkipExportComponent implements OnInit {
     this.resetOptions();
   }
 
+  checkValidationCondition() {
+    if (this.showAdditionalCondition)
+    if (
+      this.skipExportForm.get('condition1').valid &&
+      this.skipExportForm.get('condition2').valid
+    ) {
+      if (
+        this.skipExportForm.get('condition1').value.field_name ===
+        this.skipExportForm.get('condition2').value.field_name
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  checkValidation() {
+    if (this.showAdditionalCondition) {
+      if (
+        this.skipExportForm.get('condition1').valid &&
+        this.skipExportForm.get('condition2').valid &&
+        this.skipExportForm.get('join_by').valid
+      ) {
+        if (
+          this.skipExportForm.get('condition1').value.field_name !==
+          this.skipExportForm.get('condition2').value.field_name
+        ) {
+          if (
+            (this.skipExportForm.get('condition1').value.field_name ===
+              'spent_at' &&
+              this.skipExportForm.get('value1').valid) || (this.skipExportForm.get('condition1').value.field_name === 'report_title' && this.skipExportForm.get('value1').valid) ||
+            this.valueOption1.length !== 0 ||
+            this.skipExportForm.get('operator1').value === 'is_empty' ||
+            this.skipExportForm.get('operator1').value === 'is_not_empty'
+          ) {
+            if (
+              (this.skipExportForm.get('condition2').value.field_name ===
+                'spent_at' &&
+                this.skipExportForm.get('value2').valid) || (this.skipExportForm.get('condition2').value.field_name === 'report_title' && this.skipExportForm.get('value2').valid) ||
+              this.valueOption2.length !== 0 ||
+              this.skipExportForm.get('operator2').value === 'is_empty' ||
+              this.skipExportForm.get('operator2').value === 'is_not_empty'
+            ) {
+              return true;
+            }
+          }
+        }
+      }
+    } else if (this.skipExportForm.get('condition1').valid && this.skipExportForm.get('operator1').valid) {
+      if (this.valueOption1.length !== 0 || this.skipExportForm.get('value1').valid) {
+        return true;
+      }
+      if (
+        this.skipExportForm.get('condition1').value.field_name === 'spent_at' &&
+        this.skipExportForm.get('value1').valid
+      ) {
+        return true;
+      }
+      if (
+        this.skipExportForm.get('operator1').value === 'is_empty' ||
+        this.skipExportForm.get('operator1').value === 'is_not_empty'
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   saveSkipExportFields() {
     const that = this;
     that.isLoading = true;

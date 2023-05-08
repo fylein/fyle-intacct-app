@@ -139,7 +139,7 @@
              </div>
              <img class="skip-export--delete-icon" src="assets/images/pngs/delete.svg" (click)="remCondition()" matTooltip="Delete">
           </div>
-          <div class="validation-text">
+          <div class="validation-text" *ngIf = "checkValidationCondition()">
              <p>Condition selected should be distinct.</p>
           </div>
        </form>
@@ -165,7 +165,7 @@
        </a>
     </div>
     <div class="skip-export--save-btn">
-       <button (click)="saveSkipExportFields()" mat-flat-button color="primary" type="submit">    
+       <button (click)="saveSkipExportFields()" mat-flat-button color="primary" type="submit" [disabled] = "!checkValidation()">    
        Save
        </button>
     </div>
