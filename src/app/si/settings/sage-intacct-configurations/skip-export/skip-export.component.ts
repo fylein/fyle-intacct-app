@@ -8,8 +8,6 @@ import { SkipExport } from 'src/app/core/models/skip-export.model';
 import { forkJoin } from 'rxjs';
 import { MatChipInputEvent } from '@angular/material';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { ExpenseFilterResponse } from 'src/app/core/models/expense-filter-response.model';
-import { ConditionField } from 'src/app/core/models/condition-field.model';
 
 @Component({
   selector: 'app-skip-export',
@@ -446,135 +444,146 @@ export class SkipExportComponent implements OnInit {
     return false;
   }
 
-  private setConditionFields(response: ExpenseFilterResponse, conditionArray: ConditionField[]) {
-    response.results.forEach((element) => {
-      const type = this.conditionFieldOptions.filter( (fieldOption) => fieldOption.field_name === element.condition);
-      const selectedConditionOption: ConditionField = type[0];
-      conditionArray.push(selectedConditionOption);
-    });
-  }
-
-  private setOperatorFieldOptions(response: ExpenseFilterResponse, conditionArray: ConditionField[]) {
-    if (conditionArray.length) {
-      if (response.results[0].is_custom) {
-        this.setCustomOperatorOptions(response.results[0].rank, response.results[0].custom_field_type);
-      } else {
-        this.operatorFieldOptions1 = this.setDefaultOperatorOptions(response.results[0].condition);
-      }
-      if (response.results[0].join_by !== null) {
-        if (response.results[1].is_custom) {
-          this.setCustomOperatorOptions(response.results[1].rank, response.results[1].custom_field_type);
-        } else {
-          this.operatorFieldOptions2 = this.setDefaultOperatorOptions(response.results[1].condition);
-        }
-      }
-    }
-  }
-
-  private setSkippedConditions(response: ExpenseFilterResponse, conditionArray: ConditionField[]) {
-    if (response.count > 0) {
-      this.skippedCondition1 = conditionArray[0].field_name;
-      if (response.count > 1 && response.results[0].join_by) {
-        this.skippedCondition2 = conditionArray[1].field_name;
-      } else {
-        this.skippedCondition2 = '';
-      }
-    } else {
-      this.skippedCondition1 = '';
-      this.skippedCondition2 = '';
-    }
-  }
-
-  getSelectedOperator(operator: string, value: any, condition: ConditionField) {
-    switch (operator) {
-      case 'isnull': {
-        return value === 'True' ? 'is_empty' : 'is_not_empty';
-      }
-      case 'in':
-        return 'iexact';
-      case 'iexact': return operator;
-      default: return operator;
-    }
-  }
-
-  getFieldValue(value: any, condition: ConditionField, rank: number) {
-    if (condition.type === 'DATE') {
-      return new Date(value[0]);
-    } else if (condition.field_name === 'report_title') {
-      return value[0];
-    }
-    if (rank === 1) {
-        this.valueOption1 = value;
-      } else if (rank === 2) {
-        this.valueOption2 = value;
-      }
-    return '';
-
-  }
-
-  setupSkipExportForm(response: ExpenseFilterResponse, conditionArray: ConditionField[]) {
-
-    this.setConditionFields(response, conditionArray);
-
-    this.setOperatorFieldOptions(response, conditionArray);
-
-    this.setSkippedConditions(response, conditionArray);
-
-    let [selectedOperator1, valueFC1, customFieldTypeFC1] = ['', '', ''];
-    let [selectedOperator2, valueFC2] = ['', ''];
-    let joinByFC = '';
-
-    response.results.forEach((result, index) => {
-      if (index === 0) {
-        selectedOperator1 = this.getSelectedOperator(result.operator, result.values[0], conditionArray[0]);
-        if (!(selectedOperator1 === 'is_empty' || selectedOperator1 === 'is_not_empty')) {
-          valueFC1 = this.getFieldValue(result.values, conditionArray[0], result.rank);
-        } else {
-          this.isDisabledChip1 = true;
-        }
-        customFieldTypeFC1 = result.custom_field_type;
-      } else if (index === 1 && response.results[0].join_by !== null) {
-        selectedOperator2 = this.getSelectedOperator(result.operator, result.values[0], conditionArray[1]);
-        joinByFC = response.results[0].join_by;
-        if (!(selectedOperator2 === 'is_empty' || selectedOperator2 === 'is_not_empty')) {
-          valueFC2 = this.getFieldValue(result.values, conditionArray[1], result.rank);
-        } else {
-          this.isDisabledChip2 = true;
-        }
-      }
-    });
-
-    this.skipExportForm = this.formBuilder.group({
-      condition1: [conditionArray.length > 0 ? conditionArray[0] : ''],
-      operator1: [selectedOperator1],
-      value1: [valueFC1],
-      customFieldType1: [customFieldTypeFC1],
-      join_by: [joinByFC],
-      condition2: [joinByFC ? conditionArray[1] : ''],
-      operator2: [joinByFC && selectedOperator2 ? selectedOperator2 : ''],
-      value2: [valueFC2],
-      customFieldType2: joinByFC ? [response.results[1].custom_field_type] : ['']
-    });
-
-    if (response.count === 2 && joinByFC) {
-      this.showAdditionalCondition = true;
-      this.showAddButton = false;
-    } else {
-      this.showAdditionalCondition = false;
-      this.showAddButton = true;
-    }
-
-    this.fieldWatcher();
-    this.isLoading = false;
-  }
-
   getAllSettings() {
     forkJoin([
       this.mappingsService.getFyleCustomFields(),
       this.settingsService.getSkipExport(this.workspaceId),
     ]).subscribe((responses) => {
       this.conditionFieldOptions = responses[0];
-      this.setupSkipExportForm(responses[1], []);
+      const conditionArray = [];
+      responses[1].results.forEach((element) => {
+        const selectedConditionOption = {
+          field_name: element.condition,
+          type: '',
+          is_custom: element.is_custom,
+        };
+        const type = this.conditionFieldOptions.filter(
+          (fieldOption) => fieldOption.field_name === element.condition
+        )[0].type;
+        selectedConditionOption.type = type;
+        conditionArray.push(selectedConditionOption);
+      });
+
+      if (conditionArray.length) {
+        if (responses[1].results[0].is_custom) {
+          this.setCustomOperatorOptions(responses[1].results[0].rank, responses[1].results[0].custom_field_type);
+        } else {
+          this.operatorFieldOptions1 = this.setDefaultOperatorOptions(
+            responses[1].results[0].condition
+          );
+        }
+        if (responses[1].results[0].join_by !== null) {
+          this.updateAdditionalFilterVisibility(true);
+          if (responses[1].results[1].is_custom) {
+            this.setCustomOperatorOptions(responses[1].results[1].rank, responses[1].results[1].custom_field_type);
+          } else {
+            this.operatorFieldOptions2 = this.setDefaultOperatorOptions(
+              responses[1].results[1].condition
+            );
+          }
+        }
+      }
+
+      if (responses[1].count > 0) {
+      this.skippedCondition1 = conditionArray[0].field_name;
+      if (responses[1].count > 1 && responses[1].results[0].join_by) {
+        this.skippedCondition2 = conditionArray[1].field_name;
+      }
+    }
+      let selectedOperator1 = '';
+      let selectedOperator2 = '';
+      let valueFC1;
+      let valueFC2;
+      let customFieldTypeFC1;
+      let joinByFC;
+      if (responses[1].count > 0) {
+        if (responses[1].results[0].operator === 'isnull') {
+          if (responses[1].results[0].values[0] === 'True') {
+            selectedOperator1 = 'is_empty';
+          } else {
+            selectedOperator1 = 'is_not_empty';
+          }
+        } else {
+          selectedOperator1 = responses[1].results[0].operator;
+        }
+        if (
+          selectedOperator1 === 'is_empty' ||
+          selectedOperator1 === 'is_not_empty'
+        ) {
+          this.isDisabledChip1 = true;
+        } else {
+          if (conditionArray[0].type === 'DATE') {
+            valueFC1 = new Date(responses[1].results[0].values[0]);
+          } else if (conditionArray[0].field_name === 'report_title') {
+            valueFC1 = responses[1].results[0].values[0];
+          } else {
+            this.valueOption1 = responses[1].results[0].values;
+          }
+        }
+        customFieldTypeFC1 = responses[1].results[0].custom_field_type;
+      }
+      if (responses[1].count > 1) {
+        if (responses[1].results[1].operator === 'isnull') {
+          if (responses[1].results[1].values[0] === 'True') {
+            selectedOperator2 = 'is_empty';
+          } else {
+            selectedOperator2 = 'is_not_empty';
+          }
+        } else {
+          selectedOperator2 = responses[1].results[1].operator;
+        }
+        if (responses[1].results[0].join_by !== null) {
+          if (
+            selectedOperator2 === 'is_empty' ||
+            selectedOperator2 === 'is_not_empty'
+          ) {
+            this.isDisabledChip2 = true;
+          } else {
+            if (conditionArray[1].type === 'DATE') {
+              valueFC2 = new Date(responses[1].results[1].values[0]);
+            } else if (conditionArray[1].field_name === 'report_title') {
+              valueFC2 = responses[1].results[1].values[0];
+            } else {
+              this.valueOption2 = responses[1].results[1].values;
+            }
+          }
+        }
+        if (responses[1].results[0].join_by !== null) {
+          joinByFC = responses[1].results[0].join_by;
+        }
+      }
+
+      if (selectedOperator1 === 'in') {
+        selectedOperator1 = 'iexact';
+      }
+      if (selectedOperator2 === 'in') {
+        selectedOperator2 = 'iexact';
+      }
+
+      this.skipExportForm = this.formBuilder.group({
+        condition1: [
+          conditionArray.length > 0 ? conditionArray[0] : '',
+          [Validators.required],
+        ],
+        operator1: [
+          selectedOperator1.length !== 0 ? selectedOperator1 : '',
+          [Validators.required],
+        ],
+        value1: [valueFC1 ? valueFC1 : '', [Validators.required]],
+        customFieldType1: [customFieldTypeFC1 ? customFieldTypeFC1 : ''],
+        join_by: [joinByFC ? joinByFC : '', [Validators.required]],
+        condition2: [joinByFC ? conditionArray[1] : '', [Validators.required]],
+        operator2: [
+          joinByFC && selectedOperator2 ? selectedOperator2 : '',
+          [Validators.required],
+        ],
+        value2: [valueFC2 ? valueFC2 : '', [Validators.required]],
+        customFieldType2: joinByFC
+          ? [responses[1].results[1].custom_field_type]
+          : [''],
+      });
+      this.fieldWatcher();
+      this.isLoading = false;
     });
   }
 
