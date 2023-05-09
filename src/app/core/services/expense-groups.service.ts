@@ -7,6 +7,7 @@ import { Expense } from '../models/expense.model';
 import { WorkspaceService } from './workspace.service';
 import { ExpenseGroupSetting } from '../models/expense-group-setting.model';
 import { Count } from '../models/count.model';
+import { SkipExportLogResponse } from '../models/skip-export-log-response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -26,6 +27,12 @@ export class ExpenseGroupsService {
         state
       }
     );
+  }
+
+  getSkipExportLogs(limit: number, offset: number): Observable<SkipExportLogResponse> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(`/workspaces/${workspaceId}/fyle/expenses/`, {limit, offset});
   }
 
   getAllExpenseGroups(state: string): Observable<ExpenseGroupResponse> {

@@ -9,11 +9,14 @@ import { MappingSettingResponse } from '../models/mapping-setting-response.model
 import { Configuration } from '../models/configuration.model';
 import { MappingSetting } from '../models/mapping-setting.model';
 import { WorkspaceService } from './workspace.service';
+import { SkipExport } from '../models/skip-export.model';
+import { ExpenseFilterResponse } from '../models/expense-filter-response.model';
 
 const fyleCredentialsCache = new Subject<void>();
 const sageIntacctCredentialsCache = new Subject<void>();
 const configurationCache = new Subject<void>();
 const mappingsSettingsCache = new Subject<void>();
+const skipExportCache = new Subject<void>();
 
 @Injectable({
   providedIn: 'root',
@@ -94,6 +97,22 @@ export class SettingsService {
   })
   postMappingSettings(workspaceId: number, mappingSettings: MappingSetting[]): Observable<MappingSetting[]> {
     return this.apiService.post(`/workspaces/${workspaceId}/mappings/settings/`, mappingSettings);
+  }
+
+  @CacheBuster({
+    cacheBusterNotifier: skipExportCache
+  })
+  postSkipExport(workspaceId: number, skipExport: SkipExport): Observable<SkipExport> {
+    workspaceId = this.workspace.getWorkspaceId();
+    return this.apiService.post(`/workspaces/${workspaceId}/fyle/expense_filters/`, skipExport);
+  }
+
+  @Cacheable({
+    cacheBusterObserver: skipExportCache
+  })
+  getSkipExport(workspaceId: number): Observable<ExpenseFilterResponse> {
+    workspaceId = this.workspace.getWorkspaceId();
+    return this.apiService.get(`/workspaces/${workspaceId}/fyle/expense_filters/`, {});
   }
 
   @Cacheable({

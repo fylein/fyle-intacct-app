@@ -17,6 +17,7 @@ import { GroupedDestinationAttributes } from '../models/grouped-destination-attr
 import { Mapping } from '../models/mappings.model';
 import { WorkspaceService } from './workspace.service';
 import { LocationEntityMapping } from '../models/location-entity-mapping.model';
+import { ConditionField } from '../models/condition-field.model';
 
 const generalMappingsCache = new Subject<void>();
 
@@ -264,5 +265,11 @@ export class MappingsService {
   postEmployeeMappings(employeeMapping: EmployeeMapping): Observable<EmployeeMapping> {
     const workspaceId = this.workspaceService.getWorkspaceId();
     return this.apiService.post(`/workspaces/${workspaceId}/mappings/employee/`, employeeMapping);
+  }
+
+  getFyleCustomFields(): Observable<ConditionField[]> {
+    const workspaceId = this.workspaceService.getWorkspaceId();
+
+    return this.apiService.get(`/workspaces/${workspaceId}/fyle/custom_fields/`, {});
   }
 }
