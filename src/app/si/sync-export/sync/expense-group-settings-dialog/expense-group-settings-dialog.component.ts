@@ -28,11 +28,11 @@ export class ExpenseGroupSettingsDialogComponent implements OnInit {
 private constructReimbursableGroupingOptions(groupedFields: string[]) {
   const grouping = groupedFields.concat();
   if (groupedFields.includes('expense_id')) {
-   grouping.push('expense_number'); 
-  } 
+   grouping.push('expense_number');
+  }
   if (groupedFields.includes('claim_number')) {
     grouping.push('report_id');
-  } 
+  }
   if (groupedFields.includes('settlement_id')) {
     grouping.push('payment_number');
   }
