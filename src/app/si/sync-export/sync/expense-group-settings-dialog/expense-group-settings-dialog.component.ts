@@ -25,13 +25,27 @@ export class ExpenseGroupSettingsDialogComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private expenseGroupsService: ExpenseGroupsService, private settingsService: SettingsService, private storageService: StorageService, private dialogRef: MatDialogRef<ExpenseGroupSettingsDialogComponent>) { }
 
+private constructReimbursableGroupingOptions(groupedFields: string[]) {
+  const grouping = groupedFields.concat();
+  if (groupedFields.includes('expense_id')) {
+   grouping.push('expense_number');
+  }
+  if (groupedFields.includes('claim_number')) {
+    grouping.push('report_id');
+  }
+  if (groupedFields.includes('settlement_id')) {
+    grouping.push('payment_number');
+  }
+  return grouping;
+}
+
 save() {
   const that = this;
 
   that.isLoading = true;
 
-  const reimbursableExpensesGroupedBy = [that.importExpensesForm.value.reimbursableExpenseGroupConfiguration];
-  const cccExpensesGroupedBy = [that.importExpensesForm.getRawValue().cccExpenseGroupConfiguration];
+  const reimbursableExpensesGroupedBy = this.constructReimbursableGroupingOptions([that.importExpensesForm.value.reimbursableExpenseGroupConfiguration]);
+  const cccExpensesGroupedBy = this.constructReimbursableGroupingOptions([that.importExpensesForm.getRawValue().cccExpenseGroupConfiguration]);
   const expenseState = that.importExpensesForm.value.expenseState;
   const reimbursableExportDateType = that.importExpensesForm.value.reimbursableExportDate;
   const cccExportDateType = that.importExpensesForm.getRawValue().cccExportDate;
