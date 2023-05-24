@@ -193,7 +193,7 @@ export class GeneralMappingsComponent implements OnInit {
 
   getAttributesFilteredByConfig() {
     const attributes = [
-      'LOCATION', 'DEPARTMENT', 'PROJECT', 'LOCATION_ENTITY', 'CLASS',
+      'LOCATION', 'DEPARTMENT', 'PROJECT', 'LOCATION_ENTITY', 'CLASS', 'ITEM'
     ];
     let accountType = '';
 
@@ -223,10 +223,6 @@ export class GeneralMappingsComponent implements OnInit {
 
     if (this.configuration.sync_fyle_to_sage_intacct_payments) {
         attributes.push('PAYMENT_ACCOUNT');
-    }
-
-    if (this.projectMappingSetting.length) {
-      attributes.push('ITEM');
     }
 
     if (this.configuration.import_tax_codes) {
