@@ -144,20 +144,6 @@
           </div>
        </form>
     </div>
-    <div *ngIf="!isLoading && skippedCondition1 && !skippedCondition2" class="info-box-one" fxLayout="row" fxLayoutAlign="start center">
-       <div fxFlex="75" class="info-box-one-text" *ngIf="skippedCondition1==='claim_number' || skippedCondition1==='spent_at'">
-         <mat-icon [inline]="true" class="info-icon main">info</mat-icon>
-         The values for {{ (skippedCondition1 === 'claim_number' ? 'report_number' : skippedCondition1)  | titlecase | snakeCaseToSpaceCase }} condition will get removed once the integration skip these expenses. 
-       </div>
-       <div fxFlex="25"></div>
-     </div>
-     <div *ngIf="!isLoading && skippedCondition1 && skippedCondition2" class="info-box-one" fxLayout="row" fxLayoutAlign="start center">
-       <div fxFlex="75" class="info-box-one-text" *ngIf="(skippedCondition1==='claim_number' || skippedCondition1==='spent_at') && (skippedCondition2==='claim_number' || skippedCondition2==='spent_at')">
-         <mat-icon [inline]="true" class="info-icon main">info</mat-icon>
-         The values for {{ (skippedCondition1 === 'claim_number' ? 'report_number' : skippedCondition1)  | titlecase | snakeCaseToSpaceCase }} and {{ (skippedCondition2 === 'claim_number' ? 'report_number' : skippedCondition2)  | titlecase | snakeCaseToSpaceCase }} conditions will get removed once the integration skip these expenses. 
-       </div>
-       <div fxFlex="25"></div>
-     </div>
     <div class="add-condition-btn" fxLayoutAlign="start stretch" fxLayout="row" *ngIf = "showAddButton">
        <img class="skip-export--add-icon" src="assets/images/pngs/add.svg" (click)="updateAdditionalFilterVisibility(true)">
        <a class="add-row-text" (click)="updateAdditionalFilterVisibility(true)">
