@@ -18,6 +18,9 @@
       <mat-form-field floatLabel="always" appearance="outline" required>
         <mat-select placeholder="Choose Sage Intacct equivalent of Reimbursable Expenses"
           formControlName="reimburExpense">
+          <mat-option>
+            None
+          </mat-option>
           <mat-option *ngFor="let option of expenseOptions" [value]="option.value">
             {{option.label}}
           </mat-option>
