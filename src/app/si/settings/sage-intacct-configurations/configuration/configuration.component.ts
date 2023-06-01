@@ -255,7 +255,7 @@ export class ConfigurationComponent implements OnInit {
       }
 
       that.configurationForm = that.formBuilder.group({
-        reimburExpense: [that.configuration ? that.configuration.reimbursable_expenses_object : '', Validators.required],
+        reimburExpense: [that.configuration ? that.configuration.reimbursable_expenses_object : ''],
         employeeFieldMapping: [that.configuration ? that.configuration.employee_field_mapping : ''],
         cccExpense: [that.configuration ? that.configuration.corporate_credit_card_expenses_object : ''],
         importProjects: [importProjects],
@@ -279,7 +279,7 @@ export class ConfigurationComponent implements OnInit {
       that.isLoading = false;
       that.mappingSettings = [];
       that.configurationForm = that.formBuilder.group({
-        reimburExpense: ['', Validators.required],
+        reimburExpense: [''],
         employeeFieldMapping: [''],
         cccExpense: [null],
         importProjects: [false],
