@@ -401,10 +401,10 @@ export class ConfigurationComponent implements OnInit {
   constructConfigurationsPayload(): Configuration {
     const that = this;
 
-    const reimbursableExpensesObject = that.configurationForm.getRawValue().reimburExpense;
+    const reimbursableExpensesObject = that.configurationForm.getRawValue().reimburExpense ? that.configurationForm.getRawValue().reimburExpense : null;
     const cccExpensesObject = that.configurationForm.getRawValue().cccExpense ? that.configurationForm.getRawValue().cccExpense : null;
-    const categoryMappingObject = that.getCategory(reimbursableExpensesObject)[0].value;
-    const employeeMappingsObject = that.getEmployee(reimbursableExpensesObject)[0].value;
+    const categoryMappingObject = reimbursableExpensesObject ? that.getCategory(reimbursableExpensesObject)[0].value : null;
+    const employeeMappingsObject = reimbursableExpensesObject ? that.getEmployee(reimbursableExpensesObject)[0].value : null;
     const importProjects = that.configurationForm.value.importProjects;
     const importCategories = that.configurationForm.value.importCategories;
     const autoMapEmployees = that.configurationForm.value.autoMapEmployees ? that.configurationForm.value.autoMapEmployees : null;
@@ -442,14 +442,18 @@ export class ConfigurationComponent implements OnInit {
   constructMappingSettingsPayload(): MappingSetting[] {
     const that = this;
 
-    const reimbursableExpensesObject = that.configurationForm.getRawValue().reimburExpense;
-    const employeeMappingsObject = that.getEmployee(reimbursableExpensesObject)[0].value;
-    const categoryMappingObject = that.getCategory(reimbursableExpensesObject)[0].value;
+    const reimbursableExpensesObject = that.configurationForm.getRawValue().reimburExpense ? that.configurationForm.getRawValue().reimburExpense : null;
+    const employeeMappingsObject = reimbursableExpensesObject ? that.getEmployee(reimbursableExpensesObject)[0].value : null;
+    const categoryMappingObject = reimbursableExpensesObject ? that.getCategory(reimbursableExpensesObject)[0].value : null;
 
-    const mappingsSettingsPayload: MappingSetting[] = [{
-      source_field: 'EMPLOYEE',
-      destination_field: employeeMappingsObject
-    }];
+    const mappingsSettingsPayload: MappingSetting[] = [];
+
+    if (employeeMappingsObject) {
+      mappingsSettingsPayload.push({
+        source_field: 'EMPLOYEE',
+        destination_field: employeeMappingsObject
+      });
+    }
 
     const importProjects = that.configurationForm.value.importProjects ? that.configurationForm.value.importProjects : false;
     const importTaxCodes = that.configurationForm.value.importTaxCodes ? that.configurationForm.value.importTaxCodes : false;
@@ -462,10 +466,12 @@ export class ConfigurationComponent implements OnInit {
       });
     }
 
-    mappingsSettingsPayload.push({
-      source_field: 'CATEGORY',
-      destination_field: categoryMappingObject
-    });
+    if (categoryMappingObject) {
+      mappingsSettingsPayload.push({
+        source_field: 'CATEGORY',
+        destination_field: categoryMappingObject
+      });
+    }
 
     if (importProjects) {
       mappingsSettingsPayload.push({
