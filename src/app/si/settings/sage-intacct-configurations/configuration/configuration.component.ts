@@ -103,7 +103,7 @@ export class ConfigurationComponent implements OnInit {
     });
     }
 
-    if (reimburExpenseMappedTo === 'EXPENSE_REPORT' || (reimburExpenseMappedTo === 'JOURNAL_ENTRY' && employeesMappedTo === 'EMPLOYEE')) {
+    if (reimburExpenseMappedTo === 'EXPENSE_REPORT') {
       cccExpenseOptions.push({
         label: 'Expense Report',
         value: 'EXPENSE_REPORT'
