@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: intacct-app
+  namespace: integrations
+  labels:
+    app: intacct-app
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: intacct-app
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: intacct-app
+  namespace: integrations
+  labels:
+    app: intacct-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: intacct-app
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: intacct-app
+    spec:
+      containers:
+        - name: intacct-app
+          image: docker.io/{{DOCKERHUB_USERNAME}}/fyle_intacct-app:{{RELEASE_VERSION}}
+          resources:
+            limits:
+              memory: 30Mi
+            requests:
+              memory: 30Mi
+          env:
+            - name: GET_HOSTS_FROM
+              value: dns
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 1
+          envFrom:
+            - secretRef:
+                name: intacct-app-secrets
+      imagePullSecrets:
+        - name: myregistrykey2
