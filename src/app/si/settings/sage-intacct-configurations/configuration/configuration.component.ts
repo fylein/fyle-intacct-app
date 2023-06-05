@@ -147,13 +147,8 @@ export class ConfigurationComponent implements OnInit {
         that.configurationForm.controls.cccExpense.setValidators([Validators.required]);
         // Clear validators for the 'employeeFieldMapping' form control
         that.configurationForm.controls.employeeFieldMapping.clearValidators();
-
-        // Update the form control's value and validation state
-        that.configurationForm.controls.employeeFieldMapping.updateValueAndValidity();
       } else {
         that.configurationForm.controls.cccExpense.clearValidators();
-        // Update the form control's value and validation state
-        that.configurationForm.controls.employeeFieldMapping.updateValueAndValidity();
       }
       that.cccExpenseOptions = that.getCCCExpenseOptions(reimbursableExpenseMappedTo);
 
