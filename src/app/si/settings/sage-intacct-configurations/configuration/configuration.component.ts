@@ -94,14 +94,11 @@ export class ConfigurationComponent implements OnInit {
       label: 'Journal Entry',
       value: 'JOURNAL_ENTRY'
     },
-  ];
-
-    if (employeesMappedTo === 'VENDOR' || employeesMappedTo === 'EMPLOYEE') {
-      cccExpenseOptions.push({
-        label: 'Bill',
-        value: 'BILL'
-    });
+    {
+      label: 'Bill',
+      value: 'BILL'
     }
+  ];
 
     if (reimburExpenseMappedTo === 'EXPENSE_REPORT') {
       cccExpenseOptions.push({
