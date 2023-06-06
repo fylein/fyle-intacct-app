@@ -146,7 +146,7 @@ export class ConfigurationComponent implements OnInit {
       if (!reimbursableExpenseMappedTo) {
         that.configurationForm.controls.cccExpense.setValidators([Validators.required]);
         // Clear validators for the 'employeeFieldMapping' form control
-        that.configurationForm.controls.employeeFieldMapping.clearValidators();
+        that.configurationForm.controls.reimburExpense.clearValidators();
       } else {
         that.configurationForm.controls.cccExpense.clearValidators();
       }
@@ -452,13 +452,6 @@ export class ConfigurationComponent implements OnInit {
 
     const mappingsSettingsPayload: MappingSetting[] = [];
 
-    if (employeeMappingsObject) {
-      mappingsSettingsPayload.push({
-        source_field: 'EMPLOYEE',
-        destination_field: employeeMappingsObject
-      });
-    }
-
     const importProjects = that.configurationForm.value.importProjects ? that.configurationForm.value.importProjects : false;
     const importTaxCodes = that.configurationForm.value.importTaxCodes ? that.configurationForm.value.importTaxCodes : false;
     const isCCTExportEnabled = that.configurationForm.value.cccExpense === 'CHARGE_CARD_TRANSACTION' ? true : false;
@@ -467,13 +460,6 @@ export class ConfigurationComponent implements OnInit {
       mappingsSettingsPayload.push({
         source_field: 'TAX_GROUP',
         destination_field: 'TAX_DETAIL'
-      });
-    }
-
-    if (categoryMappingObject) {
-      mappingsSettingsPayload.push({
-        source_field: 'CATEGORY',
-        destination_field: categoryMappingObject
       });
     }
 
