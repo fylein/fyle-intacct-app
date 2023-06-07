@@ -194,7 +194,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
   showSeparateCCCField() {
     const that = this;
     const settings = that.configuration;
-    if (settings.corporate_credit_card_expenses_object && settings.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT' && settings.reimbursable_expenses_object === 'EXPENSE_REPORT') {
+    if (settings.corporate_credit_card_expenses_object && settings.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT') {
       return true;
     }
 
