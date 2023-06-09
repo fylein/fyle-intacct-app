@@ -37,7 +37,7 @@
         routerLink="{{workspace.id}}/settings/general/mappings/" routerLinkActive="active" (click)="onGeneralMappingsPageVisit()">
         General Mappings
       </a>
-      <a class="mat-h3 si-sidenav--nav-sub-item" [ngClass]="{'si-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item
+      <a class="mat-h3 si-sidenav--nav-sub-item" *ngIf = "showEmployeeMapping()" [ngClass]="{'si-sidenav--nav-sub-item__disabled': navDisabled}" mat-list-item
         routerLink="{{workspace.id}}/settings/employee/mappings/" routerLinkActive="active" (click)="onEmployeeMappingsPageVisit()">
         Employee Mappings
       </a>

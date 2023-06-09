@@ -58,6 +58,14 @@ export class SiComponent implements OnInit {
     return name.replace(/_/g, ' ');
   }
 
+  showEmployeeMapping() {
+    if (this.configuration.corporate_credit_card_expenses_object && !this.configuration.reimbursable_expenses_object) {
+      return true;
+    }
+
+    return false;
+  }
+
   refreshDashboardMappingSettings(mappingSettings: MappingSetting[]) {
     const that = this;
 
