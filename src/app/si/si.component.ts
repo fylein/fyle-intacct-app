@@ -39,7 +39,7 @@ export class SiComponent implements OnInit {
   windowReference: Window;
   connectSageIntacct = true;
   showRefreshIcon: boolean;
-  showEmployeeMapping: boolean = true;
+  showEmployeeMapping = true;
 
   constructor(
     private workspaceService: WorkspaceService,
