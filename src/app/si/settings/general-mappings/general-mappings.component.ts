@@ -57,7 +57,7 @@ export class GeneralMappingsComponent implements OnInit {
     const that = this;
 
     that.route.queryParams.subscribe(params => {
-      if (params.redirect_to_employee_mappings && that.configuration.employee_field_mapping) {
+      if (params.redirect_to_employee_mappings && that.configuration.reimbursable_expenses_object) {
         setTimeout(() => {
           const destination = that.configuration.employee_field_mapping.toLowerCase().replace(/\b(\w)/g, s => s.toUpperCase());
           that.snackBar.open(`To ensure successful export, map Fyle Employees to ${destination}s in SageIntacct`, '', {
