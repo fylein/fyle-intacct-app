@@ -39,6 +39,7 @@ export class SiComponent implements OnInit {
   windowReference: Window;
   connectSageIntacct = true;
   showRefreshIcon: boolean;
+  showEmployeeMapping: boolean = true;
 
   constructor(
     private workspaceService: WorkspaceService,
@@ -125,8 +126,13 @@ export class SiComponent implements OnInit {
     that.router.events.subscribe(() => {
       const onboarded = that.storageService.get('onboarded');
       if (onboarded !== true) {
-        that.getConfigurations().subscribe(() => {
+        that.getConfigurations().subscribe((response) => {
           that.navDisabled = false;
+          if (response[0].reimbursable_expenses_object != null) {
+            this.showEmployeeMapping = true;
+          } else {
+            this.showEmployeeMapping = false;
+          }
         });
       }
     });
