@@ -141,14 +141,35 @@ export class ConfigurationComponent implements OnInit {
 
   setupReimbursableFieldWatcher() {
     const that = this;
-    that.configurationForm.controls.reimburExpense.valueChanges.subscribe((reimbursableExpenseMappedTo) => {
-      that.configurationForm.controls.cccExpense.reset();
-      if (!reimbursableExpenseMappedTo) {
-        that.configurationForm.controls.cccExpense.setValidators([Validators.required]);
-        // Clear validators for the 'employeeFieldMapping' form control
-        that.configurationForm.controls.reimburExpense.clearValidators();
-      } else {
-        that.configurationForm.controls.cccExpense.clearValidators();
+    const cccExpenseControl = this.configurationForm.controls.cccExpense;
+    const reimburExpenseControl = this.configurationForm.controls.reimburExpense;
+    let programmaticChange = false;
+  
+    cccExpenseControl.valueChanges.subscribe((cccExpenseMappedTo) => {
+      if (!programmaticChange) {
+        programmaticChange = true;
+        if (!cccExpenseMappedTo && !reimburExpenseControl.value) {
+          reimburExpenseControl.setValidators([Validators.required]);
+        } else {
+          reimburExpenseControl.clearValidators();
+          reimburExpenseControl.reset();
+        }
+        reimburExpenseControl.updateValueAndValidity();
+        programmaticChange = false;
+      }
+    });
+  
+    reimburExpenseControl.valueChanges.subscribe((reimbursableExpenseMappedTo) => {
+      if (!programmaticChange) {
+        programmaticChange = true;
+        cccExpenseControl.reset();
+        if (!reimbursableExpenseMappedTo && !cccExpenseControl.value) {
+          cccExpenseControl.setValidators([Validators.required]);
+        } else {
+          cccExpenseControl.clearValidators();
+        }
+        cccExpenseControl.updateValueAndValidity();
+        programmaticChange = false;
       }
       that.cccExpenseOptions = that.getCCCExpenseOptions(reimbursableExpenseMappedTo);
 
@@ -188,7 +209,7 @@ export class ConfigurationComponent implements OnInit {
   setupEmployeesFieldWatcher(reimbursableExpense) {
     const that = this;
     that.configurationForm.controls.employeeFieldMapping.valueChanges.subscribe((employeesMappedTo) => {
-        that.configurationForm.controls.cccExpense.reset();
+        // that.configurationForm.controls.cccExpense.reset();
         that.cccExpenseOptions = that.getCCCExpenseOptions(reimbursableExpense, employeesMappedTo);
       });
   }
