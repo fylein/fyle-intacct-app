@@ -144,7 +144,7 @@ export class ConfigurationComponent implements OnInit {
     const cccExpenseControl = this.configurationForm.controls.cccExpense;
     const reimburExpenseControl = this.configurationForm.controls.reimburExpense;
     let programmaticChange = false;
-  
+
     cccExpenseControl.valueChanges.subscribe((cccExpenseMappedTo) => {
       if (!programmaticChange) {
         programmaticChange = true;
@@ -158,7 +158,7 @@ export class ConfigurationComponent implements OnInit {
         programmaticChange = false;
       }
     });
-  
+
     reimburExpenseControl.valueChanges.subscribe((reimbursableExpenseMappedTo) => {
       if (!programmaticChange) {
         programmaticChange = true;
