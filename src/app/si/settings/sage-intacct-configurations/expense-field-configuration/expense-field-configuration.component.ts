@@ -83,14 +83,16 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     that.showAddButton = that.showOrHideAddButton();
   }
 
-  enableDependentFieldImports() {
+  enableDependentFieldImports(payload?: DependentFieldPost) {
     this.isLoading = true;
-    const payload: DependentFieldPost = {
-      is_import_enabled: this.dependentExpenseFieldsForm.value.import,
-      cost_code_field_name: this.dependentExpenseFieldsForm.value.costCode,
-      cost_type_field_name: this.dependentExpenseFieldsForm.value.costType,
-      workspace: parseInt(this.workspaceId.toString())
-    };
+    if (!payload) {
+      payload = {
+        is_import_enabled: this.dependentExpenseFieldsForm.value.import,
+        cost_code_field_name: this.dependentExpenseFieldsForm.value.costCode,
+        cost_type_field_name: this.dependentExpenseFieldsForm.value.costType,
+        workspace: parseInt(this.workspaceId.toString())
+      };
+    }
 
     const createOrUpdateDependentField = this.dependentFields ? this.settingsService.patchDependentFields(this.workspaceId, payload) : this.settingsService.postDependentFields(this.workspaceId, payload);
 
@@ -228,12 +230,24 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
   }
 
   private setupDependentExpenseFieldsWatcher(): void {
+    if (this.dependentExpenseFieldsForm.value.import) {
+      this.dependentExpenseFieldsForm.controls.costCode.disable();
+      this.dependentExpenseFieldsForm.controls.costType.disable();
+    }
+
     // TODO: disable cost code and project code if it's already imported
     this.dependentExpenseFieldsForm.controls.import.valueChanges.subscribe((isToggleEnabled: boolean) => {
       if (isToggleEnabled) {
         this.dependentExpenseFieldsForm.controls.costCode.setValidators([Validators.required]);
         this.dependentExpenseFieldsForm.controls.costType.setValidators([Validators.required]);
       } else {
+        if (this.dependentFields) {
+          const payload: DependentFieldPost = {
+            is_import_enabled: false,
+            workspace: parseInt(this.workspaceId.toString())
+          }
+          this.enableDependentFieldImports(payload);
+        }
         this.dependentExpenseFieldsForm.controls.costCode.clearValidators();
         this.dependentExpenseFieldsForm.controls.costType.clearValidators();
       }
@@ -304,8 +318,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
         }
       });
 
-      const isTasksPresent = that.sageIntacctFields.filter(setting => setting.attribute_type === 'TASK').length;
-      that.showDependentFieldMapping = (isProjectImported && isTasksPresent) ? true : false;
+      that.showDependentFieldMapping = isProjectImported ? true : false;
 
       return sageIntacctFields;
     });

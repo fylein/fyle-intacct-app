@@ -12,7 +12,7 @@ export interface DependentField extends DependentFieldPost {
 
 export type DependentFieldPost = {
     is_import_enabled: boolean;
-    cost_code_field_name: string;
-    cost_type_field_name: string;
+    cost_code_field_name?: string;
+    cost_type_field_name?: string;
     workspace: number;
 }
