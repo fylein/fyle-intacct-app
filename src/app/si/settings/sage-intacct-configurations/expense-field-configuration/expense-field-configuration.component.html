@@ -30,7 +30,7 @@
     </div>
     <hr class="expense-fields--divider-line" />
 
-    <form class="expense-fields--form" [formGroup]="expenseFieldsForm" fxLayout="column" fxLayoutAlign="start stretch">
+    <form [formGroup]="expenseFieldsForm" class="expense-fields--form" fxLayout="column" fxLayoutAlign="start stretch">
       <div formArrayName="expenseFields">
         <div fxLayout="row" fxLayoutAlign="start center">
           <div class="fields-header" fxFlex="38">Sage Intacct Fields</div>
@@ -141,135 +141,50 @@
   </div>
 
   
-  <div *ngIf="showDependentFieldMapping" class="expense-fields--border expense-fields--form">
-    <div class="expense-fields--form">
-      <div class="expense-fields--heading">Dependent Type Field Mapping</div>
+  <div *ngIf="showDependentFieldMapping" class="expense-fields--border expense-fields--form" [formGroup]="dependentExpenseFieldsForm">
+    <div class="expense-fields--form expense-fields--dependent-fields">
+      <div class="expense-fields--heading">Import Cost Codes and Cost Types as Dependent Fields to Fyle</div>
+      <mat-slide-toggle floatLabel="always" appearance="outline" fxFlex="14" color="primary" class="toggle"
+        formControlName="import">
+      </mat-slide-toggle>
     </div>
-    <hr class="expense-fields--divider-line" />
-    <form class="expense-fields--form" [formGroup]="dependentExpenseFieldsForm" fxLayout="column" fxLayoutAlign="start stretch">
-      <div formArrayName="dependentExpenseFields">
+    <hr *ngIf="dependentExpenseFieldsForm.value.import" class="expense-fields--divider-line" />
+    <div *ngIf="dependentExpenseFieldsForm.value.import" class="expense-fields--form" fxLayout="column" fxLayoutAlign="start stretch">
+      <div>
         <div fxLayout="row" fxLayoutAlign="start center">
           <div class="fields-header" fxFlex="38">Sage Intacct Fields</div>
           <div fxFlex="10"></div>
           <div class="fields-header" fxFlex="38">Dependent Fields</div>
           <div fxFlex="4"></div>
-          <div class="fields-header" fxFlex="38">Parent Fields</div>
-          <div class="fields-header" fxFlex="15">
-            Import to Fyle
-            <mat-icon [inline]="true" class="info-icon import"
-              matTooltip="Importing to Fyle will automatically sync all the fields from Sage Intacct to Fyle"
-              matTooltipPosition="above">
-              info
-            </mat-icon>
-          </div>
         </div>
   
-        <div class="row" *ngFor="let dependentExpenseField of dependentExpenseFieldsForm.controls.dependentExpenseFields['controls']; let i = index"
-          [formGroupName]="i">
-          <div fxLayout="row" fxLayoutAlign="start center">
+        <div class="row">
+          <div *ngFor="let field of ['Cost Code', 'Cost Type']; let i = index" fxLayout="row" fxLayoutAlign="start center">
             <mat-form-field floatLabel="always" fxFlex="38" appearance="outline">
-              <mat-select placeholder="Choose Sage Intacct field" formControlName="destination_field">
-                <mat-option [value]="'TASK'">
-                  Task
-                </mat-option>
-                <mat-option *ngIf="isTaskImported" [value]="'COST_TYPE'">
-                  Cost Type
+              <mat-select placeholder="Choose Sage Intacct field" [formControlName]="i == 0 ? 'costCodeValue' : 'costTypeValue'" [disabled]="true">
+                <mat-option [value]="field">
+                  {{ field }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
             <div fxFlex="10">
-              <div class="map">Map to</div>
+              <div class="map">Import as</div>
             </div>
             
             <mat-form-field floatLabel="always" appearance="outline" fxFlex="38" required>
-              <mat-select [placeholder]="dependentCustomFieldName || 'Choose Fyle Dependent Expense field'" formControlName="source_field">
-                <mat-option *ngFor="let fyleExpenseField of fyleDependentExpenseFields"
-                  [(value)]="fyleExpenseField.attribute_type">
-                  {{ fyleExpenseField.attribute_type.replaceAll('_', ' ') | titlecase }}
-                </mat-option>
-                <mat-option (click)="showCustomField(dependentExpenseField, true)" [value]="dependentExpenseField.source_field">
-                  <div class="expense-fields--custom-option">
-                    <img class="expense-fields--add-custom-icon" src="assets/images/pngs/add.png"
-                      (click)="showCustomField(dependentExpenseField, true)">
-                    <div class="expense-fields--custom-option-text">Create Fyle Dependent Expense field</div>
-                  </div>
-                </mat-option>
-              </mat-select>
+              <input type="text" [formControlName]="i == 0 ? 'costCode' : 'costType'" placeholder="Enter {{field}} field name" matInput>
             </mat-form-field>
             
             <div fxFlex="4"></div>
-            
-            <mat-form-field floatLabel="always" appearance="outline" fxFlex="38" required>
-              <mat-select [placeholder]="'Choose Fyle Parent field'" formControlName="parent_field">
-                <mat-option *ngFor="let parentField of parentFields"
-                  [(value)]="parentField.id">
-                  {{ parentField.attribute_type.replaceAll('_', ' ') | titlecase }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-  
-            <div fxFlex="5" *ngIf="i !== 0 && dependentExpenseField.controls.destination_field.status !== 'DISABLED'">
-              <img class="expense-fields--delete-icon" src="assets/images/pngs/delete.png"
-              (click)="removeExpenseField(i, dependentExpenseField.controls.source_field.value, true)">
-            </div>
-            <div fxFlex="5" *ngIf="!(i !== 0 && dependentExpenseField.controls.destination_field.status !== 'DISABLED')">
-            </div>
-  
-            <mat-slide-toggle floatLabel="always" appearance="outline" fxFlex="14" color="primary" class="toggle"
-              formControlName="import_to_fyle">
-            </mat-slide-toggle>
-          </div>
-          <div class="expense-fields--errors" md-colors="{color:'warning'}"
-            *ngIf="dependentExpenseField.status === 'INVALID' && dependentExpenseField.value.source_field && dependentExpenseField.value.destination_field && dependentExpenseField.value.parent_field">
-            Dependent Field, Sage Intacct and Parent field should be unique
           </div>
         </div>
-      </div>
-
-      <div fxLayout="row" fxLayoutAlign="center center">
-        <div fxFlex="35" fxLayout="row" fxLayoutAlign="center" *ngIf="showDependentCustomFieldName" [formGroup]="dependentCustomFieldForm">
-          <mat-card class="custom-field-box">
-            <mat-list role="list">
-              Add a custom field
-              <mat-form-field class="custom-field-name" appearance="outline">
-                <input autocomplete="off" type="text" formControlName="customFieldName" placeholder="Enter Custom Field"
-                  (input)="updateCustomFieldName($event.target.value, true)" matInput>
-              </mat-form-field>
-  
-              <p *ngIf="isSystemField" class="existing-field-warning">
-                <mat-icon [inline]="true" class="info-icon warning">info</mat-icon>
-                This field already exists. Please enter new.
-              </p>
-  
-              <div class="custom-field-grp" fxLayoutAlign="start stretch">
-                <div fxFlex="10"></div>
-                <a fxLayout="row" fxLayoutAlign="start center" class="custom-field-btn" mat-raised-button
-                  color="basic" (click)="hideCustomField($event.target.innerText, true)">
-                  <span>Cancel</span>
-                </a>
-                <div fxFlex="10"></div>
-                <button fxLayout="row" fxLayoutAlign="start center" data-dismiss="modal" class="custom-field-btn" mat-flat-button
-                  color="primary" (click)="hideCustomField($event.target.innerText, true)" [disabled]="isSystemField">
-                  <span>Done</span>
-                </button>
-              </div>
-            </mat-list>
-          </mat-card>
-        </div>
-      </div>
-  
-      <div fxLayoutAlign="start stretch" *ngIf="showDependentAddButton">
-        <img class="expense-fields--add-icon" src="assets/images/pngs/add.png">
-        <a class="add-row-text" (click)="addExpenseField(true)">
-          Add another field
-        </a>
       </div>
   
       <button class="expense-fields--save-btn" mat-flat-button color="primary" [disabled]="!dependentExpenseFieldsForm.valid"
-        (click)="saveExpenseFields(true)" type="submit">
+        (click)="enableDependentFieldImports()" type="submit">
         Save
       </button>
-    </form>
+    </div>
   </div>
 
 </div>
