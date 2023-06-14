@@ -443,7 +443,6 @@ export class ConfigurationComponent implements OnInit {
     const reimbursableExpensesObject = that.configurationForm.getRawValue().reimburExpense ? that.configurationForm.getRawValue().reimburExpense : null;
     const cccExpensesObject = that.configurationForm.getRawValue().cccExpense ? that.configurationForm.getRawValue().cccExpense : null;
     const categoryMappingObject = reimbursableExpensesObject ? that.getCategory(reimbursableExpensesObject)[0].value : null;
-    console.log(that.getEmployee(cccExpensesObject));
     const employeeMappingsObject = reimbursableExpensesObject ? that.getEmployee(reimbursableExpensesObject)[0].value : (cccExpensesObject === 'JOURNAL_ENTRY' ? that.getEmployee(cccExpensesObject)[0].value : null);
     const importProjects = that.configurationForm.value.importProjects;
     const importCategories = that.configurationForm.value.importCategories;
