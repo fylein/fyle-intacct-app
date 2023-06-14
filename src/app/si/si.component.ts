@@ -119,8 +119,13 @@ export class SiComponent implements OnInit {
 
   setupAccessiblePathWatchers() {
     const that = this;
-    that.getConfigurations().subscribe(() => {
+    that.getConfigurations().subscribe((response) => {
       that.navDisabled = false;
+      if (response[0].reimbursable_expenses_object != null) {
+        this.showEmployeeMapping = true;
+      } else {
+        this.showEmployeeMapping = false;
+      }
     });
 
     that.router.events.subscribe(() => {
