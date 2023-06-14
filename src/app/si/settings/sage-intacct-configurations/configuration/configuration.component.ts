@@ -152,7 +152,6 @@ export class ConfigurationComponent implements OnInit {
           reimburExpenseControl.setValidators([Validators.required]);
         } else {
           reimburExpenseControl.clearValidators();
-          reimburExpenseControl.reset();
         }
         reimburExpenseControl.updateValueAndValidity();
         programmaticChange = false;
@@ -162,7 +161,6 @@ export class ConfigurationComponent implements OnInit {
     reimburExpenseControl.valueChanges.subscribe((reimbursableExpenseMappedTo) => {
       if (!programmaticChange) {
         programmaticChange = true;
-        cccExpenseControl.reset();
         if (!reimbursableExpenseMappedTo && !cccExpenseControl.value) {
           cccExpenseControl.setValidators([Validators.required]);
         } else {
@@ -209,7 +207,6 @@ export class ConfigurationComponent implements OnInit {
   setupEmployeesFieldWatcher(reimbursableExpense) {
     const that = this;
     that.configurationForm.controls.employeeFieldMapping.valueChanges.subscribe((employeesMappedTo) => {
-        // that.configurationForm.controls.cccExpense.reset();
         that.cccExpenseOptions = that.getCCCExpenseOptions(reimbursableExpense, employeesMappedTo);
       });
   }
