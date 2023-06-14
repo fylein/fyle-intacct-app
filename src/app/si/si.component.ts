@@ -121,7 +121,7 @@ export class SiComponent implements OnInit {
     const that = this;
     that.getConfigurations().subscribe((response) => {
       that.navDisabled = false;
-      if (response[0].reimbursable_expenses_object != null || response[0].corporate_credit_card_expenses_object==='JOURNAL_ENTRY') {
+      if (response[0].reimbursable_expenses_object != null || response[0].corporate_credit_card_expenses_object === 'JOURNAL_ENTRY') {
         this.showEmployeeMapping = true;
       } else {
         this.showEmployeeMapping = false;
@@ -133,7 +133,7 @@ export class SiComponent implements OnInit {
       if (onboarded !== true) {
         that.getConfigurations().subscribe((response) => {
           that.navDisabled = false;
-          if (response[0].reimbursable_expenses_object != null || response[0].corporate_credit_card_expenses_object==='JOURNAL_ENTRY') {
+          if (response[0].reimbursable_expenses_object != null || response[0].corporate_credit_card_expenses_object === 'JOURNAL_ENTRY') {
             this.showEmployeeMapping = true;
           } else {
             this.showEmployeeMapping = false;
