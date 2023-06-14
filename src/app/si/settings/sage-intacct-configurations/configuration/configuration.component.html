@@ -28,11 +28,11 @@
       </mat-form-field>
       <mandatory-error-message listName="export type" *ngIf="configurationForm.controls.reimburExpense.touched && !configurationForm.controls.reimburExpense.valid"></mandatory-error-message>
 
-      <div class="configurations--label" *ngIf="configurationForm.controls.reimburExpense.value === 'JOURNAL_ENTRY'">
+      <div class="configurations--label" *ngIf="configurationForm.controls.reimburExpense.value === 'JOURNAL_ENTRY' || configurationForm.controls.cccExpense.value === 'JOURNAL_ENTRY'">
         Map Employees from Fyle to
         <mandatory-field></mandatory-field>
       </div>
-      <mat-form-field floatLabel="always" appearance="outline" required *ngIf="configurationForm.controls.reimburExpense.value === 'JOURNAL_ENTRY'">
+      <mat-form-field floatLabel="always" appearance="outline" required *ngIf="configurationForm.controls.reimburExpense.value === 'JOURNAL_ENTRY' || configurationForm.controls.cccExpense.value === 'JOURNAL_ENTRY'">
         <mat-select placeholder="Choose Sage Intacct equivalent of Employees" formControlName="employeeFieldMapping">
           <mat-option value="VENDOR">
             Vendor

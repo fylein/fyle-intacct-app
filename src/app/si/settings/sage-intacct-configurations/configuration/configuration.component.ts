@@ -156,6 +156,23 @@ export class ConfigurationComponent implements OnInit {
         reimburExpenseControl.updateValueAndValidity();
         programmaticChange = false;
       }
+
+      if (cccExpenseMappedTo === 'JOURNAL_ENTRY') {
+        that.configurationForm.controls.employeeFieldMapping.reset();
+        // Add validators for the 'employeeFieldMapping' form control
+        that.configurationForm.controls.employeeFieldMapping.setValidators([Validators.required]);
+
+        // Update the form control's value and validation state
+        that.configurationForm.controls.employeeFieldMapping.updateValueAndValidity();
+      } else {
+        that.configurationForm.controls.employeeFieldMapping.reset();
+
+        // Clear validators for the 'employeeFieldMapping' form control
+        that.configurationForm.controls.employeeFieldMapping.clearValidators();
+
+        // Update the form control's value and validation state
+        that.configurationForm.controls.employeeFieldMapping.updateValueAndValidity();
+      }
     });
 
     reimburExpenseControl.valueChanges.subscribe((reimbursableExpenseMappedTo) => {
@@ -426,7 +443,8 @@ export class ConfigurationComponent implements OnInit {
     const reimbursableExpensesObject = that.configurationForm.getRawValue().reimburExpense ? that.configurationForm.getRawValue().reimburExpense : null;
     const cccExpensesObject = that.configurationForm.getRawValue().cccExpense ? that.configurationForm.getRawValue().cccExpense : null;
     const categoryMappingObject = reimbursableExpensesObject ? that.getCategory(reimbursableExpensesObject)[0].value : null;
-    const employeeMappingsObject = reimbursableExpensesObject ? that.getEmployee(reimbursableExpensesObject)[0].value : null;
+    console.log(that.getEmployee(cccExpensesObject));
+    const employeeMappingsObject = reimbursableExpensesObject ? that.getEmployee(reimbursableExpensesObject)[0].value : (cccExpensesObject === 'JOURNAL_ENTRY' ? that.getEmployee(cccExpensesObject)[0].value : null);
     const importProjects = that.configurationForm.value.importProjects;
     const importCategories = that.configurationForm.value.importCategories;
     const autoMapEmployees = that.configurationForm.value.autoMapEmployees ? that.configurationForm.value.autoMapEmployees : null;
