@@ -301,7 +301,7 @@ export class ConfigurationComponent implements OnInit {
       that.isLoading = false;
       that.mappingSettings = [];
       that.configurationForm = that.formBuilder.group({
-        reimburExpense: [''],
+        reimburExpense: ['', Validators.required],
         employeeFieldMapping: [''],
         cccExpense: [null],
         importProjects: [false],
