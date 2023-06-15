@@ -157,7 +157,7 @@ export class ConfigurationComponent implements OnInit {
         programmaticChange = false;
       }
 
-      if (cccExpenseMappedTo === 'JOURNAL_ENTRY') {
+      if (cccExpenseMappedTo === 'JOURNAL_ENTRY' && !reimburExpenseControl.value) {
         that.configurationForm.controls.employeeFieldMapping.reset();
         // Add validators for the 'employeeFieldMapping' form control
         that.configurationForm.controls.employeeFieldMapping.setValidators([Validators.required]);
