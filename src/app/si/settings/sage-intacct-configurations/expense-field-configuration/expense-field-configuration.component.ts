@@ -94,7 +94,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
       };
     }
 
-    const createOrUpdateDependentField = this.dependentFields ? this.settingsService.patchDependentFields(this.workspaceId, payload) : this.settingsService.postDependentFields(this.workspaceId, payload);
+    const createOrUpdateDependentField = this.dependentFields ? this.settingsService.patchDependentFieldSettings(this.workspaceId, payload) : this.settingsService.postDependentFieldSettings(this.workspaceId, payload);
 
     createOrUpdateDependentField.subscribe((response) => {
       this.isLoading = false;
@@ -325,7 +325,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
   }
 
   private getDependentFields() {
-    return this.settingsService.getDependentFields(this.workspaceId).toPromise().then((dependentFields: DependentField) => {
+    return this.settingsService.getDependentFieldSettings(this.workspaceId).toPromise().then((dependentFields: DependentField) => {
       this.dependentFields = dependentFields;
 
       return dependentFields;

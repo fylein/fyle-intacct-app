@@ -128,24 +128,24 @@ export class SettingsService {
   @CacheBuster({
     cacheBusterNotifier: dependentFieldsCache
   })
-  postDependentFields(workspaceId: number, dependentFields: DependentFieldPost): Observable<DependentField> {
+  postDependentFieldSettings(workspaceId: number, dependentFields: DependentFieldPost): Observable<DependentField> {
     workspaceId = this.workspace.getWorkspaceId();
-    return this.apiService.post(`/workspaces/${workspaceId}/fyle/dependent_fields/`, dependentFields);
+    return this.apiService.post(`/workspaces/${workspaceId}/fyle/dependent_field_settings/`, dependentFields);
   }
 
   @CacheBuster({
     cacheBusterNotifier: dependentFieldsCache
   })
-  patchDependentFields(workspaceId: number, dependentFields: DependentFieldPost): Observable<DependentField> {
+  patchDependentFieldSettings(workspaceId: number, dependentFields: DependentFieldPost): Observable<DependentField> {
     workspaceId = this.workspace.getWorkspaceId();
-    return this.apiService.patch(`/workspaces/${workspaceId}/fyle/dependent_fields/`, dependentFields);
+    return this.apiService.patch(`/workspaces/${workspaceId}/fyle/dependent_field_settings/`, dependentFields);
   }
 
   @Cacheable({
     cacheBusterObserver: dependentFieldsCache
   })
-  getDependentFields(workspaceId: number): Observable<DependentField> {
+  getDependentFieldSettings(workspaceId: number): Observable<DependentField> {
     workspaceId = this.workspace.getWorkspaceId();
-    return this.apiService.get(`/workspaces/${workspaceId}/fyle/dependent_fields/`, {});
+    return this.apiService.get(`/workspaces/${workspaceId}/fyle/dependent_field_settings/`, {});
   }
 }
