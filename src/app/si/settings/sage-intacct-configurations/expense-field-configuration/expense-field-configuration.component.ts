@@ -97,6 +97,10 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     const createOrUpdateDependentField = this.dependentFields ? this.settingsService.patchDependentFieldSettings(this.workspaceId, payload) : this.settingsService.postDependentFieldSettings(this.workspaceId, payload);
 
     createOrUpdateDependentField.subscribe((response) => {
+      if (response.is_import_enabled) {
+        this.dependentExpenseFieldsForm.controls.costCode.setValidators([Validators.required]);
+        this.dependentExpenseFieldsForm.controls.costType.setValidators([Validators.required]);
+      }
       this.isLoading = false;
       this.dependentFields = response;
       this.snackBar.open('Dependent fields will be imported in few minutes');
