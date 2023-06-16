@@ -98,8 +98,8 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
 
     createOrUpdateDependentField.subscribe((response) => {
       if (response.is_import_enabled) {
-        this.dependentExpenseFieldsForm.controls.costCode.setValidators([Validators.required]);
-        this.dependentExpenseFieldsForm.controls.costType.setValidators([Validators.required]);
+        this.dependentExpenseFieldsForm.controls.costCode.disable();
+        this.dependentExpenseFieldsForm.controls.costType.disable();
       }
       this.isLoading = false;
       this.dependentFields = response;
