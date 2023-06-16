@@ -90,7 +90,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
         is_import_enabled: this.dependentExpenseFieldsForm.value.import,
         cost_code_field_name: this.dependentExpenseFieldsForm.value.costCode,
         cost_type_field_name: this.dependentExpenseFieldsForm.value.costType,
-        workspace: parseInt(this.workspaceId.toString())
+        workspace: parseInt(this.workspaceId.toString(), 10)
       };
     }
 
@@ -244,8 +244,8 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
         if (this.dependentFields) {
           const payload: DependentFieldPost = {
             is_import_enabled: false,
-            workspace: parseInt(this.workspaceId.toString())
-          }
+            workspace: parseInt(this.workspaceId.toString(), 10)
+          };
           this.enableDependentFieldImports(payload);
         }
         this.dependentExpenseFieldsForm.controls.costCode.clearValidators();
@@ -352,7 +352,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
           that.showAddButton = that.showOrHideAddButton();
           that.isLoading = false;
         });
-    })
+    });
   }
 
   ngOnInit() {
