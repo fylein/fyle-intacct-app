@@ -136,6 +136,10 @@ ngOnInit() {
     {
       label: 'Last Spend Date',
       value: 'last_spent_at'
+    },
+    {
+      label: 'Posted Date',
+      value: 'posted_at'
     }
   ];
 
