@@ -10,6 +10,8 @@ import { MappingSetting } from 'src/app/core/models/mapping-setting.model';
 import { ExpenseField } from 'src/app/core/models/expense-field.model';
 import { MatSnackBar } from '@angular/material';
 import { MappingSettingResponse } from 'src/app/core/models/mapping-setting-response.model';
+import { DependentField, DependentFieldPost } from 'src/app/core/models/dependent-fields.model';
+import { TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-expense-field-configuration',
@@ -19,34 +21,28 @@ import { MappingSettingResponse } from 'src/app/core/models/mapping-setting-resp
 export class ExpenseFieldConfigurationComponent implements OnInit {
   expenseFieldsForm: FormGroup;
   dependentExpenseFieldsForm: FormGroup;
-  dependentExpenseFields: FormArray;
   expenseFields: FormArray;
   customFieldForm: FormGroup;
-  dependentCustomFieldForm: FormGroup;
   workspaceId: number;
   isLoading: boolean;
   mappingSettings: MappingSetting[];
   fyleExpenseFields: ExpenseField[];
-  fyleDependentExpenseFields: ExpenseField[];
-  sageIntacctFields: ExpenseField[];
-  parentFields: ExpenseField[];
+  sageIntacctFields: ExpenseField[] = [];
   sageIntacctFormFieldList: ExpenseField[];
   windowReference: Window;
   showCustomFieldName: boolean;
   customFieldName  = 'Choose Fyle Expense field';
-  showDependentCustomFieldName: boolean;
-  dependentCustomFieldName = 'Choose Dependent Custom Field';
   isSystemField: boolean;
   showAddButton: boolean;
-  showDependentAddButton: boolean;
   isTaskImported: boolean;
   showDependentFieldMapping: boolean;
+  dependentFields: DependentField;
 
   constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private settingsService: SettingsService, private mappingsService: MappingsService, private snackBar: MatSnackBar, private si: SiComponent, private windowReferenceService: WindowReferenceService) {
     this.windowReference = this.windowReferenceService.nativeWindow;
   }
 
-  createExpenseField(isDependent: boolean = false, sourceField: string = '', destinationField: string = '', isCustom: boolean = false, importToFyle: boolean = false, parentField: string = '') {
+  createExpenseField(sourceField: string = '', destinationField: string = '', isCustom: boolean = false, importToFyle: boolean = false, parentField: string = '') {
     const that = this;
     const fieldName = 'parent_field';
     const formControllers = {
@@ -55,10 +51,6 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
       import_to_fyle: [importToFyle],
       is_custom: [isCustom]
     };
-
-    if (isDependent) {
-      formControllers[fieldName] = [parentField ? parentField : '', [Validators.required, RxwebValidators.unique()]];
-    }
 
     const group = that.formBuilder.group(formControllers);
 
@@ -74,44 +66,55 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     return group;
   }
 
-  showOrHideAddButton(isDependent: boolean = false) {
+  showOrHideAddButton() {
     const that = this;
 
-    if (isDependent) {
-      if (that.dependentExpenseFieldsForm.controls.dependentExpenseFields.value.length === 2 || that.showDependentCustomFieldName) {
-        return false;
-      }
-      return true;
-    } else {
-      if (that.expenseFieldsForm.controls.expenseFields.value.length === that.sageIntacctFields.length || that.showCustomFieldName) {
-        return false;
-      }
-      return true;
+    if (that.expenseFieldsForm.controls.expenseFields.value.length === that.sageIntacctFields.length || that.showCustomFieldName) {
+      return false;
     }
+    return true;
   }
 
-  addExpenseField(isDependent: boolean = false) {
+  addExpenseField() {
     const that = this;
 
-    if (isDependent) {
-      that.dependentExpenseFields  = that.dependentExpenseFieldsForm.get('dependentExpenseFields') as FormArray;
-      that.dependentExpenseFields.push(that.createExpenseField(true));
-      that.showDependentAddButton = that.showOrHideAddButton(true);
-    } else {
-      that.expenseFields = that.expenseFieldsForm.get('expenseFields') as FormArray;
-      that.expenseFields.push(that.createExpenseField());
-      that.showAddButton = that.showOrHideAddButton();
-    }
+    that.expenseFields = that.expenseFieldsForm.get('expenseFields') as FormArray;
+    that.expenseFields.push(that.createExpenseField());
+    that.showAddButton = that.showOrHideAddButton();
   }
 
-  saveExpenseFields(isDependent: boolean = false) {
+  enableDependentFieldImports(payload?: DependentFieldPost) {
+    this.isLoading = true;
+    if (!payload) {
+      payload = {
+        is_import_enabled: this.dependentExpenseFieldsForm.value.import,
+        cost_code_field_name: this.dependentExpenseFieldsForm.value.costCode,
+        cost_type_field_name: this.dependentExpenseFieldsForm.value.costType,
+        workspace: parseInt(this.workspaceId.toString(), 10)
+      };
+    }
+
+    const createOrUpdateDependentField = this.dependentFields ? this.settingsService.patchDependentFieldSettings(this.workspaceId, payload) : this.settingsService.postDependentFieldSettings(this.workspaceId, payload);
+
+    createOrUpdateDependentField.subscribe((response) => {
+      if (response.is_import_enabled) {
+        this.dependentExpenseFieldsForm.controls.costCode.disable();
+        this.dependentExpenseFieldsForm.controls.costType.disable();
+      }
+      this.isLoading = false;
+      this.dependentFields = response;
+      this.snackBar.open('Dependent fields will be imported in few minutes');
+    });
+  }
+
+  saveExpenseFields() {
     const that = this;
-    const savedExpenseFieldForm = isDependent ? that.dependentExpenseFieldsForm : that.expenseFieldsForm;
+    const savedExpenseFieldForm = that.expenseFieldsForm;
 
     if (savedExpenseFieldForm.valid) {
       that.isLoading = true;
       // getRawValue() would have values even if they are disabled
-      const expenseFields = isDependent ? savedExpenseFieldForm.getRawValue().dependentExpenseFields :  savedExpenseFieldForm.getRawValue().expenseFields;
+      const expenseFields = savedExpenseFieldForm.getRawValue().expenseFields;
       let hasCustomField = false;
       expenseFields.forEach(element => {
         if (element.source_field !== 'PROJECT' && element.source_field !== 'COST_CENTER' && !element.is_custom) {
@@ -150,47 +153,32 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     }
   }
 
-  removeExpenseField(index: number, sourceField: string = null, isDependent: boolean = false) {
+  removeExpenseField(index: number, sourceField: string = null) {
     const that = this;
-    that.showDependentCustomFieldName = false;
     that.showCustomFieldName = false;
 
-    if (isDependent) {
-      const dependentExpenseFields = that.dependentExpenseFieldsForm.get('dependentExpenseFields') as FormArray;
-      dependentExpenseFields.removeAt(index);
+    const expenseFields = that.expenseFieldsForm.get('expenseFields') as FormArray;
+    expenseFields.removeAt(index);
 
-      if (sourceField && sourceField !== 'PROJECT' && sourceField !== 'COST_CENTER') {
-        that.fyleDependentExpenseFields = that.fyleDependentExpenseFields.filter(mappingRow => mappingRow.attribute_type !== sourceField);
-      }
-      that.showDependentAddButton = that.showOrHideAddButton(true);
-    } else {
-      const expenseFields = that.expenseFieldsForm.get('expenseFields') as FormArray;
-      expenseFields.removeAt(index);
-
-      // remove custom field option from the Fyle fields drop down if the corresponding row is deleted
-      if (sourceField && sourceField !== 'PROJECT' && sourceField !== 'COST_CENTER') {
-        that.fyleExpenseFields = that.fyleExpenseFields.filter(mappingRow => mappingRow.attribute_type !== sourceField);
-      }
-      that.showAddButton = that.showOrHideAddButton();
+    // remove custom field option from the Fyle fields drop down if the corresponding row is deleted
+    if (sourceField && sourceField !== 'PROJECT' && sourceField !== 'COST_CENTER') {
+      that.fyleExpenseFields = that.fyleExpenseFields.filter(mappingRow => mappingRow.attribute_type !== sourceField);
     }
+    that.showAddButton = that.showOrHideAddButton();
   }
 
-  showCustomField(expenseField, isDependent: boolean = false) {
+  showCustomField(expenseField) {
     const that = this;
 
     expenseField.controls.import_to_fyle.setValue(true);
     expenseField.controls.import_to_fyle.disable();
     expenseField.controls.source_field.disable();
 
-    if (isDependent) {
-      that.showDependentCustomFieldName = true;
-    } else {
-      that.showCustomFieldName = true;
-    }
+    that.showCustomFieldName = true;
     that.customFieldForm.markAllAsTouched();
   }
 
-  updateCustomFieldName(name: string, isDependent: boolean = false) {
+  updateCustomFieldName(name: string) {
     const that = this;
 
     let existingFields: string[] = that.fyleExpenseFields.map(fields => fields.display_name.toLowerCase());
@@ -203,29 +191,21 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     }
 
     that.isSystemField = false;
-    if (isDependent) {
-      that.dependentCustomFieldName = name;
-    } else {
-      that.customFieldName = name;
-    }
+    that.customFieldName = name;
   }
 
-  hideCustomField(event: string, isDependent: boolean = false) {
+  hideCustomField(event: string) {
     const that = this;
     that.showCustomFieldName = false;
-    that.showDependentCustomFieldName = false;
 
-    const fieldForm = !isDependent ? that.expenseFieldsForm : that.dependentExpenseFieldsForm;
-    const customFieldNameForm = !isDependent ? that.customFieldForm : that.dependentCustomFieldForm;
+    const fieldForm = that.expenseFieldsForm;
+    const customFieldNameForm = that.customFieldForm;
     let lastAddedMappingIndex;
 
-    if (isDependent) {
-      lastAddedMappingIndex = fieldForm.getRawValue().dependentExpenseFields.length - 1;
-    } else {
-      lastAddedMappingIndex = fieldForm.getRawValue().expenseFields.length - 1;
-    }
+    lastAddedMappingIndex = fieldForm.getRawValue().expenseFields.length - 1;
+
     const customFieldName = customFieldNameForm.value.customFieldName.replace(/ /g, '_').toUpperCase();
-    const fyleExpenseFields = isDependent ? that.fyleDependentExpenseFields : that.fyleExpenseFields;
+    const fyleExpenseFields = that.fyleExpenseFields;
 
     if (event === 'Done') {
       fyleExpenseFields.push({
@@ -233,7 +213,7 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
         display_name: customFieldNameForm.value.customFieldName
       });
 
-      const formValuesArray = isDependent ? that.dependentExpenseFieldsForm.get('dependentExpenseFields') as FormArray : fieldForm.get('expenseFields') as FormArray;
+      const formValuesArray = fieldForm.get('expenseFields') as FormArray;
       formValuesArray.controls[lastAddedMappingIndex].get('source_field').setValue(customFieldName);
       formValuesArray.controls[lastAddedMappingIndex].get('is_custom').setValue(true);
       formValuesArray.controls[lastAddedMappingIndex].get('import_to_fyle').setValue(true);
@@ -241,16 +221,9 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     } else if (lastAddedMappingIndex) {
       that.removeExpenseField(lastAddedMappingIndex);
     }
-
-    if (isDependent) {
-      that.dependentCustomFieldForm.controls.customFieldName.reset();
-      that.dependentCustomFieldName = 'Choose Fyle Dependent Expense field';
-      that.showAddButton = that.showOrHideAddButton(true);
-    } else {
-      that.customFieldForm.controls.customFieldName.reset();
-      that.customFieldName = 'Choose Fyle Expense field';
-      that.showAddButton = that.showOrHideAddButton();
-    }
+    that.customFieldForm.controls.customFieldName.reset();
+    that.customFieldName = 'Choose Fyle Expense field';
+    that.showAddButton = that.showOrHideAddButton();
   }
 
   saveCustomField() {
@@ -260,24 +233,42 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
     that.saveExpenseFields();
   }
 
-  checkIfTaskSelected(mappingSetting: MappingSetting[]) {
-    const that = this;
-    const taskSettings = mappingSetting.filter(setting => setting.expense_field !== null && setting.destination_field === 'TASK').length;
-    that.isTaskImported = taskSettings ? true : false;
+  private setupDependentExpenseFieldsWatcher(): void {
+    if (this.dependentExpenseFieldsForm.value.import) {
+      this.dependentExpenseFieldsForm.controls.costCode.disable();
+      this.dependentExpenseFieldsForm.controls.costType.disable();
+    }
+
+    // TODO: disable cost code and project code if it's already imported
+    this.dependentExpenseFieldsForm.controls.import.valueChanges.subscribe((isToggleEnabled: boolean) => {
+      if (isToggleEnabled) {
+        this.dependentExpenseFieldsForm.controls.costCode.setValidators([Validators.required]);
+        this.dependentExpenseFieldsForm.controls.costType.setValidators([Validators.required]);
+      } else {
+        if (this.dependentFields) {
+          const payload: DependentFieldPost = {
+            is_import_enabled: false,
+            workspace: parseInt(this.workspaceId.toString(), 10)
+          };
+          this.enableDependentFieldImports(payload);
+        }
+        this.dependentExpenseFieldsForm.controls.costCode.clearValidators();
+        this.dependentExpenseFieldsForm.controls.costType.clearValidators();
+      }
+    });
   }
 
   createFormFields(mappingSetting: MappingSetting[]) {
     const that = this;
-    this.checkIfTaskSelected(mappingSetting);
 
     that.mappingSettings = mappingSetting.filter(
-      setting => setting.source_field !== 'EMPLOYEE' && setting.source_field !== 'CATEGORY' && setting.source_field !== 'CORPORATE_CARD' && setting.expense_field === null
+      setting => setting.source_field !== 'EMPLOYEE' && setting.source_field !== 'CATEGORY' && setting.source_field !== 'CORPORATE_CARD'
     );
 
     let expenseFieldFormArray;
     if (that.mappingSettings.length) {
       expenseFieldFormArray = that.mappingSettings.map(
-        setting => that.createExpenseField(false, setting.source_field, setting.destination_field, setting.is_custom, setting.import_to_fyle)
+        setting => that.createExpenseField(setting.source_field, setting.destination_field, setting.is_custom, setting.import_to_fyle)
       );
     } else {
       expenseFieldFormArray = [that.createExpenseField()];
@@ -287,20 +278,15 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
       expenseFields: that.formBuilder.array(expenseFieldFormArray)
     });
 
-    const dependentSettings = mappingSetting.filter(setting => setting.expense_field !== null);
-    let dependentExpenseFieldsFormArray;
-
-    if (dependentSettings.length) {
-      dependentExpenseFieldsFormArray = dependentSettings.map(
-        setting => that.createExpenseField(true, setting.source_field, setting.destination_field, true, setting.import_to_fyle, setting.expense_field)
-      );
-    } else {
-      dependentExpenseFieldsFormArray = [that.createExpenseField(true)];
-    }
-
     that.dependentExpenseFieldsForm = that.formBuilder.group({
-      dependentExpenseFields: that.formBuilder.array(dependentExpenseFieldsFormArray)
+      import: [this.dependentFields ? this.dependentFields.is_import_enabled : false],
+      costCode: [this.dependentFields ? new TitleCasePipe().transform(this.dependentFields.cost_code_field_name.replace(/_/g, ' ').toLowerCase()) : null],
+      costType: [this.dependentFields ? new TitleCasePipe().transform(this.dependentFields.cost_type_field_name.replace(/_/g, ' ').toLowerCase()) : null],
+      costCodeValue: ['Cost Code'],
+      costTypeValue: ['Cost Type']
     });
+
+    this.setupDependentExpenseFieldsWatcher();
   }
 
   getMappingSettings() {
@@ -336,19 +322,19 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
         }
       });
 
-      const isTasksPresent = that.sageIntacctFields.filter(setting => setting.attribute_type === 'TASK').length;
-      that.showDependentFieldMapping = (isProjectImported && isTasksPresent) ? true : false;
+      that.showDependentFieldMapping = isProjectImported ? true : false;
 
       return sageIntacctFields;
     });
   }
 
-  getExpenseField() {
-    const that = this;
-    return that.mappingsService.getParentExpenseFields().toPromise().then((parentExpenseFields: any) => {
-      that.parentFields = parentExpenseFields.results;
-      that.fyleDependentExpenseFields = that.parentFields.filter(field => field.attribute_type !== 'PROJECT');
-      return parentExpenseFields;
+  private getDependentFields() {
+    return this.settingsService.getDependentFieldSettings(this.workspaceId).toPromise().then((dependentFields: DependentField) => {
+      this.dependentFields = dependentFields;
+
+      return dependentFields;
+    }).catch(() => {
+      // do nothing
     });
   }
 
@@ -359,22 +345,18 @@ export class ExpenseFieldConfigurationComponent implements OnInit {
       customFieldName: ['', Validators.required]
     });
 
-    that.dependentCustomFieldForm = that.formBuilder.group({
-      customFieldName: ['', Validators.required]
-    });
-
-    that.getMappingSettings()
+    that.getDependentFields()
+    .then(() => {
+      that.getMappingSettings()
       .then(() => {
         return that.getFyleFields();
       }).then(() => {
-        return that.getSageIntacctFields();
-      }).then(() => {
-        return that.getExpenseField();
-      }).finally(() => {
-        that.showAddButton = that.showOrHideAddButton();
-        that.showDependentAddButton = that.showOrHideAddButton(true);
-        that.isLoading = false;
-      });
+          return that.getSageIntacctFields();
+        }).finally(() => {
+          that.showAddButton = that.showOrHideAddButton();
+          that.isLoading = false;
+        });
+    });
   }
 
   ngOnInit() {

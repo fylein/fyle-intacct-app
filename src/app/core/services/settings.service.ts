@@ -11,12 +11,15 @@ import { MappingSetting } from '../models/mapping-setting.model';
 import { WorkspaceService } from './workspace.service';
 import { SkipExport } from '../models/skip-export.model';
 import { ExpenseFilterResponse } from '../models/expense-filter-response.model';
+import { DependentField, DependentFieldPost } from '../models/dependent-fields.model';
 
 const fyleCredentialsCache = new Subject<void>();
 const sageIntacctCredentialsCache = new Subject<void>();
 const configurationCache = new Subject<void>();
 const mappingsSettingsCache = new Subject<void>();
 const skipExportCache = new Subject<void>();
+const dependentFieldsCache = new Subject<void>();
+
 
 @Injectable({
   providedIn: 'root',
@@ -120,5 +123,29 @@ export class SettingsService {
   })
   getConfiguration(workspaceId: number): Observable<Configuration> {
     return this.apiService.get(`/workspaces/${workspaceId}/configuration/`, {});
+  }
+
+  @CacheBuster({
+    cacheBusterNotifier: dependentFieldsCache
+  })
+  postDependentFieldSettings(workspaceId: number, dependentFields: DependentFieldPost): Observable<DependentField> {
+    workspaceId = this.workspace.getWorkspaceId();
+    return this.apiService.post(`/workspaces/${workspaceId}/fyle/dependent_field_settings/`, dependentFields);
+  }
+
+  @CacheBuster({
+    cacheBusterNotifier: dependentFieldsCache
+  })
+  patchDependentFieldSettings(workspaceId: number, dependentFields: DependentFieldPost): Observable<DependentField> {
+    workspaceId = this.workspace.getWorkspaceId();
+    return this.apiService.patch(`/workspaces/${workspaceId}/fyle/dependent_field_settings/`, dependentFields);
+  }
+
+  @Cacheable({
+    cacheBusterObserver: dependentFieldsCache
+  })
+  getDependentFieldSettings(workspaceId: number): Observable<DependentField> {
+    workspaceId = this.workspace.getWorkspaceId();
+    return this.apiService.get(`/workspaces/${workspaceId}/fyle/dependent_field_settings/`, {});
   }
 }

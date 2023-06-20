@@ -25,6 +25,10 @@ $text-error: #ff6e40;
     color: $fy-nav-text;
   }
 
+  &--dependent-fields {
+    margin-bottom: 0px;
+  }
+
   &--add-icon {
     text-align: center;
     cursor: pointer;
