@@ -139,6 +139,30 @@ export class ConfigurationComponent implements OnInit {
     }
   }
 
+  updateEmployeeFieldMapping(reimbursableExpenseMappedTo, cccExpenseMappedTo, reimburExpenseControl, configurationForm) {
+    const employeeFieldMappingControl = configurationForm.controls.employeeFieldMapping;
+  
+    if (reimbursableExpenseMappedTo === 'JOURNAL_ENTRY') {
+      employeeFieldMappingControl.reset();
+      employeeFieldMappingControl.setValidators([Validators.required]);
+      employeeFieldMappingControl.updateValueAndValidity();
+    } else {
+      employeeFieldMappingControl.reset();
+      employeeFieldMappingControl.clearValidators();
+      employeeFieldMappingControl.updateValueAndValidity();
+    }
+  
+    if (cccExpenseMappedTo === 'JOURNAL_ENTRY' && !reimburExpenseControl.value) {
+      employeeFieldMappingControl.reset();
+      employeeFieldMappingControl.setValidators([Validators.required]);
+      employeeFieldMappingControl.updateValueAndValidity();
+    } else if (!reimburExpenseControl.value) {
+      employeeFieldMappingControl.reset();
+      employeeFieldMappingControl.clearValidators();
+      employeeFieldMappingControl.updateValueAndValidity();
+    }
+  }
+
   setupReimbursableFieldWatcher() {
     const that = this;
     const cccExpenseControl = this.configurationForm.controls.cccExpense;
@@ -157,22 +181,7 @@ export class ConfigurationComponent implements OnInit {
         programmaticChange = false;
       }
 
-      if (cccExpenseMappedTo === 'JOURNAL_ENTRY' && !reimburExpenseControl.value) {
-        that.configurationForm.controls.employeeFieldMapping.reset();
-        // Add validators for the 'employeeFieldMapping' form control
-        that.configurationForm.controls.employeeFieldMapping.setValidators([Validators.required]);
-
-        // Update the form control's value and validation state
-        that.configurationForm.controls.employeeFieldMapping.updateValueAndValidity();
-      } else if (!reimburExpenseControl.value) {
-        that.configurationForm.controls.employeeFieldMapping.reset();
-
-        // Clear validators for the 'employeeFieldMapping' form control
-        that.configurationForm.controls.employeeFieldMapping.clearValidators();
-
-        // Update the form control's value and validation state
-        that.configurationForm.controls.employeeFieldMapping.updateValueAndValidity();
-      }
+      this.updateEmployeeFieldMapping(reimburExpenseControl.value, cccExpenseMappedTo, reimburExpenseControl, this.configurationForm);
     });
 
     reimburExpenseControl.valueChanges.subscribe((reimbursableExpenseMappedTo) => {
@@ -196,22 +205,7 @@ export class ConfigurationComponent implements OnInit {
           that.showImportCategories = true;
         }
 
-        if (reimbursableExpenseMappedTo === 'JOURNAL_ENTRY') {
-          that.configurationForm.controls.employeeFieldMapping.reset();
-          // Add validators for the 'employeeFieldMapping' form control
-          that.configurationForm.controls.employeeFieldMapping.setValidators([Validators.required]);
-
-          // Update the form control's value and validation state
-          that.configurationForm.controls.employeeFieldMapping.updateValueAndValidity();
-        } else {
-          that.configurationForm.controls.employeeFieldMapping.reset();
-
-          // Clear validators for the 'employeeFieldMapping' form control
-          that.configurationForm.controls.employeeFieldMapping.clearValidators();
-
-          // Update the form control's value and validation state
-          that.configurationForm.controls.employeeFieldMapping.updateValueAndValidity();
-        }
+        this.updateEmployeeFieldMapping(reimbursableExpenseMappedTo, cccExpenseControl.value, reimburExpenseControl, this.configurationForm);
 
         if (that.configuration && that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT' && reimbursableExpenseMappedTo !== 'EXPENSE_REPORT') {
           // turn off the import categories toggle when the user switches from EXPENSE REPORT to something else
