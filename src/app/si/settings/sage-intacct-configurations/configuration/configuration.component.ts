@@ -142,21 +142,11 @@ export class ConfigurationComponent implements OnInit {
   updateEmployeeFieldMapping(reimbursableExpenseMappedTo, cccExpenseMappedTo, reimburExpenseControl, configurationForm) {
     const employeeFieldMappingControl = configurationForm.controls.employeeFieldMapping;
   
-    if (reimbursableExpenseMappedTo === 'JOURNAL_ENTRY') {
+    if (reimbursableExpenseMappedTo === 'JOURNAL_ENTRY' || (cccExpenseMappedTo === 'JOURNAL_ENTRY' && !reimburExpenseControl.value)) {
       employeeFieldMappingControl.reset();
       employeeFieldMappingControl.setValidators([Validators.required]);
       employeeFieldMappingControl.updateValueAndValidity();
     } else {
-      employeeFieldMappingControl.reset();
-      employeeFieldMappingControl.clearValidators();
-      employeeFieldMappingControl.updateValueAndValidity();
-    }
-  
-    if (cccExpenseMappedTo === 'JOURNAL_ENTRY' && !reimburExpenseControl.value) {
-      employeeFieldMappingControl.reset();
-      employeeFieldMappingControl.setValidators([Validators.required]);
-      employeeFieldMappingControl.updateValueAndValidity();
-    } else if (!reimburExpenseControl.value) {
       employeeFieldMappingControl.reset();
       employeeFieldMappingControl.clearValidators();
       employeeFieldMappingControl.updateValueAndValidity();
