@@ -164,7 +164,7 @@ export class ConfigurationComponent implements OnInit {
 
         // Update the form control's value and validation state
         that.configurationForm.controls.employeeFieldMapping.updateValueAndValidity();
-      } else {
+      } else if (!reimburExpenseControl.value) {
         that.configurationForm.controls.employeeFieldMapping.reset();
 
         // Clear validators for the 'employeeFieldMapping' form control
