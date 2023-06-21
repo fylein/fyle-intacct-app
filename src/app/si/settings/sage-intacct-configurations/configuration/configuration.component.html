@@ -14,11 +14,13 @@
     <div fxLayout="column" fxLayoutAlign="start stretch">
       <div class="configurations--label">
         Map reimbursable Expenses from Fyle to
-        <mandatory-field></mandatory-field>
       </div>
       <mat-form-field floatLabel="always" appearance="outline" required>
         <mat-select placeholder="Choose Sage Intacct equivalent of Reimbursable Expenses"
           formControlName="reimburExpense">
+          <mat-option>
+            None
+          </mat-option>
           <mat-option *ngFor="let option of expenseOptions" [value]="option.value">
             {{option.label}}
           </mat-option>
@@ -26,11 +28,11 @@
       </mat-form-field>
       <mandatory-error-message listName="export type" *ngIf="configurationForm.controls.reimburExpense.touched && !configurationForm.controls.reimburExpense.valid"></mandatory-error-message>
 
-      <div class="configurations--label" *ngIf="configurationForm.controls.reimburExpense.value === 'JOURNAL_ENTRY'">
+      <div class="configurations--label" *ngIf="configurationForm.controls.reimburExpense.value === 'JOURNAL_ENTRY' || (!configurationForm.controls.reimburExpense.value && configurationForm.controls.cccExpense.value === 'JOURNAL_ENTRY')">
         Map Employees from Fyle to
         <mandatory-field></mandatory-field>
       </div>
-      <mat-form-field floatLabel="always" appearance="outline" required *ngIf="configurationForm.controls.reimburExpense.value === 'JOURNAL_ENTRY'">
+      <mat-form-field floatLabel="always" appearance="outline" required *ngIf="configurationForm.controls.reimburExpense.value === 'JOURNAL_ENTRY' || (!configurationForm.controls.reimburExpense.value && configurationForm.controls.cccExpense.value === 'JOURNAL_ENTRY')">
         <mat-select placeholder="Choose Sage Intacct equivalent of Employees" formControlName="employeeFieldMapping">
           <mat-option value="VENDOR">
             Vendor

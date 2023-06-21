@@ -94,16 +94,13 @@ export class ConfigurationComponent implements OnInit {
       label: 'Journal Entry',
       value: 'JOURNAL_ENTRY'
     },
+    {
+      label: 'Bill',
+      value: 'BILL'
+    }
   ];
 
-    if (employeesMappedTo === 'VENDOR') {
-      cccExpenseOptions.push({
-        label: 'Bill',
-        value: 'BILL'
-    });
-    }
-
-    if (reimburExpenseMappedTo === 'EXPENSE_REPORT' || (reimburExpenseMappedTo === 'JOURNAL_ENTRY' && employeesMappedTo === 'EMPLOYEE')) {
+    if (reimburExpenseMappedTo === 'EXPENSE_REPORT') {
       cccExpenseOptions.push({
         label: 'Expense Report',
         value: 'EXPENSE_REPORT'
@@ -142,10 +139,52 @@ export class ConfigurationComponent implements OnInit {
     }
   }
 
+  updateEmployeeFieldMapping(reimbursableExpenseMappedTo, cccExpenseMappedTo, reimburExpenseControl, configurationForm) {
+    const employeeFieldMappingControl = configurationForm.controls.employeeFieldMapping;
+
+    if (reimbursableExpenseMappedTo === 'JOURNAL_ENTRY' || (cccExpenseMappedTo === 'JOURNAL_ENTRY' && !reimburExpenseControl.value)) {
+      employeeFieldMappingControl.reset();
+      employeeFieldMappingControl.setValidators([Validators.required]);
+      employeeFieldMappingControl.updateValueAndValidity();
+    } else {
+      employeeFieldMappingControl.reset();
+      employeeFieldMappingControl.clearValidators();
+      employeeFieldMappingControl.updateValueAndValidity();
+    }
+  }
+
   setupReimbursableFieldWatcher() {
     const that = this;
-    that.configurationForm.controls.reimburExpense.valueChanges.subscribe((reimbursableExpenseMappedTo) => {
-      that.configurationForm.controls.cccExpense.reset();
+    const cccExpenseControl = this.configurationForm.controls.cccExpense;
+    const reimburExpenseControl = this.configurationForm.controls.reimburExpense;
+    let programmaticChange = false;
+
+    cccExpenseControl.valueChanges.subscribe((cccExpenseMappedTo) => {
+      if (!programmaticChange) {
+        programmaticChange = true;
+        if (!cccExpenseMappedTo && !reimburExpenseControl.value) {
+          reimburExpenseControl.setValidators([Validators.required]);
+        } else {
+          reimburExpenseControl.clearValidators();
+        }
+        reimburExpenseControl.updateValueAndValidity();
+        programmaticChange = false;
+      }
+
+      this.updateEmployeeFieldMapping(reimburExpenseControl.value, cccExpenseMappedTo, reimburExpenseControl, this.configurationForm);
+    });
+
+    reimburExpenseControl.valueChanges.subscribe((reimbursableExpenseMappedTo) => {
+      if (!programmaticChange) {
+        programmaticChange = true;
+        if (!reimbursableExpenseMappedTo && !cccExpenseControl.value) {
+          cccExpenseControl.setValidators([Validators.required]);
+        } else {
+          cccExpenseControl.clearValidators();
+        }
+        cccExpenseControl.updateValueAndValidity();
+        programmaticChange = false;
+      }
       that.cccExpenseOptions = that.getCCCExpenseOptions(reimbursableExpenseMappedTo);
 
       if (reimbursableExpenseMappedTo) {
@@ -156,22 +195,7 @@ export class ConfigurationComponent implements OnInit {
           that.showImportCategories = true;
         }
 
-        if (reimbursableExpenseMappedTo === 'JOURNAL_ENTRY') {
-          that.configurationForm.controls.employeeFieldMapping.reset();
-          // Add validators for the 'employeeFieldMapping' form control
-          that.configurationForm.controls.employeeFieldMapping.setValidators([Validators.required]);
-
-          // Update the form control's value and validation state
-          that.configurationForm.controls.employeeFieldMapping.updateValueAndValidity();
-        } else {
-          that.configurationForm.controls.employeeFieldMapping.reset();
-
-          // Clear validators for the 'employeeFieldMapping' form control
-          that.configurationForm.controls.employeeFieldMapping.clearValidators();
-
-          // Update the form control's value and validation state
-          that.configurationForm.controls.employeeFieldMapping.updateValueAndValidity();
-        }
+        this.updateEmployeeFieldMapping(reimbursableExpenseMappedTo, cccExpenseControl.value, reimburExpenseControl, this.configurationForm);
 
         if (that.configuration && that.configuration.reimbursable_expenses_object === 'EXPENSE_REPORT' && reimbursableExpenseMappedTo !== 'EXPENSE_REPORT') {
           // turn off the import categories toggle when the user switches from EXPENSE REPORT to something else
@@ -184,7 +208,6 @@ export class ConfigurationComponent implements OnInit {
   setupEmployeesFieldWatcher(reimbursableExpense) {
     const that = this;
     that.configurationForm.controls.employeeFieldMapping.valueChanges.subscribe((employeesMappedTo) => {
-        that.configurationForm.controls.cccExpense.reset();
         that.cccExpenseOptions = that.getCCCExpenseOptions(reimbursableExpense, employeesMappedTo);
       });
   }
@@ -255,7 +278,7 @@ export class ConfigurationComponent implements OnInit {
       }
 
       that.configurationForm = that.formBuilder.group({
-        reimburExpense: [that.configuration ? that.configuration.reimbursable_expenses_object : '', Validators.required],
+        reimburExpense: [that.configuration ? that.configuration.reimbursable_expenses_object : ''],
         employeeFieldMapping: [that.configuration ? that.configuration.employee_field_mapping : ''],
         cccExpense: [that.configuration ? that.configuration.corporate_credit_card_expenses_object : ''],
         importProjects: [importProjects],
@@ -401,10 +424,10 @@ export class ConfigurationComponent implements OnInit {
   constructConfigurationsPayload(): Configuration {
     const that = this;
 
-    const reimbursableExpensesObject = that.configurationForm.getRawValue().reimburExpense;
+    const reimbursableExpensesObject = that.configurationForm.getRawValue().reimburExpense ? that.configurationForm.getRawValue().reimburExpense : null;
     const cccExpensesObject = that.configurationForm.getRawValue().cccExpense ? that.configurationForm.getRawValue().cccExpense : null;
-    const categoryMappingObject = that.getCategory(reimbursableExpensesObject)[0].value;
-    const employeeMappingsObject = that.getEmployee(reimbursableExpensesObject)[0].value;
+    const categoryMappingObject = reimbursableExpensesObject ? that.getCategory(reimbursableExpensesObject)[0].value : null;
+    const employeeMappingsObject = reimbursableExpensesObject ? that.getEmployee(reimbursableExpensesObject)[0].value : (cccExpensesObject === 'JOURNAL_ENTRY' ? that.getEmployee(cccExpensesObject)[0].value : null);
     const importProjects = that.configurationForm.value.importProjects;
     const importCategories = that.configurationForm.value.importCategories;
     const autoMapEmployees = that.configurationForm.value.autoMapEmployees ? that.configurationForm.value.autoMapEmployees : null;
@@ -442,14 +465,11 @@ export class ConfigurationComponent implements OnInit {
   constructMappingSettingsPayload(): MappingSetting[] {
     const that = this;
 
-    const reimbursableExpensesObject = that.configurationForm.getRawValue().reimburExpense;
-    const employeeMappingsObject = that.getEmployee(reimbursableExpensesObject)[0].value;
-    const categoryMappingObject = that.getCategory(reimbursableExpensesObject)[0].value;
+    const reimbursableExpensesObject = that.configurationForm.getRawValue().reimburExpense ? that.configurationForm.getRawValue().reimburExpense : null;
+    const employeeMappingsObject = reimbursableExpensesObject ? that.getEmployee(reimbursableExpensesObject)[0].value : null;
+    const categoryMappingObject = reimbursableExpensesObject ? that.getCategory(reimbursableExpensesObject)[0].value : null;
 
-    const mappingsSettingsPayload: MappingSetting[] = [{
-      source_field: 'EMPLOYEE',
-      destination_field: employeeMappingsObject
-    }];
+    const mappingsSettingsPayload: MappingSetting[] = [];
 
     const importProjects = that.configurationForm.value.importProjects ? that.configurationForm.value.importProjects : false;
     const importTaxCodes = that.configurationForm.value.importTaxCodes ? that.configurationForm.value.importTaxCodes : false;
@@ -461,11 +481,6 @@ export class ConfigurationComponent implements OnInit {
         destination_field: 'TAX_DETAIL'
       });
     }
-
-    mappingsSettingsPayload.push({
-      source_field: 'CATEGORY',
-      destination_field: categoryMappingObject
-    });
 
     if (importProjects) {
       mappingsSettingsPayload.push({
