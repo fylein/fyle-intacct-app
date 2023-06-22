@@ -110,6 +110,17 @@ showCCCGroups() {
   return that.configurations.corporate_credit_card_expenses_object;
 }
 
+cccExpenseGroupFn(value) {
+  if (value === 'expense_id') {
+    this.cccExportDateOptions = this.exportDateOptions.concat([{
+      label: 'Posted Date',
+      value: 'posted_at'
+    }]);
+  } else {
+    this.cccExportDateOptions = this.exportDateOptions;
+  }
+}
+
 ngOnInit() {
   const that = this;
 
@@ -140,10 +151,7 @@ ngOnInit() {
     }
   ];
 
-  that.cccExportDateOptions = this.exportDateOptions.concat([{
-    label: 'Posted Date',
-    value: 'posted_at'
-  }]);
+  that.cccExportDateOptions = that.exportDateOptions;
 
   that.expenseGroupingFieldOptions = [
     {
