@@ -17,6 +17,7 @@ export class ExpenseGroupSettingsDialogComponent implements OnInit {
   expenseGroupSettings: ExpenseGroupSetting;
   configurations: Configuration;
   exportDateOptions: { label: string, value: string }[];
+  cccExportDateOptions: { label: string, value: string }[];
   reimbursableOptions: { label: string, value: string }[];
   cccOptions: { label: string, value: string }[];
   expenseGroupingFieldOptions: { label: string, value: string }[];
@@ -136,12 +137,13 @@ ngOnInit() {
     {
       label: 'Last Spend Date',
       value: 'last_spent_at'
-    },
-    {
-      label: 'Posted Date',
-      value: 'posted_at'
     }
   ];
+
+  that.cccExportDateOptions = this.exportDateOptions.concat([{
+    label: 'Posted Date',
+    value: 'posted_at'
+  }]);
 
   that.expenseGroupingFieldOptions = [
     {
