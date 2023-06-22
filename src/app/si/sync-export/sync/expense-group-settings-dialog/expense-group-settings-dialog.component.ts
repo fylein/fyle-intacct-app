@@ -101,6 +101,8 @@ getExpenseGroupSettings() {
       that.importExpensesForm.controls.cccExportDate.disable();
     }
 
+    this.cccExpenseGroupFn(this.importExpensesForm.value.cccExpenseGroupConfiguration)
+
     that.isLoading = false;
   });
 }
