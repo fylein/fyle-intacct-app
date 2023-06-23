@@ -128,7 +128,7 @@ cccExpenseGroupFn(value) {
       value: 'posted_at'
     }]);
   } else {
-    this.cccExportDateOptions = this.exportDateOptions;
+    this.cccExportDateOptions = this.exportDateOptions.concat();
   }
 }
 
@@ -161,8 +161,6 @@ ngOnInit() {
       value: 'last_spent_at'
     }
   ];
-
-  that.cccExportDateOptions = that.exportDateOptions;
 
   that.expenseGroupingFieldOptions = [
     {
