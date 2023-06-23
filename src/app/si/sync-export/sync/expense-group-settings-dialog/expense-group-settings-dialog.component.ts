@@ -98,10 +98,19 @@ getExpenseGroupSettings() {
 
     if (that.configurations.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION') {
       that.importExpensesForm.controls.cccExpenseGroupConfiguration.disable();
-      that.importExpensesForm.controls.cccExportDate.disable();
+      this.cccExportDateOptions = [
+        {
+          label: 'Spend Date',
+          value: 'spent_at'
+        },
+        {
+          label: 'Posted Date',
+          value: 'posted_at'
+        }
+      ];
+    } else {
+      this.cccExpenseGroupFn(this.importExpensesForm.value.cccExpenseGroupConfiguration);
     }
-
-    this.cccExpenseGroupFn(this.importExpensesForm.value.cccExpenseGroupConfiguration)
 
     that.isLoading = false;
   });
