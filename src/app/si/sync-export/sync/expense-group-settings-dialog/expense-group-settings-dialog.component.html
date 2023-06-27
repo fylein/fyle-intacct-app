@@ -38,7 +38,7 @@
     
             <mat-form-field floatLabel="always" class="dialog--group-field-right" appearance="outline" *ngIf="showCCCGroups()" required>
               <mat-select placeholder="Choose Expense fields to group Expenses" formControlName="cccExpenseGroupConfiguration">
-                <mat-option *ngFor="let option of expenseGroupingFieldOptions" [value]="option.value">
+                <mat-option *ngFor="let option of expenseGroupingFieldOptions" [value]="option.value" (click)="cccExpenseGroupFn(option.value)">
                   {{option.label}}
                 </mat-option>
               </mat-select>
@@ -69,7 +69,7 @@
             <mat-form-field floatLabel="always" class="dialog--group-field-right" appearance="outline" *ngIf="showCCCGroups()">
 
               <mat-select placeholder="Choose Date when Exporting Expenses" formControlName="cccExportDate">
-                <mat-option *ngFor="let option of exportDateOptions" [value]="option.value">
+                <mat-option *ngFor="let option of cccExportDateOptions" [value]="option.value">
                   {{option.label}}
                 </mat-option>
               </mat-select>
