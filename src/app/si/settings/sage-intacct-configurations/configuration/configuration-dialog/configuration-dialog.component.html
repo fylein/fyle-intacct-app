@@ -34,12 +34,14 @@
           </div>
           <div fxFlex="60">
             <div fxFlex="45">
-              <button mat-stroked-button [autofocus]="false" [disableRipple]="true" class="configurations-dialog--btn">{{updatedConfiguration.reimburseExpense.oldValue | titlecase}}</button>
-            </div>
+                <button *ngIf="updatedConfiguration.reimburseExpense.oldValue" mat-stroked-button [autofocus]="false" [disableRipple]="true" class="configurations-dialog--btn">{{updatedConfiguration.reimburseExpense.oldValue | titlecase}}</button>
+                <button *ngIf="!updatedConfiguration.reimburseExpense.oldValue" mat-stroked-button [autofocus]="false" [disableRipple]="true" class="configurations-dialog--btn">None</button>
+              </div>
             <div fxFlex="10" class="configurations-dialog--update-text" [ngStyle]="customStyle">to</div>
             <div fxFlex="45">
-              <button mat-stroked-button [autofocus]="false" [disableRipple]="true" class="configurations-dialog--btn-update">{{updatedConfiguration.reimburseExpense.newValue | titlecase}}</button>
-            </div>
+                <button *ngIf="updatedConfiguration.reimburseExpense.newValue" mat-stroked-button [autofocus]="false" [disableRipple]="true" class="configurations-dialog--btn-update">{{updatedConfiguration.reimburseExpense.newValue | titlecase}}</button>
+                <button *ngIf="!updatedConfiguration.reimburseExpense.newValue" mat-stroked-button [autofocus]="false" [disableRipple]="true" class="configurations-dialog--btn-update">None</button>
+              </div>
           </div>
         </div>
       </div>

@@ -36,9 +36,9 @@ spec:
           image: docker.io/{{DOCKERHUB_USERNAME}}/fyle_intacct-app:{{RELEASE_VERSION}}
           resources:
             limits:
-              memory: 450Mi
+              memory: 100Mi
             requests:
-              memory: 200Mi
+              memory: 30Mi
           env:
             - name: GET_HOSTS_FROM
               value: dns

@@ -39,6 +39,7 @@ export class SiComponent implements OnInit {
   windowReference: Window;
   connectSageIntacct = true;
   showRefreshIcon: boolean;
+  showEmployeeMapping = true;
 
   constructor(
     private workspaceService: WorkspaceService,
@@ -57,6 +58,7 @@ export class SiComponent implements OnInit {
   getTitle(name: string) {
     return name.replace(/_/g, ' ');
   }
+
 
   refreshDashboardMappingSettings(mappingSettings: MappingSetting[]) {
     const that = this;
@@ -117,15 +119,25 @@ export class SiComponent implements OnInit {
 
   setupAccessiblePathWatchers() {
     const that = this;
-    that.getConfigurations().subscribe(() => {
+    that.getConfigurations().subscribe((response) => {
       that.navDisabled = false;
+      if (response[0].reimbursable_expenses_object != null || response[0].corporate_credit_card_expenses_object === 'JOURNAL_ENTRY') {
+        this.showEmployeeMapping = true;
+      } else {
+        this.showEmployeeMapping = false;
+      }
     });
 
     that.router.events.subscribe(() => {
       const onboarded = that.storageService.get('onboarded');
       if (onboarded !== true) {
-        that.getConfigurations().subscribe(() => {
+        that.getConfigurations().subscribe((response) => {
           that.navDisabled = false;
+          if (response[0].reimbursable_expenses_object != null || response[0].corporate_credit_card_expenses_object === 'JOURNAL_ENTRY') {
+            this.showEmployeeMapping = true;
+          } else {
+            this.showEmployeeMapping = false;
+          }
         });
       }
     });

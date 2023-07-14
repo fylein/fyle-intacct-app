@@ -145,7 +145,7 @@ export class DashboardComponent implements OnInit {
   getEmployeeMappings() {
     const that = this;
     // TODO: remove promises and do with rxjs observables
-    if (that.configuration && that.configuration.auto_create_destination_entity) {
+    if (that.configuration && (that.configuration.auto_create_destination_entity || !that.configuration.reimbursable_expenses_object)) {
       that.currentState = onboardingStates.employeeMappingsDone;
       return;
     } else {
