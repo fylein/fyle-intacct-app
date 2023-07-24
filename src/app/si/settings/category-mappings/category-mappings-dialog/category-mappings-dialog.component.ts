@@ -149,7 +149,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
       attributes.push('EXPENSE_TYPE');
     }
 
-    if (that.configuration.reimbursable_expenses_object !== 'EXPENSE_REPORT' || (that.showSeparateCCCField() && that.configuration.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT')) {
+    if (that.configuration.reimbursable_expenses_object !== 'EXPENSE_REPORT' || that.configuration.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT') {
       attributes.push('ACCOUNT');
     }
     return attributes;
@@ -191,15 +191,6 @@ export class CategoryMappingsDialogComponent implements OnInit {
     });
   }
 
-  showSeparateCCCField() {
-    const that = this;
-    const settings = that.configuration;
-    if (settings.corporate_credit_card_expenses_object && settings.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT' && !(settings.reimbursable_expenses_object === 'BILL' || settings.reimbursable_expenses_object === 'JOURNAL_ENTRY' )) {
-      return true;
-    }
-
-    return false;
-  }
 
   ngOnInit() {
     const that = this;
