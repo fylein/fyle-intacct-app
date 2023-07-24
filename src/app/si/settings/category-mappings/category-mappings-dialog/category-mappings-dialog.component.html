@@ -70,25 +70,6 @@
           Please enter a valid value
         </mat-error>
       </mat-form-field>
-
-      <div class="mat-body-strong" *ngIf="showSeparateCCCField()">
-        <strong class="mappings-dialog--label">
-          Credit Card Expense Account
-        </strong>
-      </div>
-      <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="showSeparateCCCField()">
-        <input type="text" formControlName="sageIntacctAccount" placeholder="Choose Sage Intacct account" matInput
-          [matAutocomplete]="siAc" [errorStateMatcher]="matcher">
-        <mat-autocomplete #siAc="matAutocomplete" [displayWith]="mappingDisplay">
-          <mat-option *ngFor="let option of sageIntacctAccountOptions" [value]="option">
-            {{option.value}}
-          </mat-option>
-        </mat-autocomplete>
-        <mat-error class="mappings-dialog--error" *ngIf="form.controls.sageIntacctAccount.hasError('forbiddenOption')">
-          Please enter a valid value
-        </mat-error>
-      </mat-form-field>
-
     </div>
   </form>
 </mat-dialog-content>
