@@ -28,12 +28,12 @@
              Operator
              <mandatory-field></mandatory-field>
           </div>
-          <div class="fields-header-3" fxFlex="25" *ngIf = "(!skipExportForm.value.join_by) && ((skipExportForm.value.operator1 !== 'is_empty') && (skipExportForm.value.operator1 !== 'is_not_empty'))">
-             Value
+          <div class="fields-header-3" fxFlex="25" *ngIf = "(!skipExportForm.value.join_by) && ((skipExportForm.value.operator1 !== 'is_empty') && (skipExportForm.value.operator1 !== 'is_not_empty')) && (skipExportForm.value.condition1.type !== 'BOOLEAN')">
+             Values
              <mandatory-field></mandatory-field>
           </div>
-          <div class="fields-header-3" fxFlex="25" *ngIf = "(skipExportForm.value.join_by === 'AND' || skipExportForm.value.join_by === 'OR') && (((skipExportForm.value.operator1 !== 'is_empty') && (skipExportForm.value.operator1 !== 'is_not_empty')) || ((skipExportForm.value.operator2 !== 'is_empty') && (skipExportForm.value.operator2 !== 'is_not_empty')))">
-             Value
+          <div class="fields-header-3" fxFlex="25" *ngIf = "(skipExportForm.value.join_by === 'AND' || skipExportForm.value.join_by === 'OR') && (((skipExportForm.value.operator1 !== 'is_empty') && (skipExportForm.value.operator1 !== 'is_not_empty')) || ((skipExportForm.value.operator2 !== 'is_empty') && (skipExportForm.value.operator2 !== 'is_not_empty')) || (skipExportForm.value.condition2.type !== 'BOOLEAN')) ">
+             Value 
              <mandatory-field></mandatory-field>
           </div>
        </div>
