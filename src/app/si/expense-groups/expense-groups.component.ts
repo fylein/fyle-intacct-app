@@ -202,7 +202,7 @@ export class ExpenseGroupsComponent implements OnInit, OnDestroy {
     return data.description.employee_email.includes(filterText) ||
       ('Reimbursable'.toLowerCase().includes(filterText) && data.fund_source === 'PERSONAL') ||
       ('Corporate Credit Card'.toLowerCase().includes(filterText) && data.fund_source !== 'PERSONAL') ||
-      data.description.claim_number.includes(filterText);
+      (data.description.claim_number && data.description.claim_number.includes(filterText));
   }
 
   searchByText2(data: SkipExportLog, filterText: string) {
