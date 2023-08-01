@@ -46,15 +46,22 @@ export class SkipExportComponent implements OnInit {
   selectable = true;
   removable = true;
   addOnBlur = true;
+  customCheckBoxValueOptions: { label: string; value: string; }[] = [
+    {
+      label: 'Is selected',
+      value: 'true',
+    },
+    {
+      label: 'Is not selected',
+      value: 'false',
+    },
+  ];
+
   customCheckBoxOperatorOptions: { label: string; value: string; }[] = [
     {
-      label: 'Yes',
-      value: 'yes',
-    },
-    {
-      label: 'No',
-      value: 'no',
-    },
+      label: 'Exact',
+      value: 'exact',
+    }
   ];
   customOperatorOptions = [
     {
@@ -205,6 +212,7 @@ export class SkipExportComponent implements OnInit {
           this.skipExportForm.get('condition1').value.field_name !==
           this.skipExportForm.get('condition2').value.field_name
         ) {
+
           if (
             (this.skipExportForm.get('condition1').value.field_name ===
               'spent_at' &&
@@ -222,10 +230,15 @@ export class SkipExportComponent implements OnInit {
               this.skipExportForm.get('operator2').value === 'is_not_empty'
             ) {
               return true;
-            } else if ((this.skipExportForm.get('condition1').value.type === 'BOOLEAN' && this.skipExportForm.get('operator1').valid) || (this.skipExportForm.get('condition2').value.type === 'BOOLEAN' && this.skipExportForm.get('operator2').valid)) {
-              return true;
             }
           }
+          if ( this.valueOption2.length !== 0 || this.skipExportForm.get('operator2').value === 'is_empty' ||
+              this.skipExportForm.get('operator2').value === 'is_not_empty') {
+                return true;
+              }
+          if (this.skipExportForm.get('condition2').value.type === 'BOOLEAN' && this.skipExportForm.get('operator2').valid && this.skipExportForm.get('value2').valid) {
+              return true;
+            }
         }
       }
     } else if (this.skipExportForm.get('condition1').valid && this.skipExportForm.get('operator1').valid) {
@@ -244,8 +257,9 @@ export class SkipExportComponent implements OnInit {
       ) {
         return true;
       }
-    } else if (this.skipExportForm.get('condition1').value.type === 'BOOLEAN' || this.skipExportForm.get('condition2').value.type === 'BOOLEAN') {
-      return true;
+      if ((this.skipExportForm.get('condition1').value.type === 'BOOLEAN' && this.skipExportForm.get('operator1').valid && this.skipExportForm.get('value1').valid) || (this.skipExportForm.get('condition2').value.type === 'BOOLEAN' && this.skipExportForm.get('operator2').valid && this.skipExportForm.get('value2').valid)) {
+        return true;
+      }
     }
     return false;
   }
@@ -274,10 +288,6 @@ export class SkipExportComponent implements OnInit {
 
     if (valueField.condition1.field_name === 'spent_at') {
       valueField.value1 = new Date(valueField.value1).toISOString().split('T')[0] + 'T17:00:00.000Z';
-    }
-
-    if (valueField.condition1.type === 'BOOLEAN') {
-      valueField.value1 = valueField.operator1 === 'yes' ? 'true' : 'false';
     }
 
     if (typeof valueField.value1 === 'string') {
@@ -316,9 +326,6 @@ export class SkipExportComponent implements OnInit {
               valueField.operator2 = 'isnull';
             }
           }
-          if (valueField.condition2.type === 'BOOLEAN') {
-      valueField.value2 = valueField.operator2 === 'yes' ? 'true' : 'false';
-    }
 
           if (typeof valueField.value2 === 'string') {
             valueField.value2 = [valueField.value2];
@@ -433,10 +440,6 @@ export class SkipExportComponent implements OnInit {
           operatorSelected === 'is_not_empty'
         ) {
           this.isDisabledChip1 = true;
-        } else if (this.skipExportForm.controls.condition1.value.type === 'BOOLEAN') {
-          if (operatorSelected) {
-            this.skipExportForm.controls.value1.patchValue(operatorSelected);
-          }
         } else {
           this.isDisabledChip1 = false;
         }
@@ -451,10 +454,6 @@ export class SkipExportComponent implements OnInit {
           operatorSelected === 'is_not_empty'
         ) {
           this.isDisabledChip2 = true;
-        } else if (this.skipExportForm.controls.condition2.value.type === 'BOOLEAN') {
-          if (operatorSelected) {
-            this.skipExportForm.controls.value2.patchValue(operatorSelected);
-          }
         } else {
           this.isDisabledChip2 = false;
         }
@@ -553,7 +552,7 @@ export class SkipExportComponent implements OnInit {
         } else {
           if (conditionArray[0].type === 'DATE') {
             valueFC1 = new Date(responses[1].results[0].values[0]);
-          } else if (conditionArray[0].field_name === 'report_title') {
+          } else if (conditionArray[0].field_name === 'report_title' || conditionArray[0].type === 'BOOLEAN') {
             valueFC1 = responses[1].results[0].values[0];
           } else {
             this.valueOption1 = responses[1].results[0].values;
@@ -580,7 +579,7 @@ export class SkipExportComponent implements OnInit {
           } else {
             if (conditionArray[1].type === 'DATE') {
               valueFC2 = new Date(responses[1].results[1].values[0]);
-            } else if (conditionArray[1].field_name === 'report_title') {
+            } else if (conditionArray[1].field_name === 'report_title' || conditionArray[1].type === 'BOOLEAN') {
               valueFC2 = responses[1].results[1].values[0];
             } else {
               this.valueOption2 = responses[1].results[1].values;
