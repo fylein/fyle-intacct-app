@@ -29,11 +29,11 @@
              <mandatory-field></mandatory-field>
           </div>
           <div class="fields-header-3" fxFlex="25" *ngIf = "(!skipExportForm.value.join_by) && ((skipExportForm.value.operator1 !== 'is_empty') && (skipExportForm.value.operator1 !== 'is_not_empty'))">
-             Value
+             Values
              <mandatory-field></mandatory-field>
           </div>
-          <div class="fields-header-3" fxFlex="25" *ngIf = "(skipExportForm.value.join_by === 'AND' || skipExportForm.value.join_by === 'OR') && (((skipExportForm.value.operator1 !== 'is_empty') && (skipExportForm.value.operator1 !== 'is_not_empty')) || ((skipExportForm.value.operator2 !== 'is_empty') && (skipExportForm.value.operator2 !== 'is_not_empty')))">
-             Value
+          <div class="fields-header-3" fxFlex="25" *ngIf = "(skipExportForm.value.join_by === 'AND' || skipExportForm.value.join_by === 'OR') && (((skipExportForm.value.operator1 !== 'is_empty') && (skipExportForm.value.operator1 !== 'is_not_empty')) || ((skipExportForm.value.operator2 !== 'is_empty') && (skipExportForm.value.operator2 !== 'is_not_empty'))) ">
+             Value 
              <mandatory-field></mandatory-field>
           </div>
        </div>
@@ -81,6 +81,13 @@
                 <mat-datepicker #picker startView="month"></mat-datepicker>
              </div>
           </mat-form-field>
+          <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition1?.type==='BOOLEAN'">
+            <mat-select placeholder="Select the operator" formControlName="value1">
+               <mat-option *ngFor = "let customCheckBoxValueOption of customCheckBoxValueOptions" [value]="customCheckBoxValueOption.value">
+               {{ customCheckBoxValueOption.label }}
+               </mat-option>
+            </mat-select>
+         </mat-form-field>
        </div>
     </form>
     <div *ngIf="showAdditionalCondition">
@@ -136,6 +143,13 @@
                       <mat-datepicker #picker startView="month"></mat-datepicker>
                    </div>
                 </mat-form-field>
+                <mat-form-field floatLabel="always" fxFlex="25" fxLayoutAlign="start stretch" appearance="outline" *ngIf="skipExportForm.value?.condition2?.type==='BOOLEAN'">
+                  <mat-select placeholder="Select the operator" formControlName="value2">
+                     <mat-option *ngFor = "let customCheckBoxValueOption of customCheckBoxValueOptions" [value]="customCheckBoxValueOption.value">
+                        {{ customCheckBoxValueOption.label }}
+                        </mat-option>
+                  </mat-select>
+               </mat-form-field>
              </div>
              <img class="skip-export--delete-icon" src="assets/images/pngs/delete.svg" (click)="remCondition()" matTooltip="Delete">
           </div>

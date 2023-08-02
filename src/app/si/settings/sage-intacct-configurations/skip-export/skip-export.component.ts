@@ -46,6 +46,17 @@ export class SkipExportComponent implements OnInit {
   selectable = true;
   removable = true;
   addOnBlur = true;
+  customCheckBoxValueOptions: { label: string; value: string; }[] = [
+    {
+      label: 'Yes',
+      value: 'true',
+    },
+    {
+      label: 'No',
+      value: 'false',
+    },
+  ];
+
   customOperatorOptions = [
     {
       label: 'Is',
@@ -195,6 +206,7 @@ export class SkipExportComponent implements OnInit {
           this.skipExportForm.get('condition1').value.field_name !==
           this.skipExportForm.get('condition2').value.field_name
         ) {
+
           if (
             (this.skipExportForm.get('condition1').value.field_name ===
               'spent_at' &&
@@ -214,6 +226,13 @@ export class SkipExportComponent implements OnInit {
               return true;
             }
           }
+          if ( this.valueOption2.length !== 0 || this.skipExportForm.get('operator2').value === 'is_empty' ||
+              this.skipExportForm.get('operator2').value === 'is_not_empty') {
+                return true;
+              }
+          if (this.skipExportForm.get('condition2').value.type === 'BOOLEAN' && this.skipExportForm.get('operator2').valid && this.skipExportForm.get('value2').valid) {
+              return true;
+            }
         }
       }
     } else if (this.skipExportForm.get('condition1').valid && this.skipExportForm.get('operator1').valid) {
@@ -230,6 +249,9 @@ export class SkipExportComponent implements OnInit {
         this.skipExportForm.get('operator1').value === 'is_empty' ||
         this.skipExportForm.get('operator1').value === 'is_not_empty'
       ) {
+        return true;
+      }
+      if ((this.skipExportForm.get('condition1').value.type === 'BOOLEAN' && this.skipExportForm.get('operator1').valid && this.skipExportForm.get('value1').valid) || (this.skipExportForm.get('condition2').value.type === 'BOOLEAN' && this.skipExportForm.get('operator2').valid && this.skipExportForm.get('value2').valid)) {
         return true;
       }
     }
@@ -265,12 +287,13 @@ export class SkipExportComponent implements OnInit {
     if (typeof valueField.value1 === 'string') {
       valueField.value1 = [valueField.value1];
     }
+
     const payload1 = {
       condition: valueField.condition1.field_name,
       operator: valueField.operator1,
       values:
         valueField.condition1.type === 'DATE' ||
-        valueField.operator1 === 'isnull' || valueField.condition1.field_name === 'report_title'
+        valueField.operator1 === 'isnull' || valueField.condition1.field_name === 'report_title' || valueField.condition1.type === 'BOOLEAN'
           ? valueField.value1
           : this.valueOption1,
       rank: 1,
@@ -306,7 +329,7 @@ export class SkipExportComponent implements OnInit {
             operator: valueField.operator2,
             values:
               valueField.condition2.type === 'DATE' ||
-              valueField.operator2 === 'isnull' || valueField.condition2.field_name === 'report_title'
+              valueField.operator2 === 'isnull' || valueField.condition2.field_name === 'report_title' || valueField.condition2.type === 'BOOLEAN'
                 ? valueField.value2
                 : this.valueOption2,
             rank: 2,
@@ -356,7 +379,20 @@ export class SkipExportComponent implements OnInit {
   }
 
   setCustomOperatorOptions(rank: number, type: string) {
-      if (type !== 'SELECT') {
+
+    if (type === 'BOOLEAN') {
+      const customCheckBoxOperatorOptions: { label: string; value: string; }[] = [
+        {
+          label: 'Is',
+          value: 'exact',
+        }
+      ];
+      if (rank === 1) {
+        this.operatorFieldOptions1 = customCheckBoxOperatorOptions;
+      } else if (rank === 2) {
+        this.operatorFieldOptions2 = customCheckBoxOperatorOptions;
+      }
+    } else if (type !== 'SELECT') {
         if (rank === 1) {
           this.operatorFieldOptions1 = this.customOperatorOptions;
         } else if (rank === 2) {
@@ -516,7 +552,7 @@ export class SkipExportComponent implements OnInit {
         } else {
           if (conditionArray[0].type === 'DATE') {
             valueFC1 = new Date(responses[1].results[0].values[0]);
-          } else if (conditionArray[0].field_name === 'report_title') {
+          } else if (conditionArray[0].field_name === 'report_title' || conditionArray[0].type === 'BOOLEAN') {
             valueFC1 = responses[1].results[0].values[0];
           } else {
             this.valueOption1 = responses[1].results[0].values;
@@ -543,7 +579,7 @@ export class SkipExportComponent implements OnInit {
           } else {
             if (conditionArray[1].type === 'DATE') {
               valueFC2 = new Date(responses[1].results[1].values[0]);
-            } else if (conditionArray[1].field_name === 'report_title') {
+            } else if (conditionArray[1].field_name === 'report_title' || conditionArray[1].type === 'BOOLEAN') {
               valueFC2 = responses[1].results[1].values[0];
             } else {
               this.valueOption2 = responses[1].results[1].values;
