@@ -48,18 +48,18 @@ export class SkipExportComponent implements OnInit {
   addOnBlur = true;
   customCheckBoxValueOptions: { label: string; value: string; }[] = [
     {
-      label: 'Is selected',
+      label: 'Yes',
       value: 'true',
     },
     {
-      label: 'Is not selected',
+      label: 'No',
       value: 'false',
     },
   ];
 
-  customCheckBoxOperatorOptions: { label: string; value: string; }[] = [
+  private customCheckBoxOperatorOptions: { label: string; value: string; }[] = [
     {
-      label: 'Exact',
+      label: 'Is',
       value: 'exact',
     }
   ];
