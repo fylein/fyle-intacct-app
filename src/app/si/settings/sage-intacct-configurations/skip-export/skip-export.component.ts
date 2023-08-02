@@ -57,12 +57,6 @@ export class SkipExportComponent implements OnInit {
     },
   ];
 
-  private customCheckBoxOperatorOptions: { label: string; value: string; }[] = [
-    {
-      label: 'Is',
-      value: 'exact',
-    }
-  ];
   customOperatorOptions = [
     {
       label: 'Is',
@@ -387,10 +381,16 @@ export class SkipExportComponent implements OnInit {
   setCustomOperatorOptions(rank: number, type: string) {
 
     if (type === 'BOOLEAN') {
+      const customCheckBoxOperatorOptions: { label: string; value: string; }[] = [
+        {
+          label: 'Is',
+          value: 'exact',
+        }
+      ];
       if (rank === 1) {
-        this.operatorFieldOptions1 = this.customCheckBoxOperatorOptions;
+        this.operatorFieldOptions1 = customCheckBoxOperatorOptions;
       } else if (rank === 2) {
-        this.operatorFieldOptions2 = this.customCheckBoxOperatorOptions;
+        this.operatorFieldOptions2 = customCheckBoxOperatorOptions;
       }
     } else if (type !== 'SELECT') {
         if (rank === 1) {
