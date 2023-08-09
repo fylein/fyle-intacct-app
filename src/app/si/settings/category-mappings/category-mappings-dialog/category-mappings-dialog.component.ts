@@ -149,7 +149,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
       attributes.push('EXPENSE_TYPE');
     }
 
-    if (that.configuration.reimbursable_expenses_object === 'BILL' || that.configuration.reimbursable_expenses_object === 'JOURNAL_ENTRY' || (!that.configuration.reimbursable_expenses_object && (that.configuration.corporate_credit_card_expenses_object==='JOURNAL_ENTRY' || that.configuration.corporate_credit_card_expenses_object==='BILL' || that.configuration.corporate_credit_card_expenses_object==='CHARGE_CARD_TRANSACTION'))) {
+    if (that.configuration.reimbursable_expenses_object === 'BILL' || that.configuration.reimbursable_expenses_object === 'JOURNAL_ENTRY' || (!that.configuration.reimbursable_expenses_object && (that.configuration.corporate_credit_card_expenses_object === 'JOURNAL_ENTRY' || that.configuration.corporate_credit_card_expenses_object === 'BILL' || that.configuration.corporate_credit_card_expenses_object === 'CHARGE_CARD_TRANSACTION'))) {
       attributes.push('ACCOUNT');
     }
     return attributes;
