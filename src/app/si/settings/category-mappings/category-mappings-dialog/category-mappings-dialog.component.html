@@ -35,12 +35,12 @@
         </mat-error>
       </mat-form-field>
 
-      <div class="mat-body-strong" *ngIf="configuration.reimbursable_expenses_object === 'BILL' || configuration.reimbursable_expenses_object === 'JOURNAL_ENTRY'">
+      <div class="mat-body-strong" *ngIf="configuration.reimbursable_expenses_object === 'BILL' || configuration.reimbursable_expenses_object === 'JOURNAL_ENTRY' || (!configuration.reimbursable_expenses_object && (configuration.corporate_credit_card_expenses_object==='JOURNAL_ENTRY' || configuration.corporate_credit_card_expenses_object==='BILL' || configuration.corporate_credit_card_expenses_object==='CHARGE_CARD_TRANSACTION'))">
         <strong class="mappings-dialog--label">
           Gl Account
         </strong>
       </div>
-      <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="configuration.reimbursable_expenses_object === 'BILL' || configuration.reimbursable_expenses_object === 'JOURNAL_ENTRY'">
+      <mat-form-field class="mappings-dialog--field" appearance="outline" *ngIf="configuration.reimbursable_expenses_object === 'BILL' || configuration.reimbursable_expenses_object === 'JOURNAL_ENTRY' || (!configuration.reimbursable_expenses_object && (configuration.corporate_credit_card_expenses_object==='JOURNAL_ENTRY' || configuration.corporate_credit_card_expenses_object==='BILL' || configuration.corporate_credit_card_expenses_object==='CHARGE_CARD_TRANSACTION'))">
         <input type="text" formControlName="sageIntacctAccount" placeholder="Choose Sage Intacct account" matInput
           [matAutocomplete]="siAc" [errorStateMatcher]="matcher">
         <mat-autocomplete #siAc="matAutocomplete" [displayWith]="mappingDisplay">
