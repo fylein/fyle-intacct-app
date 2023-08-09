@@ -149,7 +149,7 @@ export class CategoryMappingsDialogComponent implements OnInit {
       attributes.push('EXPENSE_TYPE');
     }
 
-    if (that.configuration.reimbursable_expenses_object && that.configuration.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT') {
+    if (that.configuration.reimbursable_expenses_object || that.configuration.corporate_credit_card_expenses_object !== 'EXPENSE_REPORT') {
       attributes.push('ACCOUNT');
     }
     return attributes;
