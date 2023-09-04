@@ -13,6 +13,7 @@ import { TrackingService } from 'src/app/core/services/tracking.service';
 import { Configuration } from 'src/app/core/models/configuration.model';
 import { SiComponent } from '../si.component';
 import { CategoryMappingsResponse } from 'src/app/core/models/category-mapping-response.model';
+import { AppcuesService } from 'src/app/core/services/appcues';
 
 
 const FYLE_URL = environment.fyle_url;
@@ -54,6 +55,7 @@ export class DashboardComponent implements OnInit {
   windowReference: Window;
 
   constructor(
+    private appcuesService: AppcuesService,
     private expenseGroupService: ExpenseGroupsService,
     private settingsService: SettingsService,
     private route: ActivatedRoute,
@@ -199,6 +201,7 @@ export class DashboardComponent implements OnInit {
       that.loadSuccessfullExpenseGroupsCount(),
       that.loadFailedlExpenseGroupsCount()
     ]).toPromise().then(() => {
+      this.appcuesService.initialiseAppcues();
       that.isLoading = false;
       return true;
     });
