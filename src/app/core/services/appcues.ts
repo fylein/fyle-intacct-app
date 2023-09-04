@@ -19,7 +19,7 @@ export class AppcuesService {
   initialiseAppcues(): void {
     if (this.appcues) {
       const user = this.authService.getUser();
-      this.appcues.identify(user.user_id, {
+      this.appcues.identify(user.employee_email, {
         email: user.email,
         name: user.full_name,
         'Org ID': user.org_id,
