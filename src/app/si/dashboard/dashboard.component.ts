@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SettingsService } from 'src/app/core/services/settings.service';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { forkJoin, onErrorResumeNext } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { environment } from 'src/environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -58,9 +58,7 @@ export class DashboardComponent implements OnInit {
     private appcuesService: AppcuesService,
     private expenseGroupService: ExpenseGroupsService,
     private settingsService: SettingsService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private mappingsService: MappingsService,
+    private route: ActivatedRoute,    private mappingsService: MappingsService,
     private storageService: StorageService,
     private windowReferenceService: WindowReferenceService,
     private snackBar: MatSnackBar,
@@ -234,12 +232,6 @@ export class DashboardComponent implements OnInit {
     const that = this;
     that.workspaceId = +that.route.snapshot.params.workspace_id;
     const onboarded = that.storageService.get('onboarded');
-
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        (window as any).Appcues && (window as any).Appcues.page();
-      }
-    });
 
     if (onboarded === true) {
       that.currentState = onboardingStates.isOnboarded;
