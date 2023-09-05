@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { AuthService } from '../core/services/auth.service';
 import { WorkspaceService } from '../core/services/workspace.service';
@@ -215,6 +215,12 @@ export class SiComponent implements OnInit {
     that.navDisabled = onboarded !== true;
     that.showRefreshIcon = !onboarded;
     that.orgsCount = that.authService.getOrgCount();
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        /* tslint:disable */
+        (window as any).Appcues && (window as any).Appcues.page();
+      }
+    });
     that.setupWorkspace();
   }
 }

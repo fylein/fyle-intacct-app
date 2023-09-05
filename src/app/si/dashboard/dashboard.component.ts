@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SettingsService } from 'src/app/core/services/settings.service';
 import { ActivatedRoute } from '@angular/router';
-import { forkJoin, onErrorResumeNext } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { MappingsService } from 'src/app/core/services/mappings.service';
 import { environment } from 'src/environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -13,6 +13,7 @@ import { TrackingService } from 'src/app/core/services/tracking.service';
 import { Configuration } from 'src/app/core/models/configuration.model';
 import { SiComponent } from '../si.component';
 import { CategoryMappingsResponse } from 'src/app/core/models/category-mapping-response.model';
+import { AppcuesService } from 'src/app/core/services/appcues';
 
 
 const FYLE_URL = environment.fyle_url;
@@ -54,10 +55,10 @@ export class DashboardComponent implements OnInit {
   windowReference: Window;
 
   constructor(
+    private appcuesService: AppcuesService,
     private expenseGroupService: ExpenseGroupsService,
     private settingsService: SettingsService,
-    private route: ActivatedRoute,
-    private mappingsService: MappingsService,
+    private route: ActivatedRoute,    private mappingsService: MappingsService,
     private storageService: StorageService,
     private windowReferenceService: WindowReferenceService,
     private snackBar: MatSnackBar,
@@ -199,6 +200,7 @@ export class DashboardComponent implements OnInit {
       that.loadSuccessfullExpenseGroupsCount(),
       that.loadFailedlExpenseGroupsCount()
     ]).toPromise().then(() => {
+      this.appcuesService.initialiseAppcues();
       that.isLoading = false;
       return true;
     });
