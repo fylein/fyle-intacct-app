@@ -217,6 +217,7 @@ export class SiComponent implements OnInit {
     that.orgsCount = that.authService.getOrgCount();
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
+        /* tslint:disable */
         (window as any).Appcues && (window as any).Appcues.page();
       }
     });
