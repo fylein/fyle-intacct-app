@@ -14,7 +14,7 @@ import { MappingsService } from '../core/services/mappings.service';
 import { MatSnackBar } from '@angular/material';
 import { MappingSettingResponse } from '../core/models/mapping-setting-response.model';
 import { TrackingService } from '../core/services/tracking.service';
-import { environment } from 'environment.localhost';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-si',
