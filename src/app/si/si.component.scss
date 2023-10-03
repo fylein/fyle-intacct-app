@@ -201,3 +201,30 @@ $fy-page-info-desc: #414562;
     margin-left: 4px;
   }
 }
+
+.switcher {
+  &--back-btn {
+    border: 1px solid #DFDFE2;
+    box-sizing: border-box;
+    border-radius: 4px;
+    height: 32px;
+    cursor: pointer;
+    background: #FFFFFF;
+
+    &:hover {
+      box-shadow: 0px 4px 4px rgba(44, 48, 78, 0.1);
+    }
+  }
+
+  &--back-btn-arrow {
+    padding-left: 17px;
+  }
+
+  &--btn-icon {
+    font-size: 14px;
+    font-weight: 400;
+    padding-left: 9px;
+    padding-right: 16px;
+    text-align: center;
+  }
+}

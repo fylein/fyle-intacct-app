@@ -14,6 +14,7 @@ import { MappingsService } from '../core/services/mappings.service';
 import { MatSnackBar } from '@angular/material';
 import { MappingSettingResponse } from '../core/models/mapping-setting-response.model';
 import { TrackingService } from '../core/services/tracking.service';
+import { environment } from 'environment.localhost';
 
 @Component({
   selector: 'app-si',
@@ -207,6 +208,10 @@ export class SiComponent implements OnInit {
 
   hideRefreshIconVisibility() {
     this.showRefreshIcon = false;
+  }
+
+  switchToNewApp(): void {
+    this.windowReference.location.href = `${environment.fyle_url}/app/settings/#/integrations/native_apps`;
   }
 
   ngOnInit() {
